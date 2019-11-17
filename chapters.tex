@@ -114,11 +114,29 @@ Template:
 The gaps represented by \textbf{[train]} and \textbf{[town]} are filled by looking up the relevant
 information in a table. More information you can find in \cite{applied_nlg}.
 
-In \textbf{corpus-based} systems it is possible directly mimicking the language of a real domain expert, rather than attempting to model it by rule and this category is able to generate more proper responses that could have never appeared in the coprus, but a good corpus is necessary. 
+\textbf{Corpus-based} models dominate the NLG community, special in the case of open-domain tasks, where it is almost impossible to hand-craft the templates for all possible combinations of semantic units and their respective surface realization.
+In corpus-based systems include statistical and machine learning approaches. 
+
+\textbf{Advantages:}
+\begin{itemize}
+  \item Possibility to mimick the language of a real domain expert
+  \item Ability to generate more proper responses that could have never appeared in the coprus
+  \item Possibility to use for open-domain dialogue systems
+  \item A lot of possible variations of output
+  \item Ability to learn
+  \item Ability to handle unknown inputs
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+  \item It is necessary to have a good corpus
+  \item Generation process is not fully controlled
+  \item The output can be grammatically incorrect
+\end{itemize}
 \cite{stochastic_language_generation_ds} \cite{survey_on_ds}
 
 \subsection*{NLG problems}
-The NLG component converts an abstract dialogue action into natural language surface utterances. As noticed in \cite{generator_problems}, a good generator usually relies on several factors: adequacy (similarity in meaning), fluency (syntactic correctness), readability (efficacy in context), and variation.
+The NLG component converts an abstract dialogue action into natural language surface utterances. In NLG it is necessary to control not only correctness of output but also if output is appropriate or felicitous in a given context. As noticed in \cite{generator_problems}, a good generator usually relies on several factors: adequacy (similarity in meaning), fluency (syntactic correctness), readability (efficacy in context), and variation.
 
 \chapter{Other}
 Oh and Rudnicky showed that stochastic generation benefits from two factors: 

@@ -1,0 +1,58 @@
+This is BibTeX, Version 0.99d (TeX Live 2017/Debian)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: projekt.aux
+The style file: bib-styles/Pysny/enplain.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Database file #1: bibliography.bib
+Warning--empty year in open_domain_neural_ds
+Warning--empty year in stochastic_language_generation_ds
+You've used 2 entries,
+            4032 wiz_defined-function locations,
+            800 strings with 5475 characters,
+and the built_in function-call counts, 792 in all, are:
+= -- 56
+> -- 28
+< -- 2
++ -- 10
+- -- 8
+* -- 42
+:= -- 99
+add.period$ -- 6
+call.type$ -- 2
+change.case$ -- 12
+chr.to.int$ -- 0
+cite$ -- 4
+duplicate$ -- 50
+empty$ -- 103
+format.name$ -- 8
+if$ -- 187
+int.to.chr$ -- 0
+int.to.str$ -- 2
+missing$ -- 0
+newline$ -- 17
+num.names$ -- 4
+pop$ -- 36
+preamble$ -- 1
+purify$ -- 10
+quote$ -- 0
+skip$ -- 36
+stack$ -- 0
+substring$ -- 20
+swap$ -- 8
+text.length$ -- 2
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 4
+warning$ -- 2
+while$ -- 4
+width$ -- 3
+write$ -- 26
+(There were 2 warnings)

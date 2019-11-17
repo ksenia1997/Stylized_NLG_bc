@@ -73,12 +73,52 @@ Exists several \textbf{modes of communication}:
 
 \chapter{Natural Language Generation}\label{nlg}
 Natural Language Generation is a subsection of Natural Language Processing (NLP). 
-NLG approaches can be grouped into two categories, one focuses on generating text using templates or rules (linguistic) methods, the other uses corpus-based statistical methods. 
+NLG approaches can be grouped into two categories, one focuses on generating text using templates or rules (linguistic) methods, the other uses corpus-based statistical methods, where \textbf{corpus} is a collection of texts.
 
-There is one obvious disadvantage in \textbf{template-based generation}: the quality of the output depends entirely on the set of templates. Even in a relatively  simple domain the number of templates necessary for reasonable quality can become a serious problem.
+\subsection*{Categories of Natural Language Generation approaches}
 
-In \textbf{corpus-based generation} it is possible directly mimicking the language of a real domain expert, rather than attempting to model it by rule, but a good corpus is necessary.
-\cite{stochastic_language_generation_ds}
+\textbf{Template-based} systems map their non-linguistic input directly to the linguistic surface structure. This linguistic structure may contain gaps. Well-formed outputs does not cointain gaps.
+The template-based system selects a proper response for the current conversation from a repository with response selection algorithms. 
+
+\textbf{Advantages:}
+\begin{itemize}
+  \item Robust and reliable
+  \item The output produced by this modules is likely to be grammatically correct and not contain unexpected generation errors
+  \item Generation process is fully controlles
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+  \item Number of templates grows quickly (different templates for singular and plural versions)
+  \item Expensive and time-consuming to deploy a real dialogue system
+  \item Limits its usage to other domains
+  \item Not much variation in output (no planning of text; simple concatenation of strings)
+  \item Not able to handle unknown inputs 
+  \item Templates often sound unnatural due to their generic structures
+  \item Not able to learn and not able to adapt to the user
+\end{itemize}
+
+\begin{center}
+\textbf{Example}: "The 306 train leaves Aberdeen at 11:20 am"
+
+\vspace{5mm}
+Semantic representation: 
+
+$Departure(train_{306}, location_{abdn}, time_{1120})$
+
+\vspace{5mm}
+Template: 
+
+[train] \textit{is leaving} [town] \textit{now}
+\end{center}
+The gaps represented by \textbf{[train]} and \textbf{[town]} are filled by looking up the relevant
+information in a table. More information you can find in \cite{applied_nlg}.
+
+In \textbf{corpus-based} systems it is possible directly mimicking the language of a real domain expert, rather than attempting to model it by rule and this category is able to generate more proper responses that could have never appeared in the coprus, but a good corpus is necessary. 
+\cite{stochastic_language_generation_ds} \cite{survey_on_ds}
+
+\subsection*{NLG problems}
+The NLG component converts an abstract dialogue action into natural language surface utterances. As noticed in \cite{generator_problems}, a good generator usually relies on several factors: adequacy (similarity in meaning), fluency (syntactic correctness), readability (efficacy in context), and variation.
 
 \chapter{Other}
 Oh and Rudnicky showed that stochastic generation benefits from two factors: 
@@ -86,6 +126,10 @@ Oh and Rudnicky showed that stochastic generation benefits from two factors:
   \item it takes advantage of the practical language of a domain expert instead of the developer
   \item it restates the problem in terms of classification and labeling, where expertise is not required for developing a rule-based generation system
 \end{itemize}
+
+Non-task-oriented dialogue system
+
+The aim of task-oriented dialogue systems is to complete specific tasks fo user, non-task-oriented dialogue systems focus on conversing with human on open domains. 
 
 //TODO: more information in article []
 //TODO: Info about datasets

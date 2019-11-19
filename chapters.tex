@@ -72,22 +72,42 @@ Exists several \textbf{modes of communication}:
 \end{figure}
 
 \chapter{Natural Language Generation}\label{nlg}
-Natural Language Generation is a subsection of Natural Language Processing (NLP). 
-NLG approaches can be grouped into two categories, one focuses on generating text using templates or rules (linguistic) methods, the other uses corpus-based statistical methods, where \textbf{corpus} is a collection of texts.
+Natural Language Generation is a subsection of Natural Language Processing (NLP). NLG uses different methods and tricks to convert data to human language.
 
-\subsection*{Categories of Natural Language Generation approaches}
+\section{Architecture of NLG}
+  Reiter and Dale in the article \cite{applied_nlg} proposed architecture splitted into 3 stages, which is illustrated in Figure \ref{nlg architecture}. 
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.7\textwidth]{figures/nlg_architecture.jpg}
+  \caption{NLG architecture.}
+  \label{nlg architecture}
+\end{figure}
+
+This pipeline shows the milestones of natural language generation, however, specific steps and approaches, as well as the models used, can vary significantly with the technology development.
+
+NLG approaches can be grouped into two categories, one focuses on generating text using templates or rules (linguistic) methods, the other uses corpus-based statistical/dynamic methods, where \textbf{corpus} is a collection of texts.
+
+\section{Categories of Natural Language Generation approaches}
 
 \textbf{Template-based} systems map their non-linguistic input directly to the linguistic surface structure. This linguistic structure may contain gaps. Well-formed outputs does not cointain gaps.
 The template-based system selects a proper response for the current conversation from a repository with response selection algorithms. 
 
-\textbf{Advantages:}
+This approach has a long development way from simple gap-filling to word-level grammatical functions:
+
+\textbf{Gap-Filling Approach} is one of the oldest approaches, that can automatically fill gaps in text, that have a predefined structure, with a small amount of data retrieved from a spreadsheet row, database table entry, etc. This approach is a quite limited.
+
+\textbf{Scripts or Rules-Producing Text} is an approach, that expands basic gap-filling systems with general-purpose programming constructs via a scripting language or by using business rules. These systems still lack linguistic capabilities and cannot generate high-quality text reliably.
+
+\textbf{Word-Level Grammatical Functions} was adding to template-based systems to deal with morphology, morphophonology and orthography. These functions made it easier to generate grammatically correct texts and to write complex template systems.
+
+\textbf{Advantages of template-based systems:}
 \begin{itemize}
   \item Robust and reliable
   \item The output produced by this modules is likely to be grammatically correct and not contain unexpected generation errors
   \item Generation process is fully controlles
 \end{itemize}
 
-\textbf{Disadvantages:}
+\textbf{Disadvantages of template-based systems:}
 \begin{itemize}
   \item Number of templates grows quickly (different templates for singular and plural versions)
   \item Expensive and time-consuming to deploy a real dialogue system
@@ -114,10 +134,14 @@ Template:
 The gaps represented by \textbf{[train]} and \textbf{[town]} are filled by looking up the relevant
 information in a table. More information you can find in \cite{applied_nlg}.
 
-\textbf{Corpus-based} models dominate the NLG community, special in the case of open-domain tasks, where it is almost impossible to hand-craft the templates for all possible combinations of semantic units and their respective surface realization.
+\textbf{Corpus-based/Dynamic} approach dominates the NLG community, special in the case of open-domain tasks, where it is almost impossible to hand-craft the templates for all possible combinations of semantic units and their respective surface realization.
 In corpus-based systems include statistical and machine learning approaches. 
 
-\textbf{Advantages:}
+One of the first approaches in corpus-based methods was \textbf{Dynamic Sentence Generation}, that dynamically creates sentences from representations of the meaning to be conveyed by the sentence and/or its desired linguistic structure. It allows do not write code for every boundary case and includes aggregation, reference, ordering and connectives to optimise sentences.
+
+Next level of corpus-based approaches was \textbf{Dynamic Document Creation}, what can produce relevant and well-structured document. 
+
+\textbf{Advantages of corpus-based approach:}
 \begin{itemize}
   \item Possibility to mimick the language of a real domain expert
   \item Ability to generate more proper responses that could have never appeared in the coprus
@@ -127,7 +151,7 @@ In corpus-based systems include statistical and machine learning approaches.
   \item Ability to handle unknown inputs
 \end{itemize}
 
-\textbf{Disadvantages:}
+\textbf{Disadvantages of corpus-based approach:}
 \begin{itemize}
   \item It is necessary to have a good corpus
   \item Generation process is not fully controlled

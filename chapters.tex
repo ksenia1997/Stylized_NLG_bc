@@ -159,6 +159,27 @@ Next level of corpus-based approaches was \textbf{Dynamic Document Creation}, wh
 \end{itemize}
 \cite{stochastic_language_generation_ds} \cite{survey_on_ds}
 
+\section{Models for Natural Language Generation}
+NLG evolution from templates to dynamic generation of sentences took a lot of time and models developed along with it. 
+
+One of the first models was \textbf{Markov chain}. It is a stochastic model, that is used to describe the next event in a sequence given the previous event only by probabilistic weighting. It does not track all the previous states in a sequence to conclude what is the next possible state. In our case state is an n-gram(contiguous sequence of n items from text or speech).
+
+The next model, what is used in NLG, is \textbf{Recurrent neural network (RNN)}. Neural networks are computing systems that are inspired by biological neural networks. A "neuron" is a mathematical function that classifies and collects information according to a specific architecture. A neural network contains layers of interconnected "neurons". RNN takes series of input with no predetermined limit on size. Recurrent neural network passes each item of the sequence through a feedforward network and stores the information from the previous step. In each iteration this model calculates the probability of the next item with using information in the memory.
+
+The architecture of RNN is illustrated in Figure \ref{rnn}, where coefficient \textbf{h} is a hidden layer, \textbf{x} is an input and \textbf{y} is an output. Coefficient \textbf{w} is a weight, what is transformed to produce a sensible output.
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figures/rnn.jpg}
+  \caption{Architecture of recurrent neural network.}
+  \label{rnn}
+\end{figure}
+
+
+LSTM
+
+Transformer
+
 \subsection*{NLG problems}
 The NLG component converts an abstract dialogue action into natural language surface utterances. In NLG it is necessary to control not only correctness of output but also if output is appropriate or felicitous in a given context. As noticed in \cite{generator_problems}, a good generator usually relies on several factors: adequacy (similarity in meaning), fluency (syntactic correctness), readability (efficacy in context), and variation.
 

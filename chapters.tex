@@ -141,10 +141,10 @@ Unfortunately corpus-based systems have some disadvantages. It is necessary to h
 
 More information you can find in \cite{stochastic_language_generation_ds} \cite{survey_on_ds} \cite{data_driven_nlg}.
 
-\section{Models for Natural Language Generation}
-NLG evolution from templates to dynamic generation of sentences took a lot of time and models developed along with it. 
+\section{Model components for Natural Language Generation}
+NLG evolution from templates to dynamic generation of sentences took a lot of time and models developed along with it. Corpus-based generation uses a generative probabilistic model what can be implemented in many ways.
 
-One of the first models was \textbf{Markov chain}. It is a stochastic model, that is used to describe the next event in a sequence given the previous event only by probabilistic weighting. It does not track all the previous states in a sequence to conclude what is the next possible state. In our case state is an n-gram(contiguous sequence of n items from text or speech).
+One of the first model's implementation was \textbf{Markov chain}. It is a stochastic model, that is used to describe the next event in a sequence given the previous event only by probabilistic weighting. It does not track all the previous states in a sequence to conclude what is the next possible state. In our case state is an n-gram(contiguous sequence of n items from text or speech).
 
 The next model, what is used in NLG, is \textbf{Recurrent neural network (RNN)}. Neural networks are computing systems that are inspired by biological neural networks. A "neuron" is a mathematical function that classifies and collects information according to a specific architecture. A neural network contains layers of interconnected "neurons". RNN takes series of input with no predetermined limit on size. Recurrent neural network passes each item of the sequence through a feedforward network and stores the information from the previous step. In each iteration this model calculates the probability of the next item with using information in the memory.
 

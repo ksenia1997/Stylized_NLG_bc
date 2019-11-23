@@ -89,7 +89,8 @@ NLG approaches can be grouped into two categories, one focuses on generating tex
 
 \section{Categories of Natural Language Generation approaches}
 
-\textbf{Template-based} systems map their non-linguistic input directly to the linguistic surface structure. This linguistic structure may contain gaps. Well-formed outputs does not cointain gaps.
+\subsection{Template-based approach} 
+Template-based systems map their non-linguistic input directly to the linguistic surface structure. This linguistic structure may contain gaps. Well-formed outputs does not cointain gaps.
 The template-based system selects a proper response for the current conversation from a repository with response selection algorithms. 
 
 This approach has a long development way from simple gap-filling to word-level grammatical functions:
@@ -100,26 +101,15 @@ This approach has a long development way from simple gap-filling to word-level g
 
 \textbf{Word-Level Grammatical Functions} was adding to template-based systems to deal with morphology, morphophonology and orthography. These functions made it easier to generate grammatically correct texts and to write complex template systems.
 
-\textbf{Advantages of template-based systems:}
-\begin{itemize}
-  \item Robust and reliable
-  \item The output produced by this modules is likely to be grammatically correct and not contain unexpected generation errors
-  \item Generation process is fully controlles
-\end{itemize}
+\subsubsection{Advantages of template-based systems}
+Template-based systems have a number of advantages: the output produced by this approach is likely to be grammatically correct and not contain unexpected generation errors; process of sentence generation is fully controlled; these models are robust and reliable because they consist of clearly defined rules.
 
-\textbf{Disadvantages of template-based systems:}
-\begin{itemize}
-  \item Number of templates grows quickly (different templates for singular and plural versions)
-  \item Expensive and time-consuming to deploy a real dialogue system
-  \item Limits its usage to other domains
-  \item Not much variation in output (no planning of text; simple concatenation of strings)
-  \item Not able to handle unknown inputs 
-  \item Templates often sound unnatural due to their generic structures
-  \item Not able to learn and not able to adapt to the user
-\end{itemize}
+\subsubsection{Disadvantages of template-based systems}
+Despite all the above, template-based approach has some disadvantages. First of all, this models requires time and human resources to deploy a real dialogue system, because templates are constructed manually, and the number of templates grows quickly (using different templates for singular and plural versions); these systems are not able to handle unknown inputs; templates often sound unnatural due to their generic structures; template-based systems cannot make variation in output, it is just concatenation of strings; this approach is not flexible, because it has limits to use templates in other domains; and finally a template-based model is not able to learn and is not able to adapt to the user.
 
 \begin{center}
-\textbf{Example}: "The 306 train leaves Aberdeen at 11:20 am"
+\subsubsection{Example}\label{tb_example} 
+"The 306 train leaves Aberdeen at 11:20 am"
 
 \vspace{5mm}
 Semantic representation: 
@@ -131,33 +121,25 @@ Template:
 
 [train] \textit{is leaving} [town] \textit{now}
 \end{center}
+
 The gaps represented by \textbf{[train]} and \textbf{[town]} are filled by looking up the relevant
 information in a table. More information you can find in \cite{applied_nlg}.
 
-\textbf{Corpus-based/Dynamic} approach dominates the NLG community, special in the case of open-domain tasks, where it is almost impossible to hand-craft the templates for all possible combinations of semantic units and their respective surface realization.
+\subsection{Corpus-based/Dynamic approach}
+Corpus-based dominates the NLG community, special in the case of open-domain tasks, where it is almost impossible to hand-craft the templates for all possible combinations of semantic units and their respective surface realization.
 In corpus-based systems include statistical and machine learning approaches. 
 
 One of the first approaches in corpus-based methods was \textbf{Dynamic Sentence Generation}, that dynamically creates sentences from representations of the meaning to be conveyed by the sentence and/or its desired linguistic structure. It allows do not write code for every boundary case and includes aggregation, reference, ordering and connectives to optimise sentences.
 
 Next level of corpus-based approaches was \textbf{Dynamic Document Creation}, what can produce relevant and well-structured document. 
 
-\textbf{Advantages of corpus-based approach:}
-\begin{itemize}
-  \item Possibility to mimick the language of a real domain expert
-  \item Ability to generate more proper responses that could have never appeared in the coprus
-  \item Possibility to use for open-domain dialogue systems
-  \item A lot of possible variations of output
-  \item Ability to learn
-  \item Ability to handle unknown inputs
-\end{itemize}
+\subsubsection{Advantages of corpus-based approach}
+Corpus-based models have some advantages: they have ability to generate more proper responses that could have never appeared in the corpus; it is possible to mimick the language of a real domain expert and use this models for open-domain dialogue systems; dynamic approach is able to learn and to handle unknown inputs, it is also has a lot of possible varioations of output.
 
-\textbf{Disadvantages of corpus-based approach:}
-\begin{itemize}
-  \item It is necessary to have a good corpus
-  \item Generation process is not fully controlled
-  \item The output can be grammatically incorrect
-\end{itemize}
-\cite{stochastic_language_generation_ds} \cite{survey_on_ds}
+\subsubsection{Disadvantages of corpus-based approach}
+Unfortunately corpus-based systems have some disadvantages. It is necessary to have a good corpus, it should contain a large amount of data and on a variety of topics to get a sensible output. Even if you have a good corpus, process of text generation is not fully controlled and the output can be grammatically incorrect.
+
+More information you can find in \cite{stochastic_language_generation_ds} \cite{survey_on_ds} \cite{data_driven_nlg}.
 
 \section{Models for Natural Language Generation}
 NLG evolution from templates to dynamic generation of sentences took a lot of time and models developed along with it. 

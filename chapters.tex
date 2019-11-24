@@ -150,7 +150,9 @@ The next model, what is used in NLG, is \textbf{Recurrent neural network (RNN)}.
 
 The architecture of RNN is illustrated in Figure \ref{rnn}, where coefficient \textbf{h} is a hidden layer, \textbf{x} is an input and \textbf{y} is an output. Coefficient \textbf{w} is a weight, what is transformed to produce a sensible output.
 
-The RNN-based models have been used for NLG as an end-to-end training network \cite{network_nlg} and a training model with semantic aggregation \cite{rnn_nlg}.
+The RNN-based models have been used for NLG as an end-to-end training network \cite{network_nlg} and a training model with semantic aggregation \cite{rnn_nlg}. 
+
+Nowadays RNN networks almost are not used in NLG, because it has problems with vanishing and exploding gradient. The long-term information travels sequentially  through all cells before getting to the present processing cell. This means, that it can be easily corrupted by being multiplied many time by small or big numbers. Other problem of RNN is that they are not hardware friendly, it takes a lot of resources to train and run this network. More information about difficulties of training RNN you can find in \cite{rnn_difficulties}.
 
 \begin{figure}[hbt]
   \centering
@@ -160,17 +162,30 @@ The RNN-based models have been used for NLG as an end-to-end training network \c
 \end{figure}
 
 
-\textbf{LSTM} networks are a special kind of RNN, capable of learning long-term dependencies. All recurrent neural networks have the form of a chain of repeating modules of neural network. LSTM network also has this chain structure, but the repeating module has a different structure.
+\textbf{LSTM} networks are a special kind of RNN, capable of learning long-term dependencies. All recurrent neural networks have the form of a chain of repeating modules of neural network. LSTM network also has this chain structure, but the repeating module has a different structure. 
+
+In Figure \ref{lstm} each line carries an entire vector from the output of one node to the inputs of others. The circles represent pointwise operations, while rectangles are learned neural network layers. Lines merging denote concatenation, while a line forking denote its content being copied and the copies going to different locations.
+
+This model resolved a problem with vanishing gradient, but still the capacity of the LSTM memory is limited, because of inherently complex sequential words' paths from the previous unit to the current unit. The same complexity results in high computational requirements that make LSTM difficult to train or parallelize.
 
 \begin{figure}[hbt]
   \centering
-  \includegraphics[width=0.4\textwidth]{figures/lstm.jpg}
-  \caption{The cell in an LSTM.}
+  \includegraphics[width=0.3\textwidth]{figures/lstm.jpg}
+  \caption{A cell in an LSTM network.}
   \label{lstm}
 \end{figure}
 
 
-\textbf{Transformer}
+\textbf{Transformer} is a relatively new architecture, which proposes a "self-attention mechanism". This model was introduced in the paper "Attention is all you need" \cite{transformer} in 2017. The advantage of this model is a constant number of operations, which simplifies the parallelization of processes. The Transformer uses the representation of all words in context without compressing all information into a single fixed-length representation that allows the system to handle longer sentences without the skyrocketing of computational requirements. 
+
+The architecture of the Transformer is illustrated in Figure \ref{transformer}. The Transformer consists of a stack of encoders (on the left) for processing inputs of any length and another set of decoders (on the right) to output the generated sentences. The inputs and output are first embedded into an n-dimensional space since we cannot use strings directly. The Transformer cannot remember how sequences are fed into a model, because of it positions are added to the embedded representation (n-dimensional vector) of each word.
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figures/transformer.png}
+  \caption{The architecture of the Transformer\cite{transformer}}
+  \label{transformer}
+\end{figure}
 
 \subsection*{NLG problems}
 The NLG component converts an abstract dialogue action into natural language surface utterances. In NLG it is necessary to control not only correctness of output but also if output is appropriate or felicitous in a given context. As noticed in \cite{generator_problems}, a good generator usually relies on several factors: adequacy (similarity in meaning), fluency (syntactic correctness), readability (efficacy in context), and variation.

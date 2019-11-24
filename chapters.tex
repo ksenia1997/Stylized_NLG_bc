@@ -150,6 +150,8 @@ The next model, what is used in NLG, is \textbf{Recurrent neural network (RNN)}.
 
 The architecture of RNN is illustrated in Figure \ref{rnn}, where coefficient \textbf{h} is a hidden layer, \textbf{x} is an input and \textbf{y} is an output. Coefficient \textbf{w} is a weight, what is transformed to produce a sensible output.
 
+The RNN-based models have been used for NLG as an end-to-end training network \cite{network_nlg} and a training model with semantic aggregation \cite{rnn_nlg}.
+
 \begin{figure}[hbt]
   \centering
   \includegraphics[width=0.5\textwidth]{figures/rnn.jpg}
@@ -158,9 +160,17 @@ The architecture of RNN is illustrated in Figure \ref{rnn}, where coefficient \t
 \end{figure}
 
 
-LSTM
+\textbf{LSTM} networks are a special kind of RNN, capable of learning long-term dependencies. All recurrent neural networks have the form of a chain of repeating modules of neural network. LSTM network also has this chain structure, but the repeating module has a different structure.
 
-Transformer
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.4\textwidth]{figures/lstm.jpg}
+  \caption{The cell in an LSTM.}
+  \label{lstm}
+\end{figure}
+
+
+\textbf{Transformer}
 
 \subsection*{NLG problems}
 The NLG component converts an abstract dialogue action into natural language surface utterances. In NLG it is necessary to control not only correctness of output but also if output is appropriate or felicitous in a given context. As noticed in \cite{generator_problems}, a good generator usually relies on several factors: adequacy (similarity in meaning), fluency (syntactic correctness), readability (efficacy in context), and variation.

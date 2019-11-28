@@ -105,7 +105,7 @@ This approach has a long development way from simple gap-filling to word-level g
 Template-based systems have a number of advantages: the output produced by this approach is likely to be grammatically correct and not contain unexpected generation errors; process of sentence generation is fully controlled; these models are robust and reliable because they consist of clearly defined rules.
 
 \subsubsection{Disadvantages of template-based systems}
-Despite all the above, template-based approach has some disadvantages. First of all, this models requires time and human resources to deploy a real dialogue system, because templates are constructed manually, and the number of templates grows quickly (using different templates for singular and plural versions); these systems are not able to handle unknown inputs; templates often sound unnatural due to their generic structures; template-based systems cannot make variation in output, it is just concatenation of strings; this approach is not flexible, because it has limits to use templates in other domains; and finally a template-based model is not able to learn and is not able to adapt to the user.
+Despite all the above, template-based approach has some disadvantages. First of all, these models requires time and human resources to deploy a real dialogue system, because templates are constructed manually, and the number of templates grows quickly (using different templates for singular and plural versions); these systems are not able to handle unknown inputs; templates often sound unnatural due to their generic structures; template-based systems cannot make variation in output, it is just concatenation of strings; this approach is not flexible, because it has limits to use templates in other domains; and finally a template-based model is not able to learn and is not able to adapt to the user.
 
 \begin{center}
 \subsubsection{Example}\label{tb_example} 
@@ -187,9 +187,10 @@ The architecture of the Transformer is illustrated in Figure \ref{transformer}. 
   \label{transformer}
 \end{figure}
 
-\subsection*{NLG problems}
-The NLG component converts an abstract dialogue action into natural language surface utterances. In NLG it is necessary to control not only correctness of output but also if output is appropriate or felicitous in a given context. As noticed in \cite{generator_problems}, a good generator usually relies on several factors: adequacy (similarity in meaning), fluency (syntactic correctness), readability (efficacy in context), and variation.
+\section{NLG problems}
+The NLG component converts an abstract dialogue action into natural language surface utterances, and a human evaluates an answer in dialogue systems, because of this it is necessary to control not only correctness of output, but also conversational flow if output is appropriate or felicitous in a given context. 
 
+As noticed in \cite{good_conversation}, it is very important to pay attention to factors such as the balance between specificity and genericness, repetition or contradiction of previous statements, the balance asking questions with other dialogue acts. 
 \chapter{Other}
 Oh and Rudnicky showed that stochastic generation benefits from two factors: 
 \begin{itemize}

@@ -188,7 +188,25 @@ The architecture of the Transformer is illustrated in Figure \ref{transformer}. 
 \end{figure}
 
 \subsection*{NLG problems}
-The NLG component converts an abstract dialogue action into natural language surface utterances. In NLG it is necessary to control not only correctness of output but also if output is appropriate or felicitous in a given context. As noticed in \cite{generator_problems}, a good generator usually relies on several factors: adequacy (similarity in meaning), fluency (syntactic correctness), readability (efficacy in context), and variation.
+The NLG component converts an abstract dialogue action into natural language surface utterances. As noticed in \cite{generator_problems}, the main task of NLG is to select, inflect and order words to communicate the input meaning as completely, clearly and fluently as possible in context. That's why it is necessary to control not only correctness of output but also if output is appropriate or felicitous in a given context. A good generator usually relies on several factors:
+\begin{itemize}
+  \item \textbf{adequacy} (a sentence that is ambiguous or not contains communicates meaning in the input, is \textbf{not} adequate.)  
+  \item \textbf{fluency} (syntactic correctness)
+  \item \textbf{readability} (efficacy in context)
+  \item \textbf{variation} (there are 2 basic forms of variation: \textit{word choice variation} and \textit{word order variation} for enriching speech.)
+\end{itemize}
+
+It is very important to have all factors in generator, because sentences that are both adequate and fluent may still not be adequate or fluent in a particular context, so they are not readable.
+In example \ref{var_example} the sentence number 4 shows, that a variation can be syntactically incorrect or unclear.
+\begin{center}
+\subsubsection{Example}\label{var_example} 
+\begin{enumerate}
+  \item I bought new dress on Tuesday. 
+  \item I got new dress on Tuesday. 
+  \item On Tuesday I bought new dress.
+  \item On new Tuesday dress I bought
+\end{enumerate}
+\end{center}
 
 \chapter{Other}
 Oh and Rudnicky showed that stochastic generation benefits from two factors: 

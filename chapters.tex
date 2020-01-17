@@ -107,22 +107,26 @@ Template-based systems have a number of advantages: the output produced by this 
 \subsubsection{Disadvantages of template-based systems}
 Despite all the above, template-based approach has some disadvantages. First of all, these models requires time and human resources to deploy a real dialogue system, because templates are constructed manually, and the number of templates grows quickly (using different templates for singular and plural versions); these systems are not able to handle unknown inputs; templates often sound unnatural due to their generic structures; template-based systems cannot make variation in output, it is just concatenation of strings; this approach is not flexible, because it has limits to use templates in other domains; and finally a template-based model is not able to learn and is not able to adapt to the user.
 
-\begin{center}
-\subsubsection{Example}\label{tb_example} 
-"The 306 train leaves Aberdeen at 11:20 am"
+\begin{table}[t]
+\centering
+ \begin{tabular}{|p{8cm}|} 
+ \hline
+ Example \\
+ \hline
+ "The 306 train leaves Aberdeen at 11:20 am" \\ 
+ \hline
+ Semantic representation: 
+ $Departure(train_{306}, location_{abdn}, time_{1120})$ \\
+ \hline
+ Template: 
+ [train] \textit{is leaving} [town] \textit{now} \\
+ \hline
+ \end{tabular}
+ \caption{The example of gaps in the sentence.}
+\label{tab:tb_example}
+\end{table}
 
-\vspace{5mm}
-Semantic representation: 
-
-$Departure(train_{306}, location_{abdn}, time_{1120})$
-
-\vspace{5mm}
-Template: 
-
-[train] \textit{is leaving} [town] \textit{now}
-\end{center}
-
-The gaps represented by \textbf{[train]} and \textbf{[town]} are filled by looking up the relevant
+The gaps represented by \textbf{[train]} and \textbf{[town]} in example \ref{tab:tb_example} are filled by looking up the relevant
 information in a table. More information you can find in \cite{applied_nlg}.
 
 \subsection{Corpus-based/Dynamic approach}
@@ -197,16 +201,26 @@ The NLG component converts an abstract dialogue action into natural language sur
 \end{itemize}
 
 It is very important to have all factors in generator, because sentences that are both adequate and fluent may still not be adequate or fluent in a particular context, so they are not readable.
-In example \ref{var_example} the sentence number 4 shows, that a variation can be syntactically incorrect or unclear.
-\begin{center}
-\subsubsection{Example}\label{var_example} 
-\begin{enumerate}
-  \item I bought new dress on Tuesday. 
-  \item I got new dress on Tuesday. 
-  \item On Tuesday I bought new dress.
-  \item On new Tuesday dress I bought
-\end{enumerate}
-\end{center}
+In example \ref{tab:var_example} the sentence number 4 shows, that a variation can be syntactically incorrect or unclear.
+
+\begin{table}[t]
+\centering
+ \begin{tabular}{|p{0.5cm}|p{8cm}|} 
+ \hline
+ \multicolumn{2}{|c|}{Example} \\
+ \hline
+ 1 & I bought new dress on Tuesday. \\ 
+ \hline
+ 2 & I got new dress on Tuesday. \\
+ \hline
+ 3 & On Tuesday I bought new dress. \\
+ \hline
+ 4 & On new Tuesday dress I bought \\
+ \hline
+ \end{tabular}
+ \caption{The example of sentences' variation}
+\label{tab:var_example}
+\end{table}
 
 \chapter{Other}
 Oh and Rudnicky showed that stochastic generation benefits from two factors: 

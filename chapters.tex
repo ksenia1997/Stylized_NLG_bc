@@ -109,9 +109,9 @@ Despite all the above, template-based approach has some disadvantages. First of 
 
 \begin{table}[t]
 \centering
- \begin{tabular}{|p{8cm}|} 
+ \begin{tabular}{|c|} 
  \hline
- Example \\
+ Example: \\
  \hline
  "The 306 train leaves Aberdeen at 11:20 am" \\ 
  \hline
@@ -191,7 +191,7 @@ The architecture of the Transformer is illustrated in Figure \ref{transformer}. 
   \label{transformer}
 \end{figure}
 
-\subsection*{NLG problems}
+\section{NLG problems}
 The NLG component converts an abstract dialogue action into natural language surface utterances. As noticed in \cite{generator_problems}, the main task of NLG is to select, inflect and order words to communicate the input meaning as completely, clearly and fluently as possible in context. That's why it is necessary to control not only correctness of output but also if output is appropriate or felicitous in a given context. A good generator usually relies on several factors:
 \begin{itemize}
   \item \textbf{adequacy} (a sentence that is ambiguous or not contains communicates meaning in the input, is \textbf{not} adequate.)  
@@ -199,9 +199,9 @@ The NLG component converts an abstract dialogue action into natural language sur
   \item \textbf{readability} (efficacy in context)
   \item \textbf{variation} (there are 2 basic forms of variation: \textit{word choice variation} and \textit{word order variation} for enriching speech.)
 \end{itemize}
+An example \ref{tab:var_example} shows all types of variation, but sometimes variation can be syntactically incorrect or unclear, what you can see in the forth sentence. In fifth sentnecne a variation changed the meaning of part of the sentence. In addition, the variation may add or remove meaning possibilities.
 
-It is very important to have all factors in generator, because sentences that are both adequate and fluent may still not be adequate or fluent in a particular context, so they are not readable.
-In example \ref{tab:var_example} the sentence number 4 shows, that a variation can be syntactically incorrect or unclear.
+If a sentnence is ambigous and it's does not express the meaning of the input, that means that the sentence is not adequate. Sentences that are both adequate and fluent may still not be adequate or fluent in a particular context, so they are not readable. That's why it is very important to have all factors in generator.
 
 \begin{table}[t]
 \centering
@@ -209,33 +209,106 @@ In example \ref{tab:var_example} the sentence number 4 shows, that a variation c
  \hline
  \multicolumn{2}{|c|}{Example} \\
  \hline
- 1 & I bought new dress on Tuesday. \\ 
+ 1 & I bought movie tickets on Tuesday. \\ 
  \hline
- 2 & I got new dress on Tuesday. \\
+ 2 & I got movie tickets on Tuesday. \\
  \hline
- 3 & On Tuesday I bought new dress. \\
+ 3 & On Tuesday I bought movie tickets. \\
  \hline
- 4 & On new Tuesday dress I bought \\
+ 4 & On movie Tuesday tickets I bought. \\
+ \hline
+ 5 & I bought tickets for the Tuesday movie. \\ 
  \hline
  \end{tabular}
  \caption{The example of sentences' variation}
 \label{tab:var_example}
 \end{table}
 
+\section{Datasets for NLG}
+A good corpus is very important for successful training of Natural Language Generation model. Quality is more important for training data than the quantity of data points. Unfortunately, there are not a lot of datasets available for training NLG models, due to the high cost of creating quality data sets. Dialogue systems require training data in the format of people text conversation, non-fiction or movie reviews are not suitable for this. Large volumes of training data improves the decision-making ability of NLG model. Fortunately, there is a lot more training data available in English than in Japanese.
+
+In my bachelor thesis I will use 2 types of dataset. The first one is data from Twitter, but they are without context. Example of these data you can see in example \ref{tab:twitter_chat}. The second one is data from Persona chat. This dataset consists of a description of a person and a small dialogue with him. Example of Persona chat you can see in example \ref{tab:persona_chat}.
+
+
+\begin{table}[t]
+\centering
+ \begin{tabular}{|p{2cm}|p{8cm}|} 
+ \hline
+ \multicolumn{2}{|c|}{Example} \\
+ \hline
+ Person 1 & yeah i'm preparing myself to drop a lot on this man, but definitely need something reliable \\ 
+ \hline
+ Person 2 & yeah dude i would definitely consider a daniel defence super reliable and they are just bad ass \\
+ \hline
+ Person 1 & besides if trump say his condolences it won't sound genuine, ex: (dwayne wade cousin) it will sound all political and petty \\
+ \hline
+ Person 2 & yea you right. but we do live in a world where republicans will harass obama about a birth certificate but won't say \\
+ \hline
+ \end{tabular}
+ \caption{The Twitter chat example}
+\label{tab:twitter_chat}
+\end{table}
+
+\begin{table}[t]
+\centering
+ \begin{tabular}{|p{3cm}|p{8cm}|} 
+ \hline
+ \multicolumn{2}{|c|}{Example} \\
+ \hline
+ your persona: & i like to remodel homes. \\ 
+ \hline
+ your persona: & i like to go hunting. \\
+ \hline
+ your persona: & i like to shoot a bow. \\
+ \hline
+ your persona: & my favorite holiday is halloween. \\
+ \hline
+ Person 1 & hi, how are you doing? i'm getting ready to do some cheetah chasing to stay in shape. \\
+ \hline
+ Person 2 & you must be very fast. hunting is one of my favorite hobbies. \\
+ \hline
+ Person 1 & i am! for my hobby i like to do canning or some whittling. \\ 
+ \hline
+ Person 2 & i also remodel homes when i am not out bow hunting. \\
+ \hline
+ Person 1 & that's neat. when i was in high school i placed 6th in 100m dash! \\
+ \hline
+ Person 2 & that's awesome. do you have a favorite season or time of year? \\
+ \hline
+ Person 1 & i do not. but i do have a favorite meat since that is all i eat exclusively. \\
+ \hline
+ Person 2 & what is your favorite meat to eat? \\
+ \hline
+ Person 1 & i would have to say its prime rib. do you have any favorite foods? \\
+ \hline 
+ Person 2 & i like chicken or macaroni and cheese. \\
+ \hline 
+ Person 1 & do you have anything planned for today? i think i am going to do some canning. \\
+ \hline 
+ Person 2 & i am going to watch football. what are you canning? \\
+ \hline 
+ Person 1 & i think i will can some jam. do you also play footfall for fun? \\
+ \hline 
+ Person 2 & if i have time outside of hunting and remodeling homes. which is not much! \\
+ \hline 
+ \end{tabular}
+ \caption{The example of 1 conversation from the Persona chat}
+\label{tab:persona_chat}
+\end{table}
+
+\chapter{Base model}
+
 \chapter{Other}
-Oh and Rudnicky showed that stochastic generation benefits from two factors: 
-\begin{itemize}
-  \item it takes advantage of the practical language of a domain expert instead of the developer
-  \item it restates the problem in terms of classification and labeling, where expertise is not required for developing a rule-based generation system
-\end{itemize}
 
 Non-task-oriented dialogue system
 
 The aim of task-oriented dialogue systems is to complete specific tasks fo user, non-task-oriented dialogue systems focus on conversing with human on open domains. 
 
-//TODO: more information in article []
 //TODO: Info about datasets
+
+//TODO: Info about evaluation metrics
+
+//TODO: Description of baseline
+
 //TODO: NLP vs Computation linguistic
 
-//TODO: In non task oriented dialogue systems it is very difficult to use template-based generation
-\cite{stochastic_language_generation_ds}

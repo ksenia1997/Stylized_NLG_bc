@@ -194,10 +194,11 @@ The architecture of the Transformer is illustrated in Figure \ref{transformer}. 
 \section{NLG problems}
 The NLG component converts an abstract dialogue action into natural language surface utterances. As noticed in \cite{generator_problems}, the main task of NLG is to select, inflect and order words to communicate the input meaning as completely, clearly and fluently as possible in context. That's why it is necessary to control not only correctness of output but also if output is appropriate or felicitous in a given context. A good generator usually relies on several factors:
 \begin{itemize}
-  \item \textbf{adequacy} (a sentence that is ambiguous or not contains communicates meaning in the input, is \textbf{not} adequate.)  
+  \item \textbf{adequacy} (a sentence that is ambiguous or not contains communicates meaning in the input, is \textbf{not} adequate)  
   \item \textbf{fluency} (syntactic correctness)
+  \item \textbf{repetition} (self-repetition across utterances and with utterances, repeating the conversational partner)
   \item \textbf{readability} (efficacy in context)
-  \item \textbf{variation} (there are 2 basic forms of variation: \textit{word choice variation} and \textit{word order variation} for enriching speech.)
+  \item \textbf{variation} (there are 2 basic forms of variation: \textit{word choice variation} and \textit{word order variation} for enriching speech)
 \end{itemize}
 An example \ref{tab:var_example} shows all types of variation, but sometimes variation can be syntactically incorrect or unclear, what you can see in the forth sentence. In fifth sentnecne a variation changed the meaning of part of the sentence. In addition, the variation may add or remove meaning possibilities.
 
@@ -225,9 +226,9 @@ If a sentnence is ambigous and it's does not express the meaning of the input, t
 \end{table}
 
 \section{Datasets for NLG}
-A good corpus is very important for successful training of Natural Language Generation model. Quality is more important for training data than the quantity of data points. Unfortunately, there are not a lot of datasets available for training NLG models, due to the high cost of creating quality data sets. Dialogue systems require training data in the format of people text conversation, non-fiction or movie reviews are not suitable for this. Large volumes of training data improves the decision-making ability of NLG model. Fortunately, there is a lot more training data available in English than in Japanese.
+A good corpus is very important for successful training of Natural Language Generation model. Dialogue systems require training data in the format of people text conversation, for example, non-fiction or movie reviews are not suitable for this. Large volumes of training data improves the decision-making ability of NLG model, so those models can use it to figure out patterns. Quality is more important for training data than the quantity of data points. Unfortunately, there are not a lot of datasets available for training NLG models, due to the high cost of creating quality datasets. 
 
-In my bachelor thesis I will use 2 types of dataset. The first one is data from Twitter, but they are without context. Example of these data you can see in example \ref{tab:twitter_chat}. The second one is data from Persona chat. This dataset consists of a description of a person and a small dialogue with him. Example of Persona chat you can see in example \ref{tab:persona_chat}.
+In my bachelor thesis I am using 2 types of dataset. The first one contains message-response pairs from Twitter. Example of these data you can see in example \ref{tab:twitter_chat}. The second one is PersonaChat. This corpus is a chitchat dialogue task involving two participants. Dataset consists of a persona (short collection of personal traits) and a small dialogue to get to know each other by chatting naturally using their designated personas, for 6–8 turns. Example of PersonaChat you can see in example \ref{tab:persona_chat}.
 
 
 \begin{table}[t]
@@ -245,7 +246,7 @@ In my bachelor thesis I will use 2 types of dataset. The first one is data from 
  Person 2 & yea you right. but we do live in a world where republicans will harass obama about a birth certificate but won't say \\
  \hline
  \end{tabular}
- \caption{The Twitter chat example}
+ \caption{The example of Twitter message-response pairs}
 \label{tab:twitter_chat}
 \end{table}
 
@@ -292,7 +293,7 @@ In my bachelor thesis I will use 2 types of dataset. The first one is data from 
  Person 2 & if i have time outside of hunting and remodeling homes. which is not much! \\
  \hline 
  \end{tabular}
- \caption{The example of 1 conversation from the Persona chat}
+ \caption{The example of 1 conversation from the PersonaChat}
 \label{tab:persona_chat}
 \end{table}
 

@@ -131,7 +131,7 @@ information in a table. More information you can find in \cite{applied_nlg}.
 
 \subsection{Corpus-based/Dynamic approach}
 Corpus-based dominates the NLG community, special in the case of open-domain tasks, where it is almost impossible to hand-craft the templates for all possible combinations of semantic units and their respective surface realization.
-In corpus-based systems include statistical and machine learning approaches. 
+Corpus-based systems include statistical and machine learning approaches to resolve it. 
 
 One of the first approaches in corpus-based methods was \textbf{Dynamic Sentence Generation}, that dynamically creates sentences from representations of the meaning to be conveyed by the sentence and/or its desired linguistic structure. It allows do not write code for every boundary case and includes aggregation, reference, ordering and connectives to optimise sentences.
 
@@ -228,8 +228,10 @@ If a sentnence is ambigous and it's does not express the meaning of the input, t
 \section{Datasets for NLG}
 A good corpus is very important for successful training of Natural Language Generation model. Dialogue systems require training data in the format of people text conversation, for example, non-fiction or movie reviews are not suitable for this. Large volumes of training data improves the decision-making ability of NLG model, so those models can use it to figure out patterns. Quality is more important for training data than the quantity of data points. Unfortunately, there are not a lot of datasets available for training NLG models, due to the high cost of creating quality datasets. 
 
-In my bachelor thesis I am using 2 types of dataset. The first one contains message-response pairs from Twitter. Example of these data you can see in example \ref{tab:twitter_chat}. The second one is PersonaChat. This corpus is a chitchat dialogue task involving two participants. Dataset consists of a persona (short collection of personal traits) and a small dialogue to get to know each other by chatting naturally using their designated personas, for 6–8 turns. Example of PersonaChat you can see in example \ref{tab:persona_chat}.
+In my bachelor thesis I am using 2 different dataset (Twitter data and Persona-Chat). 
 
+\subsection{Twitter}
+Twitter dataset contains message-response pairs from Twitter. Example of these data you can see in example \ref{tab:twitter_chat}. 
 
 \begin{table}[t]
 \centering
@@ -250,54 +252,23 @@ In my bachelor thesis I am using 2 types of dataset. The first one contains mess
 \label{tab:twitter_chat}
 \end{table}
 
-\begin{table}[t]
-\centering
- \begin{tabular}{|p{3cm}|p{8cm}|} 
- \hline
- \multicolumn{2}{|c|}{Example} \\
- \hline
- your persona: & i like to remodel homes. \\ 
- \hline
- your persona: & i like to go hunting. \\
- \hline
- your persona: & i like to shoot a bow. \\
- \hline
- your persona: & my favorite holiday is halloween. \\
- \hline
- Person 1 & hi, how are you doing? i'm getting ready to do some cheetah chasing to stay in shape. \\
- \hline
- Person 2 & you must be very fast. hunting is one of my favorite hobbies. \\
- \hline
- Person 1 & i am! for my hobby i like to do canning or some whittling. \\ 
- \hline
- Person 2 & i also remodel homes when i am not out bow hunting. \\
- \hline
- Person 1 & that's neat. when i was in high school i placed 6th in 100m dash! \\
- \hline
- Person 2 & that's awesome. do you have a favorite season or time of year? \\
- \hline
- Person 1 & i do not. but i do have a favorite meat since that is all i eat exclusively. \\
- \hline
- Person 2 & what is your favorite meat to eat? \\
- \hline
- Person 1 & i would have to say its prime rib. do you have any favorite foods? \\
- \hline 
- Person 2 & i like chicken or macaroni and cheese. \\
- \hline 
- Person 1 & do you have anything planned for today? i think i am going to do some canning. \\
- \hline 
- Person 2 & i am going to watch football. what are you canning? \\
- \hline 
- Person 1 & i think i will can some jam. do you also play footfall for fun? \\
- \hline 
- Person 2 & if i have time outside of hunting and remodeling homes. which is not much! \\
- \hline 
- \end{tabular}
- \caption{The example of 1 conversation from the PersonaChat}
-\label{tab:persona_chat}
-\end{table}
+\subsection{Persona-Chat}
+Persona-Chat dataset consists of small conversations between 2 crowdworkers from Amazon Mechanical Turk who were randomly paired and asked to act the part of a given provided persona (randomly assigned, and created by another set of crowdworkers). The paired workers were asked to chat naturally and to get to know each other during the conversation. The aim of the Persona-Chat dataset is to produce engaging convesations and more personal chitchat dialogues.  The data collection consists of persona chat (each dialogue has 6-8 turns), personas (set of 1155 possible personas, each consisting of at least 5 profile sentences), revised personas to avoid word overlap, because crowdworkers sometimes could repeat profile information in a chat(example you can see in the Figure \ref{revised_persona}). In turn-based dialogue each message consists of a maximum of 15 words. Example of Persona-Chat dialogue you can see in Figure \ref{persona_chat}. 
 
-\chapter{Base model}
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.9\textwidth]{figures/persona.png}
+  \caption{Example of original and revised personas \cite{persona_chat}}
+  \label{revised_persona}
+\end{figure}
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.9\textwidth]{figures/persona_chat.png}
+  \caption{Example dialogue from the Persona-Chat dataset \cite{persona_chat}}
+  \label{persona_chat}
+\end{figure}
+
 
 \chapter{Other}
 

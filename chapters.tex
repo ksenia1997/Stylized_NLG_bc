@@ -2,9 +2,11 @@
 //TODO Write what is NLP
 
 \chapter{Dialogue systems}\label{dialogue systems}
-Dialogue system is a computer system to communicate with a human. Nowadays you meet dialog systems everywhere. A lot of devices have incorporated goal-oriented spoken dialogue systems, such as  Yandex’s Alisa,  Apple’s Siri, Microsoft’s Cortana, Amazon Alexa, and Google Assistant. Dialogue systems are also used in cars (hands-free car-specific functions, Android Auto, Apple CarPlay, vendor-specific solutions), web (search assistants (IKEA), Facebook Messenger and Telegram chatbots), robots, computer games, research systems (skylar.speech.cs.cmu.edu) etc, because a conversation is a natural way for people to get information.
+Dialogue system is a computer system to communicate with a human. Nowadays you meet dialog systems everywhere. A lot of devices have incorporated goal-oriented spoken dialogue systems, such as  Yandex’s Alisa,  Apple’s Siri, Microsoft’s Cortana, Amazon Alexa, and Google Assistant. Dialogue systems are also used in cars (hands-free car-specific functions, Android Auto, Apple CarPlay, vendor-specific solutions), web (search assistants, chatbots), robots, computer games etc, because a conversation is a natural way for people to get information.
 
-\textbf{Basic Dialogue System Types}:
+\section{Components of Dialogue Systems}
+This section provides a brief description of the Dialogue Systems types, domains, modes, architecture and dialogue initiative.
+\subsection{Basic Dialogue System Types}
 \begin{itemize}
   \item Task-oriented 
     \begin{itemize}
@@ -17,9 +19,8 @@ Dialogue system is a computer system to communicate with a human. Nowadays you m
     \end{itemize}    
 \end{itemize}
 
-\textbf{Communication Domains}:
-
-"\textbf{Domain}" is a conversation topic or an area of interest
+\subsection{Communication Domains}
+"\textbf{Domain}" is a conversation topic or an area of interest.
 \begin{itemize}
   \item Single/Closed-domain is one well-defined area
   \item Multi-domain is joining several single-domain systems
@@ -27,7 +28,7 @@ Dialogue system is a computer system to communicate with a human. Nowadays you m
 \end{itemize}
 
 
-Exists several \textbf{modes of communication}:
+\subsection{Communication modes}
 \begin{itemize}
   \item Text
   \item Voice
@@ -38,7 +39,7 @@ Exists several \textbf{modes of communication}:
     \end{itemize}
 \end{itemize}
 
-\textbf{Dialogue initiative}:
+\subsection{Dialogue initiative}
 \begin{itemize}
   \item system-initiative
     \begin{itemize}
@@ -57,7 +58,8 @@ Exists several \textbf{modes of communication}:
     \end{itemize}
 \end{itemize}
 
-\textbf{Dialogue system architecture} is illustrated in Figure \ref{ds architecture}. This architecture consists from Natural Language Understanding (NLU), dialogue management (DM), and Natural Language Generation (NLG).
+\subsection{Dialogue system architecture} 
+Dialogue system architecture is illustrated in Figure \ref{ds architecture}. This architecture consists from Natural Language Understanding (NLU), dialogue management (DM), and Natural Language Generation (NLG).
 
 \textbf{NLU} extracts the meaning from the user utterance and converts into a structured semantic representation. Natural Language Understanding traditionally consists of domain identification and intent prediction, which are framed as utterance classification problems, and slot filling, framed as a sequence tagging task.
 
@@ -72,7 +74,7 @@ Exists several \textbf{modes of communication}:
 \end{figure}
 
 \chapter{Natural Language Generation}\label{nlg}
-Natural Language Generation is a subsection of Natural Language Processing (NLP). NLG uses different methods and tricks to convert data to human language.
+Natural Language Generation is a subsection of Natural Language Processing (NLP).
 
 \section{Architecture of NLG}
   Reiter and Dale in the article \cite{applied_nlg} proposed architecture splitted into 3 stages, which is illustrated in Figure \ref{nlg architecture}. 
@@ -88,6 +90,7 @@ This pipeline shows the milestones of natural language generation, however, spec
 NLG approaches can be grouped into two categories, one focuses on generating text using templates or rules (linguistic) methods, the other uses corpus-based statistical/dynamic methods, where \textbf{corpus} is a collection of texts.
 
 \section{Categories of Natural Language Generation approaches}
+This section describes categories of NLG. More information you can find in \cite{stochastic_language_generation_ds} \cite{survey_on_ds} \cite{data_driven_nlg}.
 
 \subsection{Template-based approach} 
 Template-based systems map their non-linguistic input directly to the linguistic surface structure. This linguistic structure may contain gaps. Well-formed outputs does not cointain gaps.
@@ -143,14 +146,22 @@ Corpus-based models have some advantages: they have ability to generate more pro
 \subsubsection{Disadvantages of corpus-based approach}
 Unfortunately corpus-based systems have some disadvantages. It is necessary to have a good corpus, it should contain a large amount of data and on a variety of topics to get a sensible output. Even if you have a good corpus, process of text generation is not fully controlled and the output can be grammatically incorrect.
 
-More information you can find in \cite{stochastic_language_generation_ds} \cite{survey_on_ds} \cite{data_driven_nlg}.
 
 \section{Model components for Natural Language Generation}
 NLG evolution from templates to dynamic generation of sentences took a lot of time and models developed along with it. Corpus-based generation uses a generative probabilistic model what can be implemented in many ways.
 
-One of the first model's implementation was \textbf{Markov chain}. It is a stochastic model, that is used to describe the next event in a sequence given the previous event only by probabilistic weighting. It does not track all the previous states in a sequence to conclude what is the next possible state. In our case state is an n-gram(contiguous sequence of n items from text or speech).
+\subsection{Markov Chain}
+Markov chain is one of the first model's implementation in NLG. It is a stochastic model, that is used to describe the next event in a sequence given the previous event only by probabilistic weighting. It does not track all the previous states in a sequence to conclude what is the next possible state. In our case state is an n-gram(contiguous sequence of n items from text or speech). Markov chain is shown in \ref{markov_chain}.
 
-The next model, what is used in NLG, is \textbf{Recurrent neural network (RNN)}. Neural networks are computing systems that are inspired by biological neural networks. A "neuron" is a mathematical function that classifies and collects information according to a specific architecture. A neural network contains layers of interconnected "neurons". RNN takes series of input with no predetermined limit on size. Recurrent neural network passes each item of the sequence through a feedforward network and stores the information from the previous step. In each iteration this model calculates the probability of the next item with using information in the memory.
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.3\textwidth]{figures/MarkovChain.png}
+  \caption{Markov chain}
+  \label{markov_chain}
+\end{figure}
+
+\subsection{Recurrent neural network (RNN)}
+Neural networks are computing systems that are inspired by biological neural networks. A "neuron" is a mathematical function that classifies and collects information according to a specific architecture. A neural network contains layers of interconnected "neurons". RNN takes series of input with no predetermined limit on size. Recurrent neural network passes each item of the sequence through a feedforward network and stores the information from the previous step. In each iteration this model calculates the probability of the next item with using information in the memory.
 
 The architecture of RNN is illustrated in Figure \ref{rnn}, where coefficient \textbf{h} is a hidden layer, \textbf{x} is an input and \textbf{y} is an output. Coefficient \textbf{w} is a weight, what is transformed to produce a sensible output.
 
@@ -166,7 +177,8 @@ Nowadays RNN networks almost are not used in NLG, because it has problems with v
 \end{figure}
 
 
-\textbf{LSTM} networks are a special kind of RNN, capable of learning long-term dependencies. All recurrent neural networks have the form of a chain of repeating modules of neural network. LSTM network also has this chain structure, but the repeating module has a different structure. 
+\subsection{Long short-term memory (LSTM)} 
+LSTM networks are a special kind of RNN, capable of learning long-term dependencies. All recurrent neural networks have the form of a chain of repeating modules of neural network. LSTM network also has this chain structure, but the repeating module has a different structure. 
 
 In Figure \ref{lstm} each line carries an entire vector from the output of one node to the inputs of others. The circles represent pointwise operations, while rectangles are learned neural network layers. Lines merging denote concatenation, while a line forking denote its content being copied and the copies going to different locations.
 
@@ -180,7 +192,8 @@ This model resolved a problem with vanishing gradient, but still the capacity of
 \end{figure}
 
 
-\textbf{Transformer} is a relatively new architecture, which proposes a "self-attention mechanism". This model was introduced in the paper "Attention is all you need" \cite{transformer} in 2017. The advantage of this model is a constant number of operations, which simplifies the parallelization of processes. The Transformer uses the representation of all words in context without compressing all information into a single fixed-length representation that allows the system to handle longer sentences without the skyrocketing of computational requirements. 
+\subsection{Transformer} 
+Transformer is a relatively new architecture, which proposes a "self-attention mechanism". This model was introduced in the paper "Attention is all you need" \cite{transformer} in 2017. The advantage of this model is a constant number of operations, which simplifies the parallelization of processes. The Transformer uses the representation of all words in context without compressing all information into a single fixed-length representation that allows the system to handle longer sentences without the skyrocketing of computational requirements. 
 
 The architecture of the Transformer is illustrated in Figure \ref{transformer}. The Transformer consists of a stack of encoders (on the left) for processing inputs of any length and another set of decoders (on the right) to output the generated sentences. The inputs and output are first embedded into an n-dimensional space since we cannot use strings directly. The Transformer cannot remember how sequences are fed into a model, because of it positions are added to the embedded representation (n-dimensional vector) of each word.
 
@@ -195,14 +208,12 @@ The architecture of the Transformer is illustrated in Figure \ref{transformer}. 
 The NLG component converts an abstract dialogue action into natural language surface utterances. As noticed in \cite{generator_problems}, the main task of NLG is to select, inflect and order words to communicate the input meaning as completely, clearly and fluently as possible in context. That's why it is necessary to control not only correctness of output but also if output is appropriate or felicitous in a given context. A good generator usually relies on several factors:
 \begin{itemize}
   \item \textbf{adequacy} (a sentence that is ambiguous or not contains communicates meaning in the input, is \textbf{not} adequate)  
-  \item \textbf{fluency} (syntactic correctness)
+  \item \textbf{syntactic correctness} 
   \item \textbf{repetition} (self-repetition across utterances and with utterances, repeating the conversational partner)
-  \item \textbf{readability} (efficacy in context)
+  \item \textbf{response-relatedness} (efficacy in context)
   \item \textbf{variation} (there are 2 basic forms of variation: \textit{word choice variation} and \textit{word order variation} for enriching speech)
 \end{itemize}
-An example \ref{tab:var_example} shows all types of variation, but sometimes variation can be syntactically incorrect or unclear, what you can see in the forth sentence. In fifth sentnecne a variation changed the meaning of part of the sentence. In addition, the variation may add or remove meaning possibilities.
-
-If a sentnence is ambigous and it's does not express the meaning of the input, that means that the sentence is not adequate. Sentences that are both adequate and fluent may still not be adequate or fluent in a particular context, so they are not readable. That's why it is very important to have all factors in generator.
+An example \ref{tab:var_example} shows all types of variation. Sometimes this factor can be syntactically incorrect or unclear, what you can see in the forth sentence. In fifth sentnecne a variation changed the meaning of part of the sentence. In addition, the variation may add or remove meaning possibilities.
 
 \begin{table}[t]
 \centering
@@ -225,8 +236,51 @@ If a sentnence is ambigous and it's does not express the meaning of the input, t
 \label{tab:var_example}
 \end{table}
 
-\section{Datasets for NLG}
-A good corpus is very important for successful training of Natural Language Generation model. Dialogue systems require training data in the format of people text conversation, for example, non-fiction or movie reviews are not suitable for this. Large volumes of training data improves the decision-making ability of NLG model, so those models can use it to figure out patterns. Quality is more important for training data than the quantity of data points. Unfortunately, there are not a lot of datasets available for training NLG models, due to the high cost of creating quality datasets. 
+The table \ref{tab:nlg_problems_example} presents examples of NLG problems that were described above. Sentences 1 and 2 in examples of problems of adequacy show that a sentence can be grammatically and syntactically composed correctly, but without giving any meaning. 
+
+All of these factors influence success of NLG evaluation.  
+
+\begin{table}[t]
+\centering
+ \begin{tabular}{|p{0.5cm}|p{8cm}|} 
+ \hline
+ \multicolumn{2}{|c|}{Problems of syntactic correctness} \\
+ \hline
+ 1 & They IS going to school. \\ 
+ \hline
+ 2 & It depends AT you. \\
+ \hline
+ \multicolumn{2}{|c|}{Problems of response-relatedness} \\
+ \hline
+ 1 & -Do you go get coffee often? 
+
+    -I am a musician. \\
+ \hline
+ \multicolumn{2}{|c|}{Problems of repetition} \\
+ \hline
+ 1 & -Yes, I'm studying law at the moment.
+
+     - Good.
+
+     - I like playing the piano.
+
+     - Good. \\
+ \hline
+ \multicolumn{2}{|c|}{Problems of adequacy} \\
+ \hline
+ 1 & More phones have games on them than this one. \\
+ \hline
+ 2 & Why a mouse when it spins? \\
+ \hline
+ \end{tabular}
+ \caption{The example of NLG problems}
+\label{tab:nlg_problems_example}
+\end{table}
+
+\section{Evaluation methods of NLG success}
+
+\chapter{Datasets for Natural Language Generation}
+A good corpus is very important for successful Natural Language Generation. Dialogue systems require training data in the format of people text conversation, for example, non-fiction or movie reviews are not suitable for this. Large volumes of training data improves the decision-making ability of NLG model, so those models can use it to figure out patterns. Quality is more important for training data than the quantity of data points. Unfortunately, there are not a lot of datasets available for training NLG models, due to the high cost of creating quality datasets. 
 
 In my bachelor thesis I am using 2 different dataset (Twitter data and Persona-Chat). 
 

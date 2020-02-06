@@ -236,7 +236,7 @@ An example \ref{tab:var_example} shows all types of variation. Sometimes this fa
 \label{tab:var_example}
 \end{table}
 
-The table \ref{tab:nlg_problems_example} presents examples of NLG problems that were described above. Sentences 1 and 2 in examples of problems of adequacy show that a sentence can be grammatically and syntactically composed correctly, but without giving any meaning. 
+The table \ref{tab:nlg_problems_example} presents examples of NLG problems that were described above. Sentences 1 and 2 in examples of problems of adequacy show that a sentence can be grammatically and syntactically composed correctly, but without giving any meaning. In example of response-relatedness the answer to the question does not make a sense and it spoils the impression of the conversation. A communication will be boring if NLG model has problems with repetition.
 
 All of these factors influence success of NLG evaluation.  
 
@@ -285,7 +285,7 @@ A good corpus is very important for successful Natural Language Generation. Dial
 In my bachelor thesis I am using 2 different dataset (Twitter data and Persona-Chat). 
 
 \subsection{Twitter}
-Twitter dataset contains message-response pairs from Twitter. Example of these data you can see in example \ref{tab:twitter_chat}. 
+Twitter dataset contains message-response pairs from Twitter. Example of these data you can see in the Table \ref{tab:twitter_chat}. 
 
 \begin{table}[t]
 \centering
@@ -307,7 +307,36 @@ Twitter dataset contains message-response pairs from Twitter. Example of these d
 \end{table}
 
 \subsection{Persona-Chat}
-Persona-Chat dataset consists of small conversations between 2 crowdworkers from Amazon Mechanical Turk who were randomly paired and asked to act the part of a given provided persona (randomly assigned, and created by another set of crowdworkers). The paired workers were asked to chat naturally and to get to know each other during the conversation. The aim of the Persona-Chat dataset is to produce engaging convesations and more personal chitchat dialogues.  The data collection consists of persona chat (each dialogue has 6-8 turns), personas (set of 1155 possible personas, each consisting of at least 5 profile sentences), revised personas to avoid word overlap, because crowdworkers sometimes could repeat profile information in a chat(example you can see in the Figure \ref{revised_persona}). In turn-based dialogue each message consists of a maximum of 15 words. Example of Persona-Chat dialogue you can see in Figure \ref{persona_chat}. 
+Persona-Chat models normal conversation when 2 people meet for the first meet and try to get know each other better. The aim of the dialogue is to learn about interests of another person, find common ground and discuss their hobbies. The task involves both asking and answering questions. 
+
+Persona-Chat dataset consists of small conversations between 2 crowdworkers from Amazon Mechanical Turk who were randomly paired and asked to act the part of a given provided persona (randomly assigned, and created by another set of crowdworkers). The data collection consists of persona chat (each dialogue has 6-8 turns), personas (set of 1155 possible personas, each consisting of at least 5 profile sentences), revised personas to avoid word overlap, because crowdworkers sometimes could repeat profile information in a chat(example you can see in the Figure \ref{revised_persona}). In turn-based dialogue each message consists of a maximum of 15 words. All statistics are presented in the Table \ref{tab:persona_chat} Example of Persona-Chat dialogue you can see in Figure \ref{persona_chat}. 
+
+\begin{table}[t]
+\centering
+  \begin{tabular}{|p{8cm}|p{4cm}|} 
+  \hline
+  Average length of  your persona description: & 6.331842242600462 \\
+  \hline
+  Average length of partner's persona description: & 6.321163335493196 \\
+  \hline
+  Average length of the first person's utterances: & 11.418615621053272 \\
+  \hline
+  Average length of the second person's utterances: & 11.929411585690591 \\
+  \hline
+  Number of your persona description's sentences: & 40239 \\
+  \hline
+  Number of partner's  persona description's sentences: & 40126 \\
+  \hline
+  Number of the first person's utterances: & 65719 \\
+  \hline
+  Number of the second person's utterances:  & 65719 \\
+  \hline
+  Number of dialogues & 8938 \\
+  \hline
+  \end{tabular}
+  \caption{Persona-Chat statistics}
+\label{tab:persona_chat}
+\end{table}
 
 \begin{figure}[hbt]
   \centering
@@ -323,6 +352,33 @@ Persona-Chat dataset consists of small conversations between 2 crowdworkers from
   \label{persona_chat}
 \end{figure}
 
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.6\textwidth]{figures/persona_desc.png}
+  \caption{Histogram of your persona description lengths}
+  \label{histogram_persona_desc}
+\end{figure}
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.6\textwidth]{figures/partner_desc.png}
+  \caption{Histogram of partner's persona description lengths}
+  \label{histogram_partner_desc}
+\end{figure}
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.6\textwidth]{figures/uttr1_length.png}
+  \caption{Histogram of utterances' lengths of the first person}
+  \label{histogram_uttr1_length}
+\end{figure}
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.6\textwidth]{figures/uttr2_length.png}
+  \caption{Histogram of utterances' lengths of the second person}
+  \label{histogram_uttr2_length}
+\end{figure}
 
 \chapter{Other}
 

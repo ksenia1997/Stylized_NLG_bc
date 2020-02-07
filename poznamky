@@ -1,0 +1,39 @@
+
+
+https://www.aclweb.org/anthology/W16-3649.pdf
+There are a variety of methods to generate responses for nontask-oriented systems, such as machine translation
+(Ritter et al., 2011), retrieval-based response selection (Banchs and Li, 2012), and sequence-tosequence recurrent neural network (Vinyals and
+Le, 2015). However, these systems still produce utterances that are incoherent or inappropriate from time to time. 
+
+
+
+https://www.aclweb.org/anthology/I17-5003.pdf
+4 Social Chat Bots
+Social bots are of growing importance in facilitating smooth interaction between humans and
+their electronic devices. Recently, researcher have
+begun to explore data-driven generation of conversational responses within the framework of
+nerual machine translation (NMT) in the form
+of encoder-decoder or seq2seq models (Sordoni
+et al., 2015; Vinyals and Le, 2015; Li et al.,
+2016a), as illustrated in Figure 2.
+However, the generated responses are often too
+general to carry meaningful information, such as
+“I don’t know.”, which can serve as a response to
+any user questions. A mutual information based
+model was proposed to address the issue, a mutual information model is proposed by Li et al.
+(2016a), and is later improved by using deep reinforcement learning (Li et al., 2016c). Furthermore, Li et al. (2016b) presented a persona-based
+model to address the issue of speaker consistency
+in neural response generation.
+Although task-oriented dialogue systems and
+social bots are originally developed for different
+purposes, there is a trend of combining both as
+a step towards building an open-domain dialogue
+agent.
+For example, on the one hand, Ghazvininejad
+et al. (2017) presented a fully data-driven and
+knowledge-grounded neural conversation model
+aimed at producing more contentful responses
+without slot filling. On the other hand, Zhao et al.
+(2017) proposed a task-oriented dialogue agented
+based on the encoder-decoder model with chatting
+capability.

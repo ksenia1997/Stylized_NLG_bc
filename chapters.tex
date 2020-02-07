@@ -1,67 +1,45 @@
 \chapter{Introduction}\label{introduction}
-Dialogue system or conversational agent is a computer system which interacts with a human in natural language. A lot of devices have incorporated goal-oriented or task-oriented dialogue systems, such as  Yandex’s Alisa,  Apple’s Siri, Microsoft’s Cortana, Amazon Alexa, and Google Assistant. Dialogue systems are also used in cars (hands-free car-specific functions, Android Auto, Apple CarPlay, vendor-specific solutions), web (search assistants, chatbots), robots, computer games etc, because a conversation is a natural way for people to get information. Goal-oriented conversational agents use communication with users to help complete a task, these agents such as finding a restaurant, appliances control, booking flights etc. 
-
-The ability to communicate freely in a natural language is one of the hallmarks of human intelligence, and is likely one of the requirements for true artificial intelligence. There is a relatively narrow range of correct outputs given the input in goal-oriented dialogue systems. Because of it many researches work on open-ended (i.e. there is a huge range of appropriate outputs given the input) chatbots to explore this aspect of intelligence. Chitchat (non-task-oriented) dialogues are systems designed to mimic the unstructured human-human conversation.
-
-Natural Language Generation (NLG) is a part of artificial inteligence, which goal is to imitate human behaviour.
+Dialogue system (i.e. conversational agent) is a computer system which interacts with a human in natural language. These systems are used in cars (hands-free car-specific functions, Android Auto, Apple CarPlay, vendor-specific solutions), web, robots, computer games etc, because a conversation is a natural way for people to get information. 
 
 
+Natural Language Generation (NLG) is an important component of dialogue systems, which has a significant impact on system quality, because NLG goal is to imitate human behaviour. The conversational agent can be classified into task-oriented (i.e. goal-oriented), which focused on completing a certain tasks and adhere to a determined script for each stage of the conversation, and non-task-oriented, which do not have a stated goal to work towards. A lot of devices have incorporated goal-oriented dialogue systems, such as Yandex’s Alisa, Apple’s Siri, Microsoft’s Cortana, Amazon Alexa, and Google Assistant. Goal-oriented dialogue acts make conversations more interpetable and controllable. On the other hand, they also hinder scaling such systems to new domains (i.e. conversation topic). To escape from the limitation, recent interest of research started moving to non-task-oriented chitchat dialogues (chatbots). Chitchat dialogues are systems designed to mimic the unstructured human-human conversation. This kind of conversational agent often have an entertainment value, such as Cleverbot, Microsoft's XiaoIce system etc. Chatbots have also been used for testing theories of psychological counseling.
 
-\chapter{NLG problems in dialogue systems}\label{dialogue systems}
-Dialogue system is a computer system to communicate with a human. Nowadays you meet dialog systems everywhere. A lot of devices have incorporated goal-oriented spoken dialogue systems, such as  Yandex’s Alisa,  Apple’s Siri, Microsoft’s Cortana, Amazon Alexa, and Google Assistant. Dialogue systems are also used in cars (hands-free car-specific functions, Android Auto, Apple CarPlay, vendor-specific solutions), web (search assistants, chatbots), robots, computer games etc, because a conversation is a natural way for people to get information.
+The ability to communicate freely in a natural language is one of the hallmarks of human intelligence, and is likely one of the requirements for true artificial intelligence. Many researches work on open-ended (i.e. there is a huge range of appropriate outputs given the input) chitchat dialogues to explore this aspect of intelligence, because in goal-oriented dialogue systems there is a relatively narrow range of correct outputs given the input. 
+Creating a non-task-oriented agent is a challenge for researches, because there are a lot of topics of conversations as well as user reactions and responses to them. Such bots are not able to generate meaningful conversations. Their replies are often too generic, because non-specific responses sound quite natural (e.g. ``Ok, I see'', ``I don't know''). There are still a lot of problems in the Natural Language Generation, such as response-relatedness, semantic errors, repetition etc., which will be described in more detail in the chapture \ref{nlg_problems}. In human-human conversation not only these attributes are important, but also your partner's style of communication, what phrases he is using to make your dialogue more diverse and interesting, because it is unlikely that someone will want to communicate for a long time with a person who answers the same thing all the time.
 
-\section{Components of Dialogue Systems}
-This section provides a brief description of the Dialogue Systems types, domains, modes, architecture and dialogue initiative.
-\subsection{Basic Dialogue System Types}
-\begin{itemize}
-  \item Task-oriented 
-    \begin{itemize}
-      \item focused on completing a certain task(s)
-    \end{itemize}
-  \item Non-task-oriented
-    \begin{itemize}
-      \item chitchat
-    \end{itemize}    
-\end{itemize}
-
-\subsection{Communication Domains}
-"\textbf{Domain}" is a conversation topic or an area of interest.
-\begin{itemize}
-  \item Single/Closed-domain is one well-defined area
-  \item Multi-domain is joining several single-domain systems
-  \item Open-domain “responds to anything”
-\end{itemize}
+The main purpose of this thesis was to create NLG model, which will be able to generate text in different styles.  //TODO
 
 
-\subsection{Communication modes}
-\begin{itemize}
-  \item Text
-  \item Voice
-  \item Multimodal
-    \begin{itemize}
-      \item voice/text + graphics
-      \item additional modalities: video - gestures, mimics; touch
-    \end{itemize}
-\end{itemize}
+\chapter{NLG problems in dialogue systems}\label{nlg_problems}
+In a book \cite{alder2017handbook} Natural Language Generation is defined as ``the process by which thought is rendered into language''. NLG approaches can be grouped into two categories, one focuses on generating text using templates or (linguistic) rules, the other uses corpus-based statistical methods (corpora is a collection of texts) \cite{oh2002stochastic}.
 
-\subsection{Dialogue initiative}
-\begin{itemize}
-  \item system-initiative
-    \begin{itemize}
-      \item system asks questions, user must reply in oreder to progress
-      \item least natural
-      \item "form-filling" ("Hello, please enter your e-mail") 
-    \end{itemize}
-  \item user-initiative
-    \begin{itemize}
-      \item user asks, machine responds ("Siri, set the timer for 5 minutes")
-    \end{itemize}
-  \item mixed-initiative
-    \begin{itemize}
-      \item system and user both can ask and react to queries
-      \item most natural
-    \end{itemize}
-\end{itemize}
+\subsection{Template-based approach} 
+Until recently Natural Language Generation component of a dialog system used primarily hand-coded generation templates, which represented model sentences in a natural language mapped to a particular semantic content.
+The template-based system selects a proper response for the current conversation from a repository with response selection algorithms. Templates are often designed for a specific task in a given domain \cite{manishina2016data}. 
+
+//TODO Example 
+
+\subsubsection{Advantages of template-based approach}
+The output produced by this approach is likely to be grammatically correct and not contain unexpected generation errors. The process of sentence generation is fully controlled, these models are robust and reliable because they consist of clearly defined rules. 
+
+\subsubsection{Disadvantages of template-based approach}
+These models require time and human resources to deploy a real dialogue system, because templates are constructed manually, and the number of templates grows quickly (using different templates for singular and plural versions). These systems are not able to handle unknown inputs. Templates often sound unnatural due to their generic structures. Template-based systems cannot make variation in output, it is just concatenation of strings. This approach is not flexible, because it has limits to use templates in other domains. Template-based model is not able to learn and is not able to adapt to the user.
+
+\subsection{Corpus-based approach}
+Corpus-based system dominates the NLG community, special in the case of open-ended tasks, where it is almost impossible to hand-craft the templates for all possible combinations of semantic units. Corpus-based systems include statistical and machine learning approaches to resolve it \cite{rudnicky2002dialog}.
+
+One of the first approaches in corpus-based methods is \textbf{Dynamic Sentence Generation}, which dynamically creates sentences from representations of the meaning to be conveyed by the sentence and/or its desired linguistic structure. It allows do not write code for every boundary case and includes aggregation, reference, ordering and connectives to optimise sentences.
+
+Next level of corpus-based approaches is \textbf{Dynamic Document Creation}, what can produce relevant and well-structured document. 
+
+All these approaches use Language Model to generate sequences of texts. //TODO
+
+\subsubsection{Advantages of corpus-based approach}
+Corpus-based models have ability to generate more proper responses that could have never appeared in the corpus; it is possible to mimick the language of a real domain expert and use this models for open-domain dialogue systems; dynamic approach is able to learn and to handle unknown inputs, it is also has a lot of possible variations of output.
+
+\subsubsection{Disadvantages of corpus-based approach}
+It is necessary to have a corpus, which contains a large amount of data and on a variety of topics to get a sensible output. Even if you have the corpus, process of text generation is not fully controlled and the output can be incorrect or does not make a sence. This approach still has a lot of problems, what will be described in more detail in //TODO. 
+
 
 \subsection{Dialogue system architecture} 
 Dialogue system architecture is illustrated in Figure \ref{ds architecture}. This architecture consists from Natural Language Understanding (NLU), dialogue management (DM), and Natural Language Generation (NLG).
@@ -95,25 +73,9 @@ This pipeline shows the milestones of natural language generation, however, spec
 NLG approaches can be grouped into two categories, one focuses on generating text using templates or rules (linguistic) methods, the other uses corpus-based statistical/dynamic methods, where \textbf{corpus} is a collection of texts.
 
 \section{Categories of Natural Language Generation approaches}
-This section describes categories of NLG. More information you can find in \cite{stochastic_language_generation_ds} \cite{survey_on_ds} \cite{data_driven_nlg}.
+This section describes categories of NLG. More information you can find in \cite{rudnicky2002dialog} \cite{chen2017survey} \cite{manishina2016data}.
 
-\subsection{Template-based approach} 
-Template-based systems map their non-linguistic input directly to the linguistic surface structure. This linguistic structure may contain gaps. Well-formed outputs does not cointain gaps.
-The template-based system selects a proper response for the current conversation from a repository with response selection algorithms. 
 
-This approach has a long development way from simple gap-filling to word-level grammatical functions:
-
-\textbf{Gap-Filling Approach} is one of the oldest approaches, that can automatically fill gaps in text, that have a predefined structure, with a small amount of data retrieved from a spreadsheet row, database table entry, etc. This approach is a quite limited.
-
-\textbf{Scripts or Rules-Producing Text} is an approach, that expands basic gap-filling systems with general-purpose programming constructs via a scripting language or by using business rules. These systems still lack linguistic capabilities and cannot generate high-quality text reliably.
-
-\textbf{Word-Level Grammatical Functions} was adding to template-based systems to deal with morphology, morphophonology and orthography. These functions made it easier to generate grammatically correct texts and to write complex template systems.
-
-\subsubsection{Advantages of template-based systems}
-Template-based systems have a number of advantages: the output produced by this approach is likely to be grammatically correct and not contain unexpected generation errors; process of sentence generation is fully controlled; these models are robust and reliable because they consist of clearly defined rules.
-
-\subsubsection{Disadvantages of template-based systems}
-Despite all the above, template-based approach has some disadvantages. First of all, these models requires time and human resources to deploy a real dialogue system, because templates are constructed manually, and the number of templates grows quickly (using different templates for singular and plural versions); these systems are not able to handle unknown inputs; templates often sound unnatural due to their generic structures; template-based systems cannot make variation in output, it is just concatenation of strings; this approach is not flexible, because it has limits to use templates in other domains; and finally a template-based model is not able to learn and is not able to adapt to the user.
 
 \begin{table}[t]
 \centering
@@ -136,20 +98,6 @@ Despite all the above, template-based approach has some disadvantages. First of 
 
 The gaps represented by \textbf{[train]} and \textbf{[town]} in example \ref{tab:tb_example} are filled by looking up the relevant
 information in a table. More information you can find in \cite{applied_nlg}.
-
-\subsection{Corpus-based/Dynamic approach}
-Corpus-based dominates the NLG community, special in the case of open-domain tasks, where it is almost impossible to hand-craft the templates for all possible combinations of semantic units and their respective surface realization.
-Corpus-based systems include statistical and machine learning approaches to resolve it. 
-
-One of the first approaches in corpus-based methods was \textbf{Dynamic Sentence Generation}, that dynamically creates sentences from representations of the meaning to be conveyed by the sentence and/or its desired linguistic structure. It allows do not write code for every boundary case and includes aggregation, reference, ordering and connectives to optimise sentences.
-
-Next level of corpus-based approaches was \textbf{Dynamic Document Creation}, what can produce relevant and well-structured document. 
-
-\subsubsection{Advantages of corpus-based approach}
-Corpus-based models have some advantages: they have ability to generate more proper responses that could have never appeared in the corpus; it is possible to mimick the language of a real domain expert and use this models for open-domain dialogue systems; dynamic approach is able to learn and to handle unknown inputs, it is also has a lot of possible varioations of output.
-
-\subsubsection{Disadvantages of corpus-based approach}
-Unfortunately corpus-based systems have some disadvantages. It is necessary to have a good corpus, it should contain a large amount of data and on a variety of topics to get a sensible output. Even if you have a good corpus, process of text generation is not fully controlled and the output can be grammatically incorrect.
 
 
 \section{Model components for Natural Language Generation}
@@ -282,40 +230,13 @@ All of these factors influence success of NLG evaluation.
 \label{tab:nlg_problems_example}
 \end{table}
 
-\section{Evaluation methods of NLG success}
 
-\chapter{Datasets for Natural Language Generation}
+\chapter{Datasets and Evaluation methods}
 A good corpus is very important for successful Natural Language Generation. Dialogue systems require training data in the format of people text conversation, for example, non-fiction or movie reviews are not suitable for this. Large volumes of training data improves the decision-making ability of NLG model, so those models can use it to figure out patterns. Quality is more important for training data than the quantity of data points. Unfortunately, there are not a lot of datasets available for training NLG models, due to the high cost of creating quality datasets. 
 
 In my bachelor thesis I am using 2 different dataset (Twitter data and Persona-Chat). 
 
-\subsection{Twitter}
-Twitter dataset contains message-response pairs from Twitter. Example of these data you can see in the Table \ref{tab:twitter_chat}. 
-
-\begin{table}[t]
-\centering
- \begin{tabular}{|p{2cm}|p{8cm}|} 
- \hline
- \multicolumn{2}{|c|}{Example} \\
- \hline
- Person 1 & yeah i'm preparing myself to drop a lot on this man, but definitely need something reliable \\ 
- \hline
- Person 2 & yeah dude i would definitely consider a daniel defence super reliable and they are just bad ass \\
- \hline
- Person 1 & besides if trump say his condolences it won't sound genuine, ex: (dwayne wade cousin) it will sound all political and petty \\
- \hline
- Person 2 & yea you right. but we do live in a world where republicans will harass obama about a birth certificate but won't say \\
- \hline
- \end{tabular}
- \caption{The example of Twitter message-response pairs}
-\label{tab:twitter_chat}
-\end{table}
-
 \subsection{Persona-Chat}
-Persona-Chat models normal conversation when 2 people meet for the first meet and try to get know each other better. The aim of the dialogue is to learn about interests of another person, find common ground and discuss their hobbies. The task involves both asking and answering questions. 
-
-Persona-Chat dataset consists of small conversations between 2 crowdworkers from Amazon Mechanical Turk who were randomly paired and asked to act the part of a given provided persona (randomly assigned, and created by another set of crowdworkers). The data collection consists of persona chat (each dialogue has 6-8 turns), personas (set of 1155 possible personas, each consisting of at least 5 profile sentences), revised personas to avoid word overlap, because crowdworkers sometimes could repeat profile information in a chat(example you can see in the Figure \ref{revised_persona}). In turn-based dialogue each message consists of a maximum of 15 words. All statistics are presented in the Table \ref{tab:persona_chat} Example of Persona-Chat dialogue you can see in Figure \ref{persona_chat}. 
-
 \begin{table}[t]
 \centering
   \begin{tabular}{|p{8cm}|p{4cm}|} 
@@ -345,16 +266,16 @@ Persona-Chat dataset consists of small conversations between 2 crowdworkers from
 
 \begin{figure}[hbt]
   \centering
-  \includegraphics[width=0.9\textwidth]{figures/persona.png}
-  \caption{Example of original and revised personas \cite{persona_chat}}
-  \label{revised_persona}
+  \includegraphics[width=0.9\textwidth]{figures/persona_chat.png}
+  \caption{Example dialogue from the Persona-Chat dataset \cite{persona_chat}}
+  \label{persona_chat}
 \end{figure}
 
 \begin{figure}[hbt]
   \centering
-  \includegraphics[width=0.9\textwidth]{figures/persona_chat.png}
-  \caption{Example dialogue from the Persona-Chat dataset \cite{persona_chat}}
-  \label{persona_chat}
+  \includegraphics[width=0.9\textwidth]{figures/persona.png}
+  \caption{Example of original and revised personas \cite{persona_chat}}
+  \label{revised_persona}
 \end{figure}
 
 \begin{figure}[hbt]
@@ -384,6 +305,33 @@ Persona-Chat dataset consists of small conversations between 2 crowdworkers from
   \caption{Histogram of utterances' lengths of the second person}
   \label{histogram_uttr2_length}
 \end{figure}
+
+Persona-Chat models normal conversation when 2 people meet for the first meet and try to get know each other better. The aim of the dialogue is to learn about interests of another person, find common ground and discuss their hobbies. The task involves both asking and answering questions. 
+
+Persona-Chat dataset consists of small conversations between 2 crowdworkers from Amazon Mechanical Turk who were randomly paired and asked to act the part of a given provided persona (randomly assigned, and created by another set of crowdworkers). The data collection consists of persona chat (each dialogue has 6-8 turns), personas (set of 1155 possible personas, each consisting of at least 5 profile sentences), revised personas to avoid word overlap, because crowdworkers sometimes could repeat profile information in a chat(example you can see in the Figure \ref{revised_persona}). In turn-based dialogue each message consists of a maximum of 15 words. All statistics are presented in the Table \ref{tab:persona_chat} Example of Persona-Chat dialogue you can see in Figure \ref{persona_chat}. 
+
+
+\subsection{Twitter}
+Twitter dataset contains message-response pairs from Twitter. Example of these data you can see in the Table \ref{tab:twitter_chat}. 
+
+\begin{table}[t]
+\centering
+ \begin{tabular}{|p{2cm}|p{8cm}|} 
+ \hline
+ \multicolumn{2}{|c|}{Example} \\
+ \hline
+ Person 1 & yeah i'm preparing myself to drop a lot on this man, but definitely need something reliable \\ 
+ \hline
+ Person 2 & yeah dude i would definitely consider a daniel defence super reliable and they are just bad ass \\
+ \hline
+ Person 1 & besides if trump say his condolences it won't sound genuine, ex: (dwayne wade cousin) it will sound all political and petty \\
+ \hline
+ Person 2 & yea you right. but we do live in a world where republicans will harass obama about a birth certificate but won't say \\
+ \hline
+ \end{tabular}
+ \caption{The example of Twitter message-response pairs}
+\label{tab:twitter_chat}
+\end{table}
 
 \chapter{Other}
 

@@ -13,11 +13,30 @@ The main purpose of this thesis was to create NLG model, which will be able to g
 \chapter{NLG problems in dialogue systems}\label{nlg_problems}
 In a book \cite{alder2017handbook} Natural Language Generation is defined as ``the process by which thought is rendered into language''. NLG approaches can be grouped into two categories, one focuses on generating text using templates or (linguistic) rules, the other uses corpus-based statistical methods (corpora is a collection of texts) \cite{oh2002stochastic}.
 
-\subsection{Template-based approach} 
+\section{Template-based approach} 
 Until recently Natural Language Generation component of a dialog system used primarily hand-coded generation templates, which represented model sentences in a natural language mapped to a particular semantic content.
 The template-based system selects a proper response for the current conversation from a repository with response selection algorithms. Templates are often designed for a specific task in a given domain \cite{manishina2016data}. 
+Example of template-based system is shown in the Table \ref{tab:tb_example}.
 
-//TODO Example 
+  \begin{table}[t]
+  \centering
+   \begin{tabular}{|c|} 
+   \hline
+   Example: \\
+   \hline
+   User's input: \\
+   ``I'm going to travel from Moscow on April 2.'' \\ 
+   \hline
+   Template: \\
+   What time would you like to travel from $\{departure\_city\}$ on $\{departure\_date\}?$ \\
+   \hline
+   Agent's output:\\
+   ``What time would you like to travel from Moscow on April 2?'' \\
+   \hline
+   \end{tabular}
+   \caption{The example of template-based approach.}
+  \label{tab:tb_example}
+  \end{table}
 
 \subsubsection{Advantages of template-based approach}
 The output produced by this approach is likely to be grammatically correct and not contain unexpected generation errors. The process of sentence generation is fully controlled, these models are robust and reliable because they consist of clearly defined rules. 
@@ -25,20 +44,66 @@ The output produced by this approach is likely to be grammatically correct and n
 \subsubsection{Disadvantages of template-based approach}
 These models require time and human resources to deploy a real dialogue system, because templates are constructed manually, and the number of templates grows quickly (using different templates for singular and plural versions). These systems are not able to handle unknown inputs. Templates often sound unnatural due to their generic structures. Template-based systems cannot make variation in output, it is just concatenation of strings. This approach is not flexible, because it has limits to use templates in other domains. Template-based model is not able to learn and is not able to adapt to the user.
 
-\subsection{Corpus-based approach}
+\section{Corpus-based approach}
 Corpus-based system dominates the NLG community, special in the case of open-ended tasks, where it is almost impossible to hand-craft the templates for all possible combinations of semantic units. Corpus-based systems include statistical and machine learning approaches to resolve it \cite{rudnicky2002dialog}.
 
 One of the first approaches in corpus-based methods is \textbf{Dynamic Sentence Generation}, which dynamically creates sentences from representations of the meaning to be conveyed by the sentence and/or its desired linguistic structure. It allows do not write code for every boundary case and includes aggregation, reference, ordering and connectives to optimise sentences.
 
 Next level of corpus-based approaches is \textbf{Dynamic Document Creation}, what can produce relevant and well-structured document. 
 
-All these approaches use Language Model to generate sequences of texts. //TODO
-
 \subsubsection{Advantages of corpus-based approach}
 Corpus-based models have ability to generate more proper responses that could have never appeared in the corpus; it is possible to mimick the language of a real domain expert and use this models for open-domain dialogue systems; dynamic approach is able to learn and to handle unknown inputs, it is also has a lot of possible variations of output.
 
 \subsubsection{Disadvantages of corpus-based approach}
 It is necessary to have a corpus, which contains a large amount of data and on a variety of topics to get a sensible output. Even if you have the corpus, process of text generation is not fully controlled and the output can be incorrect or does not make a sence. This approach still has a lot of problems, what will be described in more detail in //TODO. 
+
+\section{Language Models}
+In corpus-based system natural language generation uses \textbf{Language Models(LMs)} to generate sequences of texts. LM is a probabilistic model which learns to predict the probability of a sequence of words. The equation \ref{eq:LM} represents the language model, where $W$ is a sequence and $w_1, w_2, ..., w_n$ are words in this sequence. The language model provides a context for distinguishing words and phrases that sound the same. For example the phrases ``but her'' and  ``butter'' sound the same, but mean different things.
+
+\begin{equation} \label{eq:LM}
+P(W) = P(w_1, w_2, ..., w_n)
+\end{equation}
+
+The \textbf{Chain rule} (equation \ref{eq:CR}) is used to calculate the joint probability of a sentence by using the conditional probability (equation \ref{eq:CB}) of a word given previous words. 
+\begin{equation} \label{eq:CR}
+P(w_1, w_2,..., w_n) = \prod_{i}P(w_i|w_1, w_2,...,w_{i-1})
+\end{equation}
+
+\begin{equation} \label{eq:CB}
+P(A|B) = P(A \cap B) / P(B)
+\end{equation}
+In equation \ref{eq:CB} $P(A \cap B)$ is the probability that both events A and B occur.
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.8\textwidth]{figures/lm.png}
+  \caption{Example of a word prediction by using chain rule.}
+  \label{chain_rule}
+\end{figure}
+
+An example in the Figure \ref{chain_rule} shows how to predict probability of a word given previous words. A subsequence (context) may consist of a very large number of words and the likelihood that such subsequence is found in a corpus is very small. It is a main problem in language models, which is called \textbf{data sparsity}.
+
+Data sparsity is the phenomenon of not observing enough data in a corpus to model language accurately. The solution to resolve this issue is to make the assumption that the probability of a word depends only on the previous \textit{n} words and use \textbf{N-gram model} (N-gram is a sequence of N words).
+
+\begin{table}[t]
+  \centering
+   \begin{tabular}{|c|c|} 
+   \hline
+    Hi & 1-gram \\
+   \hline
+    New York & 2-gram \\
+   \hline
+   The Three Musketeers & 3-gram \\
+   \hline
+   She is studying IT & 4-gram \\
+   \hline
+   \end{tabular}
+   \caption{The example of N-grams.}
+  \label{tab:n_gram}
+\end{table}
+
+The n-gram ``She is studying IT'' from the Table \ref{tab:n_gram} does not occur as often in texts of corpus as n-grams ``Hi'', ``New York'' and ``The Three Musketeers''. Knowing a probability to the occurrence of an N-gram in a sequence of words can be useful, because it can help to decide which N-grams can be chunked together to from single entities (like ``New York'' chuncked together as one word). It can also help make next word predictions. For example, ``tea'' is more likely than ``ball'' in the phrase ``I would like to drink''.
+
 
 
 \subsection{Dialogue system architecture} 
@@ -75,26 +140,6 @@ NLG approaches can be grouped into two categories, one focuses on generating tex
 \section{Categories of Natural Language Generation approaches}
 This section describes categories of NLG. More information you can find in \cite{rudnicky2002dialog} \cite{chen2017survey} \cite{manishina2016data}.
 
-
-
-\begin{table}[t]
-\centering
- \begin{tabular}{|c|} 
- \hline
- Example: \\
- \hline
- "The 306 train leaves Aberdeen at 11:20 am" \\ 
- \hline
- Semantic representation: 
- $Departure(train_{306}, location_{abdn}, time_{1120})$ \\
- \hline
- Template: 
- [train] \textit{is leaving} [town] \textit{now} \\
- \hline
- \end{tabular}
- \caption{The example of gaps in the sentence.}
-\label{tab:tb_example}
-\end{table}
 
 The gaps represented by \textbf{[train]} and \textbf{[town]} in example \ref{tab:tb_example} are filled by looking up the relevant
 information in a table. More information you can find in \cite{applied_nlg}.

@@ -104,48 +104,97 @@ Data sparsity is the phenomenon of not observing enough data in a corpus to mode
 
 The n-gram ``She is studying IT'' from the Table \ref{tab:n_gram} does not occur as often in texts of corpus as n-grams ``Hi'', ``New York'' and ``The Three Musketeers''. Knowing a probability to the occurrence of an N-gram in a sequence of words can be useful, because it can help to decide which N-grams can be chunked together to from single entities (like ``New York'' chuncked together as one word). It can also help make next word predictions. For example, ``tea'' is more likely than ``ball'' in the phrase ``I would like to drink''.
 
+\section{Dialogue systems} 
+The ability to communicate with machines in a natural language is a long-standing dream of mankind. Today's dialogue systems often encounter criticism. There are many scientific works on creating more natural dialogue systems. Markus M. Berg defines a natural dialogue system in \cite{berg2014modelling} as ``a form of dialogue system that tries to improve usability and user satisfaction by imitating human behaviour''. It affects the features of human-to-human dialogue (for example, topic changes, sub-dialogues) and seeks to integrate them into dialogue systems for human interaction with the machine. Open-ended natural dialogue systems still have flaws in generating a response to the user.
+
+As noticed in \cite{stent2005evaluating}, the main task of NLG is to select, inflect and order words ``to communicate the input meaning'' as completely, clearly and fluently as possible in context. That's why it is necessary to control not only syntactic correctness of output but also if output is appropriate or felicitous in a given context. A good generator usually relies on several factors:
+\begin{itemize}
+  \item \textbf{adequacy} (a sentence that is ambiguous or not contains communicates meaning in the input, is \textbf{not} adequate (an example in the Table \ref{tab:adequacy_prob}))  
+  \item \textbf{syntactic correctness} (an example in the Table \ref{tab:syntactic_corr_prob})
+  \item \textbf{repetition} (self-repetition across utterances and with utterances, repeating the conversational partner (an example in the Table \ref{tab:repetition_prob}))
+  \item \textbf{response-relatedness} (efficacy in context (an example in the Table \ref{tab:response_relatedness_prob}))
+  \item \textbf{variation} (there are 2 basic forms of variation: \textit{word choice variation} and \textit{word order variation} for enriching speech)
+\end{itemize}
+
+\begin{table}[t]
+\centering
+ \begin{tabular}{|p{0.5cm}|p{8cm}|} 
+ \hline
+ 1 & More phones have games on them than this one. \\
+ \hline
+ 2 & Why a mouse when it spins? \\
+ \hline
+ \end{tabular}
+ \caption{A problem of adequacy shows that a response can be grammatically and syntactically composed correctly, but this sentence does not make sense.}
+\label{tab:adequacy_prob}
+\end{table}
+
+\begin{table}[t]
+\centering
+ \begin{tabular}{|p{0.5cm}|p{8cm}|} 
+ \hline
+ 1 & They IS going to school. \\ 
+ \hline
+ 2 & It depends AT you. \\
+ \hline
+ \end{tabular}
+ \caption{A problem of syntactic correctness.}
+\label{tab:syntactic_corr_prob}
+\end{table}
+
+\begin{table}[t]
+\centering
+ \begin{tabular}{|c|} 
+ \hline
+  -Yes, I'm studying law at the moment.\\
+  - Good. \\
+  - I like playing the piano. \\
+  - Good. \\
+ \hline
+ \end{tabular}
+ \caption{A problem of repetition makes conversation boring.}
+\label{tab:repetition_prob}
+\end{table}
+
+\begin{table}[t]
+\centering
+ \begin{tabular}{|c|} 
+ \hline
+ -Do you go get coffee often? \\
+ -I am a musician. \\
+ \hline
+ \end{tabular}
+ \caption{A problem of response-relatedness shows that the answer to the question does not make a sense in this context and it spoils the impression of the conversation.}
+\label{tab:response_relatedness_prob}
+\end{table}
+
+An example in the Table \ref{tab:var_example} shows all types of variation. Sometimes this factor can be syntactically incorrect or unclear, what you can see in the forth sentence. In fifth sentnecne a variation changed the meaning of part of the sentence. In addition, the variation may add or remove meaning possibilities.
+
+\begin{table}[t]
+\centering
+ \begin{tabular}{|p{0.5cm}|p{8cm}|} 
+ \hline
+ \# & Example \\
+ \hline
+ 1 & I bought movie tickets on Tuesday. \\ 
+ \hline
+ 2 & I got movie tickets on Tuesday. \\
+ \hline
+ 3 & On Tuesday I bought movie tickets. \\
+ \hline
+ 4 & On movie Tuesday tickets I bought. \\
+ \hline
+ 5 & I bought tickets for the Tuesday movie. \\ 
+ \hline
+ \end{tabular}
+ \caption{The example of sentences' variation.}
+\label{tab:var_example}
+\end{table}
+
+All of these factors influence success of NLG evaluation.  
 
 
-\subsection{Dialogue system architecture} 
-Dialogue system architecture is illustrated in Figure \ref{ds architecture}. This architecture consists from Natural Language Understanding (NLU), dialogue management (DM), and Natural Language Generation (NLG).
-
-\textbf{NLU} extracts the meaning from the user utterance and converts into a structured semantic representation. Natural Language Understanding traditionally consists of domain identification and intent prediction, which are framed as utterance classification problems, and slot filling, framed as a sequence tagging task.
-
-\textbf{DM} plays two roles,tracking the dialogue state and performing the dialogue policy (i.e., telling the agent how to act given the dialogue state.)
-
-\textbf{NLG} transforms structured data into natural language.\cite{open_domain_neural_ds}
-\begin{figure}[hbt]
-  \centering
-  \includegraphics[width=0.8\textwidth]{figures/ds_arcitecture.jpg}
-  \caption{Dialogue system architecture.}
-  \label{ds architecture}
-\end{figure}
-
-\chapter{Natural Language Generation}\label{nlg}
-Natural Language Generation is a subsection of Natural Language Processing (NLP).
-
-\section{Architecture of NLG}
-  Reiter and Dale in the article \cite{applied_nlg} proposed architecture splitted into 3 stages, which is illustrated in Figure \ref{nlg architecture}. 
-\begin{figure}[hbt]
-  \centering
-  \includegraphics[width=0.7\textwidth]{figures/nlg_architecture.jpg}
-  \caption{NLG architecture.}
-  \label{nlg architecture}
-\end{figure}
-
-This pipeline shows the milestones of natural language generation, however, specific steps and approaches, as well as the models used, can vary significantly with the technology development.
-
-NLG approaches can be grouped into two categories, one focuses on generating text using templates or rules (linguistic) methods, the other uses corpus-based statistical/dynamic methods, where \textbf{corpus} is a collection of texts.
-
-\section{Categories of Natural Language Generation approaches}
-This section describes categories of NLG. More information you can find in \cite{rudnicky2002dialog} \cite{chen2017survey} \cite{manishina2016data}.
-
-
-The gaps represented by \textbf{[train]} and \textbf{[town]} in example \ref{tab:tb_example} are filled by looking up the relevant
-information in a table. More information you can find in \cite{applied_nlg}.
-
-
-\section{Model components for Natural Language Generation}
+\chapter{Approaches to building NLG}
 NLG evolution from templates to dynamic generation of sentences took a lot of time and models developed along with it. Corpus-based generation uses a generative probabilistic model what can be implemented in many ways.
 
 \subsection{Markov Chain}
@@ -203,77 +252,7 @@ The architecture of the Transformer is illustrated in Figure \ref{transformer}. 
 \end{figure}
 
 \section{NLG problems}
-The NLG component converts an abstract dialogue action into natural language surface utterances. As noticed in \cite{generator_problems}, the main task of NLG is to select, inflect and order words to communicate the input meaning as completely, clearly and fluently as possible in context. That's why it is necessary to control not only correctness of output but also if output is appropriate or felicitous in a given context. A good generator usually relies on several factors:
-\begin{itemize}
-  \item \textbf{adequacy} (a sentence that is ambiguous or not contains communicates meaning in the input, is \textbf{not} adequate)  
-  \item \textbf{syntactic correctness} 
-  \item \textbf{repetition} (self-repetition across utterances and with utterances, repeating the conversational partner)
-  \item \textbf{response-relatedness} (efficacy in context)
-  \item \textbf{variation} (there are 2 basic forms of variation: \textit{word choice variation} and \textit{word order variation} for enriching speech)
-\end{itemize}
-An example \ref{tab:var_example} shows all types of variation. Sometimes this factor can be syntactically incorrect or unclear, what you can see in the forth sentence. In fifth sentnecne a variation changed the meaning of part of the sentence. In addition, the variation may add or remove meaning possibilities.
-
-\begin{table}[t]
-\centering
- \begin{tabular}{|p{0.5cm}|p{8cm}|} 
- \hline
- \multicolumn{2}{|c|}{Example} \\
- \hline
- 1 & I bought movie tickets on Tuesday. \\ 
- \hline
- 2 & I got movie tickets on Tuesday. \\
- \hline
- 3 & On Tuesday I bought movie tickets. \\
- \hline
- 4 & On movie Tuesday tickets I bought. \\
- \hline
- 5 & I bought tickets for the Tuesday movie. \\ 
- \hline
- \end{tabular}
- \caption{The example of sentences' variation}
-\label{tab:var_example}
-\end{table}
-
-The table \ref{tab:nlg_problems_example} presents examples of NLG problems that were described above. Sentences 1 and 2 in examples of problems of adequacy show that a sentence can be grammatically and syntactically composed correctly, but without giving any meaning. In example of response-relatedness the answer to the question does not make a sense and it spoils the impression of the conversation. A communication will be boring if NLG model has problems with repetition.
-
-All of these factors influence success of NLG evaluation.  
-
-\begin{table}[t]
-\centering
- \begin{tabular}{|p{0.5cm}|p{8cm}|} 
- \hline
- \multicolumn{2}{|c|}{Problems of syntactic correctness} \\
- \hline
- 1 & They IS going to school. \\ 
- \hline
- 2 & It depends AT you. \\
- \hline
- \multicolumn{2}{|c|}{Problems of response-relatedness} \\
- \hline
- 1 & -Do you go get coffee often? 
-
-    -I am a musician. \\
- \hline
- \multicolumn{2}{|c|}{Problems of repetition} \\
- \hline
- 1 & -Yes, I'm studying law at the moment.
-
-     - Good.
-
-     - I like playing the piano.
-
-     - Good. \\
- \hline
- \multicolumn{2}{|c|}{Problems of adequacy} \\
- \hline
- 1 & More phones have games on them than this one. \\
- \hline
- 2 & Why a mouse when it spins? \\
- \hline
- \end{tabular}
- \caption{The example of NLG problems}
-\label{tab:nlg_problems_example}
-\end{table}
+The NLG component converts an abstract dialogue action into natural language surface utterances. 
 
 
 \chapter{Datasets and Evaluation methods}

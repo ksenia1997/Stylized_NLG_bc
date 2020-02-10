@@ -42,7 +42,7 @@ Example of template-based system is shown in the Table \ref{tab:tb_example}.
 The output produced by this approach is likely to be grammatically correct and not contain unexpected generation errors. The process of sentence generation is fully controlled, these models are robust and reliable because they consist of clearly defined rules. 
 
 \subsubsection{Disadvantages of template-based approach}
-These models require time and human resources to deploy a real dialogue system, because templates are constructed manually, and the number of templates grows quickly (using different templates for singular and plural versions). These systems are not able to handle unknown inputs. Templates often sound unnatural due to their generic structures. Template-based systems cannot make variation in output, it is just concatenation of strings. This approach is not flexible, because it has limits to use templates in other domains. Template-based model is not able to learn and is not able to adapt to the user.
+These models require time and human resources to deploy a real dialogue system, because templates are constructed manually, and the number of templates grows quickly (using different templates for singular and plural versions). These systems are not able to handle unknown inputs. Templates often sound unnatural due to their generic structures. Template-based systems cannot make variation in output, it is just concatenation of strings. This approach is not flexible, because it has limits to use templates in other domains. Template-based model is not able to learn and is not able to adapt to the user, that's why it generates rigid and stylised responses without the natural variation of human language.
 
 \section{Corpus-based approach}
 Corpus-based system dominates the NLG community, special in the case of open-ended tasks, where it is almost impossible to hand-craft the templates for all possible combinations of semantic units. Corpus-based systems include statistical and machine learning approaches to resolve it \cite{rudnicky2002dialog}.
@@ -76,7 +76,7 @@ In equation \ref{eq:CB} $P(A \cap B)$ is the probability that both events A and 
 
 \begin{figure}[hbt]
   \centering
-  \includegraphics[width=0.8\textwidth]{figures/lm.png}
+  \includegraphics[width=0.8\textwidth]{figures/lm.pdf}
   \caption{Example of a word prediction by using chain rule.}
   \label{chain_rule}
 \end{figure}
@@ -191,69 +191,64 @@ An example in the Table \ref{tab:var_example} shows all types of variation. Some
 \label{tab:var_example}
 \end{table}
 
-All of these factors influence success of NLG evaluation.  
-
+The main problem in text generation is a language style, which makes a response to an user more human. Language style is defined as the choice of words used by a specific group of people when they speak. Some people use obscene speech, some use a lot of expressive means or jokes to make speech more emotional. This is what distinguishes people and makes their communication more interesting, but at the same time this is the most difficult task for NLG - the ability to generate different communication styles.
 
 \chapter{Approaches to building NLG}
-NLG evolution from templates to dynamic generation of sentences took a lot of time and models developed along with it. Corpus-based generation uses a generative probabilistic model what can be implemented in many ways.
+NLG evolution from templates to dynamic generation of sentences took a lot of time and models developed along with it. Corpus-based generation uses a generative probabilistic model what can be implemented in many ways. A lot of simple corpus-based NLG models are based on recurrent neural networks (RNN) and sequence-to-sequence (seq2seq) model, which basically contains a encoder-decoder structure.
 
-\subsection{Markov Chain}
-Markov chain is one of the first model's implementation in NLG. It is a stochastic model, that is used to describe the next event in a sequence given the previous event only by probabilistic weighting. It does not track all the previous states in a sequence to conclude what is the next possible state. In our case state is an n-gram(contiguous sequence of n items from text or speech). Markov chain is shown in \ref{markov_chain}.
+\section{Neural Networks}
+//TODO
+
+\section{Recurrent neural network (RNN)}
 
 \begin{figure}[hbt]
   \centering
-  \includegraphics[width=0.3\textwidth]{figures/MarkovChain.png}
-  \caption{Markov chain}
-  \label{markov_chain}
+  \includegraphics[width=0.5\textwidth]{figures/rnn.pdf}
+  \caption{Architecture of a recurrent neural network, where coefficient \textbf{h} is a hidden layer, \textbf{x} is an input and \textbf{o} is an output. Coefficient \textbf{w} is a weight, what is transformed to produce a sensible output.}
+  \label{rnn}
 \end{figure}
 
-\subsection{Recurrent neural network (RNN)}
+Recurrent Neural Network are a type of Neural Network where the output from previous step are fed as input to the current step. This allows it to exhibit temporary dynamic behavior. RNNs can use their internal state (memory), which captures information about what has been calculated so far, to process inputs of variable lengths. RNNs are called \textit{recurrent} because they perform the same task for each element of the sequence, and output depends on previous computations.
+
+The architecture of RNN is illustrated in Figure \ref{rnn}, 
 Neural networks are computing systems that are inspired by biological neural networks. A "neuron" is a mathematical function that classifies and collects information according to a specific architecture. A neural network contains layers of interconnected "neurons". RNN takes series of input with no predetermined limit on size. Recurrent neural network passes each item of the sequence through a feedforward network and stores the information from the previous step. In each iteration this model calculates the probability of the next item with using information in the memory.
 
-The architecture of RNN is illustrated in Figure \ref{rnn}, where coefficient \textbf{h} is a hidden layer, \textbf{x} is an input and \textbf{y} is an output. Coefficient \textbf{w} is a weight, what is transformed to produce a sensible output.
+
 
 The RNN-based models have been used for NLG as an end-to-end training network \cite{network_nlg} and a training model with semantic aggregation \cite{rnn_nlg}. 
 
 Nowadays RNN networks almost are not used in NLG, because it has problems with vanishing and exploding gradient. The long-term information travels sequentially  through all cells before getting to the present processing cell. This means, that it can be easily corrupted by being multiplied many time by small or big numbers. Other problem of RNN is that they are not hardware friendly, it takes a lot of resources to train and run this network. More information about difficulties of training RNN you can find in \cite{rnn_difficulties}.
 
+
+\section{Long short-term memory (LSTM)} 
+
 \begin{figure}[hbt]
   \centering
-  \includegraphics[width=0.5\textwidth]{figures/rnn.jpg}
-  \caption{Architecture of recurrent neural network.}
-  \label{rnn}
+  \includegraphics[width=0.3\textwidth]{figures/lstmCell.pdf}
+  \caption{A cell in an LSTM network.}
+  \label{lstm}
 \end{figure}
 
-
-\subsection{Long short-term memory (LSTM)} 
 LSTM networks are a special kind of RNN, capable of learning long-term dependencies. All recurrent neural networks have the form of a chain of repeating modules of neural network. LSTM network also has this chain structure, but the repeating module has a different structure. 
 
 In Figure \ref{lstm} each line carries an entire vector from the output of one node to the inputs of others. The circles represent pointwise operations, while rectangles are learned neural network layers. Lines merging denote concatenation, while a line forking denote its content being copied and the copies going to different locations.
 
 This model resolved a problem with vanishing gradient, but still the capacity of the LSTM memory is limited, because of inherently complex sequential words' paths from the previous unit to the current unit. The same complexity results in high computational requirements that make LSTM difficult to train or parallelize.
 
-\begin{figure}[hbt]
-  \centering
-  \includegraphics[width=0.3\textwidth]{figures/lstm.jpg}
-  \caption{A cell in an LSTM network.}
-  \label{lstm}
-\end{figure}
+\section{Attention}
+//TODO
 
-
-\subsection{Transformer} 
-Transformer is a relatively new architecture, which proposes a "self-attention mechanism". This model was introduced in the paper "Attention is all you need" \cite{transformer} in 2017. The advantage of this model is a constant number of operations, which simplifies the parallelization of processes. The Transformer uses the representation of all words in context without compressing all information into a single fixed-length representation that allows the system to handle longer sentences without the skyrocketing of computational requirements. 
-
-The architecture of the Transformer is illustrated in Figure \ref{transformer}. The Transformer consists of a stack of encoders (on the left) for processing inputs of any length and another set of decoders (on the right) to output the generated sentences. The inputs and output are first embedded into an n-dimensional space since we cannot use strings directly. The Transformer cannot remember how sequences are fed into a model, because of it positions are added to the embedded representation (n-dimensional vector) of each word.
+\section{Transformer} 
 
 \begin{figure}[hbt]
   \centering
   \includegraphics[width=0.5\textwidth]{figures/transformer.png}
-  \caption{The architecture of the Transformer\cite{transformer}}
+  \caption{The architecture of the Transformer \cite{transformer}.}
   \label{transformer}
 \end{figure}
+Transformer is a relatively new architecture, which proposes a "self-attention mechanism". This model was introduced in the paper "Attention is all you need" \cite{transformer} in 2017. The advantage of this model is a constant number of operations, which simplifies the parallelization of processes. The Transformer uses the representation of all words in context without compressing all information into a single fixed-length representation that allows the system to handle longer sentences without the skyrocketing of computational requirements. 
 
-\section{NLG problems}
-The NLG component converts an abstract dialogue action into natural language surface utterances. 
-
+The architecture of the Transformer is illustrated in Figure \ref{transformer}. The Transformer consists of a stack of encoders (on the left) for processing inputs of any length and another set of decoders (on the right) to output the generated sentences. The inputs and output are first embedded into an n-dimensional space since we cannot use strings directly. The Transformer cannot remember how sequences are fed into a model, because of it positions are added to the embedded representation (n-dimensional vector) of each word.
 
 \chapter{Datasets and Evaluation methods}
 A good corpus is very important for successful Natural Language Generation. Dialogue systems require training data in the format of people text conversation, for example, non-fiction or movie reviews are not suitable for this. Large volumes of training data improves the decision-making ability of NLG model, so those models can use it to figure out patterns. Quality is more important for training data than the quantity of data points. Unfortunately, there are not a lot of datasets available for training NLG models, due to the high cost of creating quality datasets. 

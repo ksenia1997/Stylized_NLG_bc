@@ -1,9 +1,7 @@
 
 
 https://www.aclweb.org/anthology/W16-3649.pdf
-There are a variety of methods to generate responses for nontask-oriented systems, such as machine translation
-(Ritter et al., 2011), retrieval-based response selection (Banchs and Li, 2012), and sequence-tosequence recurrent neural network (Vinyals and
-Le, 2015). However, these systems still produce utterances that are incoherent or inappropriate from time to time. 
+
 
 
 
@@ -37,3 +35,32 @@ without slot filling. On the other hand, Zhao et al.
 (2017) proposed a task-oriented dialogue agented
 based on the encoder-decoder model with chatting
 capability.
+
+A neural network language model is a language model based on Neural Networks , exploiting their ability to learn distributed representations to reduce the impact of the curse of dimensionality.
+
+
+
+
+
+Previous work:
+
+There are a variety of methods to generate responses for nontask-oriented systems, such as machine translation
+(Ritter et al., 2011), retrieval-based response selection (Banchs and Li, 2012), and sequence-tosequence recurrent neural network (Vinyals and
+Le, 2015). However, these systems still produce utterances that are incoherent or inappropriate from time to time. 
+
+https://www.sciencedirect.com/science/article/pii/S0885230819300919  This paper provides a comprehensive final report and extended analysis of the first shared task on End-to-End (E2E) Natural Language Generation (NLG), substantially extending previous reports (Novikova, Rieser, 2016, Novikova, Dušek, Rieser, 2017b, Dušek, Novikova, Rieser, 2018). 
+
+
+
+Shang et al.(2015)  propose a Neural Responding Machine (NRM), a neural network-based
+chatbot NLG for Short-Text Conversation, which is trained on a large amount of one-round conversation data collected from a microblogging service
+
+
+ https://www.aclweb.org/anthology/N18-2010.pdf Previous work proposed
+an RNNLM-based NLG (Wen et al., 2015) that
+can be trained on any corpus of dialogue actutterance pairs without any semantic alignment
+and hand-crafted features. Sequence-to-sequence
+(seq2seq) generators (Cho et al., 2014; Sutskever
+et al., 2014) further offer better results by leveraging encoder-decoder structure: previous model
+encoded syntax trees and dialogue acts into sequences (Dusek and Jur ˇ cˇ´ıcek ˇ , 2016) as inputs of
+attentional seq2seq model (Bahdanau et al., 2015).

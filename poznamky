@@ -40,7 +40,7 @@ A neural network language model is a language model based on Neural Networks , e
 
 
 
-
+https://www.geeksforgeeks.org/seq2seq-model-in-machine-learning/
 
 Previous work:
 
@@ -63,4 +63,10 @@ and hand-crafted features. Sequence-to-sequence
 (seq2seq) generators (Cho et al., 2014; Sutskever
 et al., 2014) further offer better results by leveraging encoder-decoder structure: previous model
 encoded syntax trees and dialogue acts into sequences (Dusek and Jur ˇ cˇ´ıcek ˇ , 2016) as inputs of
+
+
+
+architektura: 
+emotional decoder 
+https://link.springer.com/chapter/10.1007/978-3-319-73618-1_51
 attentional seq2seq model (Bahdanau et al., 2015).

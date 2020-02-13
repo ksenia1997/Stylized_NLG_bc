@@ -11,7 +11,7 @@ The main purpose of this thesis was to create NLG model, which will be able to g
 
 
 \chapter{NLG problems in dialogue systems}\label{nlg_problems}
-In a book \cite{alder2017handbook} Natural Language Generation is defined as ``the process by which thought is rendered into language''. NLG approaches can be grouped into two categories, one focuses on generating text using templates or (linguistic) rules, the other uses corpus-based statistical methods (corpora is a collection of texts) \cite{oh2002stochastic}.
+In a book \cite{alder2017handbook} Natural Language Generation is defined as ``the process by which thought is rendered into language''. NLG approaches can be grouped into two categories, one focuses on generating text using templates or (linguistic) rules (i.e. data-to-text generation), the other uses corpus-based statistical methods (i.e. text-to-text generation), where corpora is a collection of texts \cite{oh2002stochastic}.
 
 \section{Template-based approach} 
 Until recently Natural Language Generation component of a dialog system used primarily hand-coded generation templates, which represented model sentences in a natural language mapped to a particular semantic content.
@@ -194,31 +194,51 @@ An example in the Table \ref{tab:var_example} shows all types of variation. Some
 The main problem in text generation is a language style, which makes a response to an user more human. Language style is defined as the choice of words used by a specific group of people when they speak. Some people use obscene speech, some use a lot of expressive means or jokes to make speech more emotional. This is what distinguishes people and makes their communication more interesting, but at the same time this is the most difficult task for NLG - the ability to generate different communication styles.
 
 \chapter{Approaches to building NLG}
-NLG evolution from templates to dynamic generation of sentences took a lot of time and models developed along with it. Corpus-based generation uses a generative probabilistic model what can be implemented in many ways. A lot of simple corpus-based NLG models are based on recurrent neural networks (RNN) and sequence-to-sequence (seq2seq) model, which basically contains a encoder-decoder structure.
+NLG evolution from templates to dynamic generation of sentences took a lot of time and models developed along with it. Corpus-based generation uses a generative probabilistic model what can be implemented in many ways. The model focuses on response generation in the context of dialogue, where the task is to generate a response, given an utterance. Thus, these models fit well within the sequence-to-sequence (seq2seq) models with using neural networks (NNs), which are described in more detail in section \ref{seq2seq_section}, but first a short description what neural networks are, for a better understanding seq2seq model.
 
-\section{Neural Networks}
-//TODO
+\section{Neural Networks} \label{nn_section}
+Artificial Neural Networks are inspired by biological neural networks that constitute animal brains. Artificial neuron (on the Figure \ref{neuron}) is a computational unit in an artificial neural network with a set of real-valued inputs $x_1, x_2 ... x_n$ and an output $y$, where each input $x_i$ has a corresponding weight $w_i$. Weights determine the influence of the input on the output. The neuron's output is the weighted sum of its inputs, which are passed through a non-linear function known as an activation function or transfer function. The transfer functions usually have a sigmoid shape and model the threshold for neuron firing. Bias is an additional parameter in the Neural Network, which is used to adjust the output along with the weighted sum of the inputs to the neuron. Bias value allows to shift the activation function either right or left.
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figures/ai_neuron.pdf}
+  \caption{Architecture of an artificial neuron.}
+  \label{neuron}
+\end{figure}
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.3\textwidth, height=0.2\textheight]{figures/nn.pdf}
+  \caption{The fully-connected neural network.}
+  \label{nn}
+\end{figure}
+
+Neural networks are acyclic directed graphs of neurons. Neurons' outputs can be connected to inputs of other neurons and the calculation is propagated through the network. In NNs neurons are organized into layers where generally the output of the layer is the input for a next layer. The Figure \ref{nn} represents the most common type of layer - the fully-connected layer where all neurons between adjacent layers are connected with each other.
 
 \section{Recurrent neural network (RNN)}
+Recurrent neural networks are a special type of a neural network used in natural language processing(NLP) as they allow temporal depedencies in the data (like context) to be captured. RNNs share the same structure as NNs described in \ref{nn_section}, except each layer also has an internal state (i.e. hidden state), which captures information about the previous layer inputs. This allows the network to keep track of past data while processing current inputs.
 
 \begin{figure}[hbt]
   \centering
   \includegraphics[width=0.5\textwidth]{figures/rnn.pdf}
-  \caption{Architecture of a recurrent neural network, where coefficient \textbf{h} is a hidden layer, \textbf{x} is an input and \textbf{o} is an output. Coefficient \textbf{w} is a weight, what is transformed to produce a sensible output.}
+  \caption{Architecture of a recurrent neural network, where coefficient \textbf{h} is a hidden state, \textbf{x} is an input and \textbf{o} is an output. Coefficient \textbf{w} is a weight, what is transformed to produce a sensible output.}
   \label{rnn}
 \end{figure}
 
-Recurrent Neural Network are a type of Neural Network where the output from previous step are fed as input to the current step. This allows it to exhibit temporary dynamic behavior. RNNs can use their internal state (memory), which captures information about what has been calculated so far, to process inputs of variable lengths. RNNs are called \textit{recurrent} because they perform the same task for each element of the sequence, and output depends on previous computations.
 
-The architecture of RNN is illustrated in Figure \ref{rnn}, 
-Neural networks are computing systems that are inspired by biological neural networks. A "neuron" is a mathematical function that classifies and collects information according to a specific architecture. A neural network contains layers of interconnected "neurons". RNN takes series of input with no predetermined limit on size. Recurrent neural network passes each item of the sequence through a feedforward network and stores the information from the previous step. In each iteration this model calculates the probability of the next item with using information in the memory.
+The architecture of RNN is illustrated in the Figure \ref{rnn}. A hidden state $h$ is realized as a vector, which calculated from the input $x$ and the previous hidden state. An output $o$ is calculated from this new hidden state. 
+The equations \ref{eq:rnn_h} and \ref{eq:rnn_o} show the formulas for a traditional recurrent neural network.
+\begin{equation} \label{eq:rnn_h}
+h_t = \sigma(W_hh_{t-1} + W_xx_t)
+\end{equation}
 
+\begin{equation} \label{eq:rnn_o}
+o_t = softmax(W_oh_t)
+\end{equation}
 
+The RNN-based models have been used for NLG as a component of end-to-end trainable goal-oriented dialogue system \cite{network_nlg} and a training model with semantic aggregation \cite{rnn_nlg}. 
 
-The RNN-based models have been used for NLG as an end-to-end training network \cite{network_nlg} and a training model with semantic aggregation \cite{rnn_nlg}. 
-
-Nowadays RNN networks almost are not used in NLG, because it has problems with vanishing and exploding gradient. The long-term information travels sequentially  through all cells before getting to the present processing cell. This means, that it can be easily corrupted by being multiplied many time by small or big numbers. Other problem of RNN is that they are not hardware friendly, it takes a lot of resources to train and run this network. More information about difficulties of training RNN you can find in \cite{rnn_difficulties}.
-
+Nowadays traditional RNN networks almost are not used in NLG, because they have problems with vanishing and exploding gradients. As introduced in \cite{bengio1994learning} the exploding problem refers to the large increase in the norm of the gradient during training. It happens, because long term components can grow exponentially more then short term ones. The vanishing gradients problem refers to the opposite behaviour. The long term components go exponentially fast to norm 0, which makes it impossible for the model to learn correlation between temporally distant events. This issue has motivated researchers in development of more advanced RNNs like the LSTM \cite{hochreiter1997long}.
 
 \section{Long short-term memory (LSTM)} 
 
@@ -235,9 +255,6 @@ In Figure \ref{lstm} each line carries an entire vector from the output of one n
 
 This model resolved a problem with vanishing gradient, but still the capacity of the LSTM memory is limited, because of inherently complex sequential words' paths from the previous unit to the current unit. The same complexity results in high computational requirements that make LSTM difficult to train or parallelize.
 
-\section{Attention}
-//TODO
-
 \section{Transformer} 
 
 \begin{figure}[hbt]
@@ -249,6 +266,27 @@ This model resolved a problem with vanishing gradient, but still the capacity of
 Transformer is a relatively new architecture, which proposes a "self-attention mechanism". This model was introduced in the paper "Attention is all you need" \cite{transformer} in 2017. The advantage of this model is a constant number of operations, which simplifies the parallelization of processes. The Transformer uses the representation of all words in context without compressing all information into a single fixed-length representation that allows the system to handle longer sentences without the skyrocketing of computational requirements. 
 
 The architecture of the Transformer is illustrated in Figure \ref{transformer}. The Transformer consists of a stack of encoders (on the left) for processing inputs of any length and another set of decoders (on the right) to output the generated sentences. The inputs and output are first embedded into an n-dimensional space since we cannot use strings directly. The Transformer cannot remember how sequences are fed into a model, because of it positions are added to the embedded representation (n-dimensional vector) of each word.
+
+\section{Sequence-to-sequence models} \label{seq2seq_section}
+Seq2seq models were introduced by Google in 2014 \cite{sutskever2014sequence}. The model takes as input a sequence of words with fixed length and generates a fixed-length output sequence of words \ref{seq2seq}. The main advantage of such models, ulike other Deep Neural Networks (DNNs), is that the lengths of input and output may differ.
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.6\textwidth]{figures/seq2seq.pdf}
+  \caption{Seq2seq model.}
+  \label{seq2seq}
+\end{figure}
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.8\textwidth]{figures/encoder_decoder.pdf}
+  \caption{Architecture of seuence-to-sequecne model.}
+  \label{encoder_decoder}
+\end{figure}
+
+The Figure \ref{encoder_decoder} presents the model’s underlying logic.
+
+\section{Attention}
+//TODO
 
 \chapter{Datasets and Evaluation methods}
 A good corpus is very important for successful Natural Language Generation. Dialogue systems require training data in the format of people text conversation, for example, non-fiction or movie reviews are not suitable for this. Large volumes of training data improves the decision-making ability of NLG model, so those models can use it to figure out patterns. Quality is more important for training data than the quantity of data points. Unfortunately, there are not a lot of datasets available for training NLG models, due to the high cost of creating quality datasets. 

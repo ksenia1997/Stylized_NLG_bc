@@ -194,7 +194,7 @@ An example in the Table \ref{tab:var_example} shows all types of variation. Some
 The main problem in text generation is a language style, which makes a response to an user more human. Language style is defined as the choice of words used by a specific group of people when they speak. Some people use obscene speech, some use a lot of expressive means or jokes to make speech more emotional. This is what distinguishes people and makes their communication more interesting, but at the same time this is the most difficult task for NLG - the ability to generate different communication styles.
 
 \chapter{Approaches to building NLG}
-NLG evolution from templates to dynamic generation of sentences took a lot of time and models developed along with it. Corpus-based generation uses a generative probabilistic model what can be implemented in many ways. The model focuses on response generation in the context of dialogue, where the task is to generate a response, given an utterance. Thus, these models fit well within the sequence-to-sequence (seq2seq) models with using neural networks (NNs), which are described in more detail in section \ref{seq2seq_section}, but first a short description what neural networks are, for a better understanding seq2seq model.
+NLG evolution from templates to dynamic generation of sentences took a lot of time and models developed along with it. Corpus-based generation uses a generative probabilistic model what can be implemented in many ways. The model focuses on response generation in the context of dialogue, where the task is to generate a response, given an utterance. Thus, these models fit well within the sequence-to-sequence (seq2seq) (i.e. encoder-decoder) models with using neural networks (NNs), which are described in more detail in section \ref{seq2seq_section}, but first a short description what neural networks are, for a better understanding seq2seq model.
 
 \section{Neural Networks} \label{nn_section}
 Artificial Neural Networks are inspired by biological neural networks that constitute animal brains. Artificial neuron (on the Figure \ref{neuron}) is a computational unit in an artificial neural network with a set of real-valued inputs $x_1, x_2 ... x_n$ and an output $y$, where each input $x_i$ has a corresponding weight $w_i$. Weights determine the influence of the input on the output. The neuron's output is the weighted sum of its inputs, which are passed through a non-linear function known as an activation function or transfer function. The transfer functions usually have a sigmoid shape and model the threshold for neuron firing. Bias is an additional parameter in the Neural Network, which is used to adjust the output along with the weighted sum of the inputs to the neuron. Bias value allows to shift the activation function either right or left.
@@ -215,8 +215,8 @@ Artificial Neural Networks are inspired by biological neural networks that const
 
 Neural networks are acyclic directed graphs of neurons. Neurons' outputs can be connected to inputs of other neurons and the calculation is propagated through the network. In NNs neurons are organized into layers where generally the output of the layer is the input for a next layer. The Figure \ref{nn} represents the most common type of layer - the fully-connected layer where all neurons between adjacent layers are connected with each other.
 
-\section{Recurrent neural network (RNN)}
-Recurrent neural networks are a special type of a neural network used in natural language processing(NLP) as they allow temporal depedencies in the data (like context) to be captured. RNNs share the same structure as NNs described in \ref{nn_section}, except each layer also has an internal state (i.e. hidden state), which captures information about the previous layer inputs. This allows the network to keep track of past data while processing current inputs.
+\section{Recurrent neural network (RNN)} \label{rnn_section}
+Recurrent neural networks are a special type of a neural network used in natural language processing(NLP) as they allow temporal depedencies in the data (like context) to be captured. RNNs share the same structure as NNs described in the section \ref{nn_section}, except each layer also has an internal state (i.e. hidden state), which captures information about the previous layer inputs. This allows the network to keep track of past data while processing current inputs.
 
 \begin{figure}[hbt]
   \centering
@@ -244,16 +244,68 @@ Nowadays traditional RNN networks almost are not used in NLG, because they have 
 
 \begin{figure}[hbt]
   \centering
-  \includegraphics[width=0.3\textwidth]{figures/lstmCell.pdf}
+  \includegraphics[width=0.5\textwidth]{figures/lstmCell.pdf}
   \caption{A cell in an LSTM network.}
   \label{lstm}
 \end{figure}
 
-LSTM networks are a special kind of RNN, capable of learning long-term dependencies. All recurrent neural networks have the form of a chain of repeating modules of neural network. LSTM network also has this chain structure, but the repeating module has a different structure. 
+LSTM networks are a special kind of RNN, which reduce the vanishing gradient problem. It makes them much more effective on capturing long-term dependencies. All recurrent neural networks have the form of a chain of repeating modules of neural network. LSTM network also has this chain structure, but the repeating module has a different structure. The key of the solution is usage of multiple gates and a cell state, which runs through all the cells and is manipulated using these gates – parts of the state may be added or removed. Each gate is a sigmoid layer that outputs a number between 0 and 1, which represents the degree of the cell state modification.
 
-In Figure \ref{lstm} each line carries an entire vector from the output of one node to the inputs of others. The circles represent pointwise operations, while rectangles are learned neural network layers. Lines merging denote concatenation, while a line forking denote its content being copied and the copies going to different locations.
+The Figure \ref{lstm} represents a structure of a LSTM cell. First, the network decides how much of information from previous steps to keep stored in its cell state, by using the forget gate, which consists of a sigmoid function applied to weighted sum of previous output, input and bias (equation \ref{eq:lstm_1}). $W$ are updated through the backpropagation algorithm weights, $b_f$ is a bias, $x_t$ is an input, $h_{t-1}$ is a hidden state from previous step.
+\begin{equation} \label{eq:lstm_1}
+f_t = \sigma(W_{xf}x_t + W_{hf}h_{t-1}+b_f)
+\end{equation}
 
-This model resolved a problem with vanishing gradient, but still the capacity of the LSTM memory is limited, because of inherently complex sequential words' paths from the previous unit to the current unit. The same complexity results in high computational requirements that make LSTM difficult to train or parallelize.
+The next step is to decide how much of the inner state is going to be updated (i.e. what part of the result the cell is going to store in its state), by using input gate (equation \ref{eq:lstm_2}).
+\begin{equation} \label{eq:lstm_2}
+i_t = \sigma(W_{xi}x_t + W_{hi}h_{t-1}+b_i)
+\end{equation}
+
+After calculating the state modification, it is necessary to compute the new values (i.e. candidate values) which will be stored in it, by using activation function (equation \ref{eq:lstm_3}).
+\begin{equation} \label{eq:lstm_3}
+\tilde{c_{t}}=tanh(W_{xc}x_t + W_{hc}h_{t-1} + b_c)
+\end{equation}
+
+Updating the cell state is based on the previous state and the candidate values (equation \ref{eq:lstm_4}).
+\begin{equation} \label{eq:lstm_4}
+c_t = \tilde{c_{t}} \odot i_t + c_{t-1} \odot f_t
+\end{equation}
+
+Output gate is represented in equation \ref{eq:lstm_5}.
+\begin{equation} \label{eq:lstm_5}
+o_t = \sigma(W_{xo}x_t + W_{ho}h_{t-1}+b_o)
+\end{equation}
+
+And the final step producing the hidden state for the next timestep. It is based on the newly updated cell state, transformed by tanh function and multiplied by the output gate (equation \ref{eq:lstm_6}).
+\begin{equation} \label{eq:lstm_6}
+h_t = o_t \odot tanh(c_t)
+\end{equation}
+
+This model does not have a problem with vanishing gradient, but still the capacity of the LSTM memory is limited, because of inherently complex sequential words' paths from the previous unit to the current unit. The same complexity results in high computational requirements that make LSTM difficult to train. 
+
+\section{Sequence-to-sequence model (seq2seq)} \label{seq2seq_section}
+
+Seq2seq models were introduced by Google in 2014 \cite{sutskever2014sequence}. This model uses an encoder-decoder architecture (the Figure \ref{encoder_decoder}). Both the encoder and the decoder are recurrent neural networks (vanilla version of RNN is rarely used, because of the problems described in the section \ref{rnn_section}). The role of the encoder is to encode the input, a sequence of variable length data, to a fixed length vector. Decoder based on this vector generates an output sequence of data of different length. These 2 neural networks are connected into one model to maximize the learning effect. Seq2seq model is very effective to solve NLP problems, because input and output sequences can have different lengths and recurrent neural networks can work with context. This model is often used in machine translation, text summarization, dialogue systems etc.
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.8\textwidth]{figures/encoder_decoder.pdf}
+  \caption{Architecture of sequence-to-sequence model.}
+  \label{encoder_decoder}
+\end{figure}
+
+The Figure \ref{encoder_decoder} presents traditional encoder-decoder arhitecture. Encoder converts an input sequence of words to a corresponding fixed size hidden vector. Each vector represents the current word and the context of the word. Every time step, it takes a vector that represents a word and pass its output to the next layer. The last layer of encoder passes its output to the first layer of the decoder. The decoder input is an output encoder vector and start token, which characterizes the beginning of the generated sentence. The generated word depends on the previous decoder state and the last generated word. Many optimizations have led to other seq2seq components, such as attention, beam search, bucketing.
+
+\section{Attention}
+A neural attention mechanism gives a neural network the ability to focus on a subset of its inputs. In equation \ref{eq:attention1} attention vector $a$ is represented by attention network $f_{\phi}$  with parameters $\phi$ and an input vector $x$. An attention glimpse $g$ in equation \ref{eq:attention2} is a element-wise multiplication of the attention vector $a$ and a feature vector $z$. $z$ is an output of another neural network $f_{\theta}(x)$.
+
+\begin{equation} \label{eq:attention1}
+a = f_{\phi}(x)
+\end{equation}
+
+\begin{equation} \label{eq:attention2}
+g = a \odot z
+\end{equation}
 
 \section{Transformer} 
 
@@ -267,26 +319,6 @@ Transformer is a relatively new architecture, which proposes a "self-attention m
 
 The architecture of the Transformer is illustrated in Figure \ref{transformer}. The Transformer consists of a stack of encoders (on the left) for processing inputs of any length and another set of decoders (on the right) to output the generated sentences. The inputs and output are first embedded into an n-dimensional space since we cannot use strings directly. The Transformer cannot remember how sequences are fed into a model, because of it positions are added to the embedded representation (n-dimensional vector) of each word.
 
-\section{Sequence-to-sequence models} \label{seq2seq_section}
-Seq2seq models were introduced by Google in 2014 \cite{sutskever2014sequence}. The model takes as input a sequence of words with fixed length and generates a fixed-length output sequence of words \ref{seq2seq}. The main advantage of such models, ulike other Deep Neural Networks (DNNs), is that the lengths of input and output may differ.
-\begin{figure}[hbt]
-  \centering
-  \includegraphics[width=0.6\textwidth]{figures/seq2seq.pdf}
-  \caption{Seq2seq model.}
-  \label{seq2seq}
-\end{figure}
-
-\begin{figure}[hbt]
-  \centering
-  \includegraphics[width=0.8\textwidth]{figures/encoder_decoder.pdf}
-  \caption{Architecture of seuence-to-sequecne model.}
-  \label{encoder_decoder}
-\end{figure}
-
-The Figure \ref{encoder_decoder} presents the model’s underlying logic.
-
-\section{Attention}
-//TODO
 
 \chapter{Datasets and Evaluation methods}
 A good corpus is very important for successful Natural Language Generation. Dialogue systems require training data in the format of people text conversation, for example, non-fiction or movie reviews are not suitable for this. Large volumes of training data improves the decision-making ability of NLG model, so those models can use it to figure out patterns. Quality is more important for training data than the quantity of data points. Unfortunately, there are not a lot of datasets available for training NLG models, due to the high cost of creating quality datasets. 

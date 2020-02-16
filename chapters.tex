@@ -294,30 +294,47 @@ Seq2seq models were introduced by Google in 2014 \cite{sutskever2014sequence}. T
   \label{encoder_decoder}
 \end{figure}
 
-The Figure \ref{encoder_decoder} presents traditional encoder-decoder arhitecture. Encoder converts an input sequence of words to a corresponding fixed size hidden vector. Each vector represents the current word and the context of the word. Every time step, it takes a vector that represents a word and pass its output to the next layer. The last layer of encoder passes its output to the first layer of the decoder. The decoder input is an output encoder vector and start token, which characterizes the beginning of the generated sentence. The generated word depends on the previous decoder state and the last generated word. Many optimizations have led to other seq2seq components, such as attention, beam search, bucketing.
+The Figure \ref{encoder_decoder} presents traditional encoder-decoder arhitecture. Encoder converts an input sequence of words to a corresponding fixed size hidden vector. Each vector represents the current word and the context of the word. Every time step, it takes a vector that represents a word and pass its output to the next layer. The last hidden state of encoder passes its output to the first layer of the decoder. The final hidden state of the encoder is also called context vector. The decoder input is an output encoder vector and start token, which characterizes the beginning of the generated sentence. The generated word depends on the previous decoder state and the last generated word. Many optimizations have led to other seq2seq components, such as attention, beam search, bucketing.
 
 \section{Attention}
-A neural attention mechanism gives a neural network the ability to focus on a subset of its inputs. In equation \ref{eq:attention1} attention vector $a$ is represented by attention network $f_{\phi}$  with parameters $\phi$ and an input vector $x$. An attention glimpse $g$ in equation \ref{eq:attention2} is a element-wise multiplication of the attention vector $a$ and a feature vector $z$. $z$ is an output of another neural network $f_{\theta}(x)$.
+A neural attention mechanism is based on the human visual attention mechanism. Visual attention is able to focus on a certain region of an image with ``high resolution'', while perceiving the surrounding image in “low resolution”, and then adjusting the focal point over time.
 
-\begin{equation} \label{eq:attention1}
-a = f_{\phi}(x)
-\end{equation}
+In \cite{vaswani2017attention} attention is described as mapping a query and a set of key-value pairs to an output, where the query, keys, values, and output are all vectors. The output is computed as a weighted sum of the values, where the weight assigned to each value is computed by a compatibility function of the query with the corresponding key.
 
-\begin{equation} \label{eq:attention2}
-g = a \odot z
-\end{equation}
+The attention mechanism provides the decoder with information from each hidden state of the encoder and it gives a model the ability to selectively focus on useful parts of the input sequence and learn the alignment between them (example in the Figure \ref{attention}).
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figures/attention.pdf}
+  \caption{When we see ``eating'', we expect to encounter a food word very soon. The color term describes the food, but probably not so much with ``eating'' directly.}
+  \label{attention}
+\end{figure}
+
+Self-attention is an attention mechanism, where ``self'' means that the inputs interact with each other and ``attention'' means that inputs find out who they should pay more attention. Formally, in the attention mechanism the query, keys and values are from the same sequence. The query is a single element from the sequence while the keys and values are the entire sequence. The attention output is a new representation of the element that was the query. Self-attention is used to compute a new representation of the sequence.  
 
 \section{Transformer} 
 
 \begin{figure}[hbt]
   \centering
-  \includegraphics[width=0.5\textwidth]{figures/transformer.png}
-  \caption{The architecture of the Transformer \cite{transformer}.}
+  \includegraphics[width=0.9\textwidth]{figures/transformer_attention.png}
+  \caption{The architecture of the Transformer \cite{vaswani2017attention}.}
   \label{transformer}
 \end{figure}
-Transformer is a relatively new architecture, which proposes a "self-attention mechanism". This model was introduced in the paper "Attention is all you need" \cite{transformer} in 2017. The advantage of this model is a constant number of operations, which simplifies the parallelization of processes. The Transformer uses the representation of all words in context without compressing all information into a single fixed-length representation that allows the system to handle longer sentences without the skyrocketing of computational requirements. 
+Transformer introduces an architecture that is based on self-attention mechanism and does not use any recurrent networks. In each step this model applies self-attention mechanism which directly models relationships between all words in a sequence, regardless of their respective position. Transformers do not require that the sentence be processed in order, that allows process parallelization during training, unlike RNN. Due to this feature, it has enabled training on much more data. 
 
-The architecture of the Transformer is illustrated in Figure \ref{transformer}. The Transformer consists of a stack of encoders (on the left) for processing inputs of any length and another set of decoders (on the right) to output the generated sentences. The inputs and output are first embedded into an n-dimensional space since we cannot use strings directly. The Transformer cannot remember how sequences are fed into a model, because of it positions are added to the embedded representation (n-dimensional vector) of each word.
+The architecture of the Transformer is illustrated in the Figure \ref{transformer}. The Transformer consists of a stack of encoders (on the left) for processing inputs of any length and another set of decoders (on the right) to output the generated sentences. $N_x$ in the Figure means that modules of encoder and decoder can be stacked on top of each other multiple times. Modules consist of multi-head attention and feed forward layers. The inputs and output are first embedded into an n-dimensional space. Words' positions are added to the embedded representation, n-dimensional vector, of each word.
+
+\begin{equation} \label{eq:transformer_attention}
+Attention(Q, K, V) = softmax(\frac{QK^T}{\sqrt{d_k}})V
+\end{equation}
+
+\begin{equation} \label{eq:transformer_multi_head}
+MultiHead(Q, K, V) = Concat(head_1, head_2, ..., head_h)W^O
+\end{equation}
+
+An equation \ref{eq:transformer_attention} represents a \textbf{scaled dot-product attention}. The input consists of values of dimension $d_v$, queries and keys of dimension $d_k$, where queries, keys and values are matricies.
+
+An equation \ref{eq:transformer_multi_head} represents a \textbf{multi-head attention}, which allows the model to jointly track information from different representation subspaces at different positions. Averaging inhibits this with a single head of attention. The input also consists of queries, keys and values matricies, $W^O$ is a parameter matrix, $h$ is a number of parallel layers, $head_i = Attention(QW_i^Q, KW_i^K, VW_i^V)$, where $W_i^Q, W_i^K, W_i^V$ are parameter matricies. $Q$, $K$ and $V$ are different for each position of the attention modules in the structure. It depends on if they are in the encoder, the decoder or between them.
 
 
 \chapter{Datasets and Evaluation methods}

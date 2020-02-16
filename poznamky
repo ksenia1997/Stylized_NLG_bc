@@ -38,7 +38,7 @@ capability.
 
 A neural network language model is a language model based on Neural Networks , exploiting their ability to learn distributed representations to reduce the impact of the curse of dimensionality.
 
-
+http://jalammar.github.io/illustrated-transformer/
 
 https://www.geeksforgeeks.org/seq2seq-model-in-machine-learning/
 
@@ -64,6 +64,8 @@ and hand-crafted features. Sequence-to-sequence
 et al., 2014) further offer better results by leveraging encoder-decoder structure: previous model
 encoded syntax trees and dialogue acts into sequences (Dusek and Jur ˇ cˇ´ıcek ˇ , 2016) as inputs of
 
+
+http://primo.ai/index.php?title=Transformer
 
 
 architektura: 

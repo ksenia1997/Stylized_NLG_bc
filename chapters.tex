@@ -2,10 +2,15 @@
 Dialogue system (i.e. conversational agent) is a computer system which interacts with a human in natural language. These systems are used in cars (hands-free car-specific functions, Android Auto, Apple CarPlay, vendor-specific solutions), web, robots, computer games etc, because a conversation is a natural way for people to get information. 
 
 
-Natural Language Generation (NLG) is an important component of dialogue systems, which has a significant impact on system quality, because NLG goal is to imitate human behaviour. The conversational agent can be classified into task-oriented (i.e. goal-oriented), which focused on completing a certain tasks and adhere to a determined script for each stage of the conversation, and non-task-oriented, which do not have a stated goal to work towards. A lot of devices have incorporated goal-oriented dialogue systems, such as Yandex’s Alisa, Apple’s Siri, Microsoft’s Cortana, Amazon Alexa, and Google Assistant. Goal-oriented dialogue acts make conversations more interpetable and controllable. On the other hand, they also hinder scaling such systems to new domains (i.e. conversation topic). To escape from the limitation, recent interest of research started moving to non-task-oriented chitchat dialogues (chatbots). Chitchat dialogues are systems designed to mimic the unstructured human-human conversation. This kind of conversational agent often have an entertainment value, such as Cleverbot, Microsoft's XiaoIce system etc. Chatbots have also been used for testing theories of psychological counseling.
+Natural Language Generation (NLG) is an important component of dialogue systems, which has a significant impact on system quality, because NLG goal is to imitate human behaviour. The conversational agent can be classified into task-oriented (i.e. goal-oriented), which focused on completing a certain tasks and adhere to a determined script for each stage of the conversation, and non-task-oriented, which do not have a stated goal to work towards. A lot of devices have incorporated goal-oriented dialogue systems, such as Yandex’s Alisa, Apple’s Siri, Microsoft’s Cortana, Amazon Alexa, and Google Assistant. Goal-oriented dialogue acts make conversations more interpetable and controllable. On the other hand, they also hinder scaling such systems to new domains (i.e. conversation topics). To escape from the limitation, recent interest of research started moving to non-task-oriented chitchat dialogues (chatbots). Chitchat dialogues are systems designed to mimic the unstructured human-human conversation. This kind of conversational agent often have an entertainment value, such as Cleverbot, Microsoft's XiaoIce system etc. Chatbots have also been used for testing theories of psychological counseling.
 
 The ability to communicate freely in a natural language is one of the hallmarks of human intelligence, and is likely one of the requirements for true artificial intelligence. Many researches work on open-ended (i.e. there is a huge range of appropriate outputs given the input) chitchat dialogues to explore this aspect of intelligence, because in goal-oriented dialogue systems there is a relatively narrow range of correct outputs given the input. 
-Creating a non-task-oriented agent is a challenge for researches, because there are a lot of topics of conversations as well as user reactions and responses to them. Such bots are not able to generate meaningful conversations. Their replies are often too generic, because non-specific responses sound quite natural (e.g. ``Ok, I see'', ``I don't know''). There are still a lot of problems in the Natural Language Generation, such as response-relatedness, semantic errors, repetition etc., which will be described in more detail in the chapture \ref{nlg_problems}. In human-human conversation not only these attributes are important, but also your partner's style of communication, what phrases he is using to make your dialogue more diverse and interesting, because it is unlikely that someone will want to communicate for a long time with a person who answers the same thing all the time.
+Creating a non-task-oriented agent is a challenge for researches, because there are a lot of topics of conversations as well as user reactions and responses to them. Such bots are not able to generate meaningful conversations. Their replies are often too generic, because non-specific responses sound quite natural (e.g. ``Ok, I see'', ``I don't know''). There are still a lot of problems in the Natural Language Generation, such as response-relatedness, semantic errors, repetition etc., which will be described in more detail in the chapture \ref{nlg_problems}. 
+
+According to \cite{salovey1990emotional} one of the most important cognitive behaviors in humans is expressing and understanding emotions. That is why it is necessary to pay attention not only to generation of an adequate, semantically and syntactically correct text, but also to the emotions and language style in which person communicates to make a dialogue more diverse and interesting. 
+
+In \cite{minavrova2003souvcasna} language style is defined as a method of goal-oriented choice and arrangement (organisation) of language means which is applied in the making of the text; in the final product it is thus reflected as the principle of organizing language units which, out of parts and details, shapes a unity compatible with the communicative intention of the author. Carefully formulated speech without cliches or jargon is essential to avoid inaccurate presentation and ensure effective communication.
+
 
 The main purpose of this thesis was to create NLG model, which will be able to generate text in different styles.  //TODO
 
@@ -107,16 +112,7 @@ The n-gram ``She is studying IT'' from the Table \ref{tab:n_gram} does not occur
 \section{Dialogue systems} 
 The ability to communicate with machines in a natural language is a long-standing dream of mankind. Today's dialogue systems often encounter criticism. There are many scientific works on creating more natural dialogue systems. Markus M. Berg defines a natural dialogue system in \cite{berg2014modelling} as ``a form of dialogue system that tries to improve usability and user satisfaction by imitating human behaviour''. It affects the features of human-to-human dialogue (for example, topic changes, sub-dialogues) and seeks to integrate them into dialogue systems for human interaction with the machine. Open-ended natural dialogue systems still have flaws in generating a response to the user.
 
-As noticed in \cite{stent2005evaluating}, the main task of NLG is to select, inflect and order words ``to communicate the input meaning'' as completely, clearly and fluently as possible in context. That's why it is necessary to control not only syntactic correctness of output but also if output is appropriate or felicitous in a given context. A good generator usually relies on several factors:
-\begin{itemize}
-  \item \textbf{adequacy} (a sentence that is ambiguous or not contains communicates meaning in the input, is \textbf{not} adequate (an example in the Table \ref{tab:adequacy_prob}))  
-  \item \textbf{syntactic correctness} (an example in the Table \ref{tab:syntactic_corr_prob})
-  \item \textbf{repetition} (self-repetition across utterances and with utterances, repeating the conversational partner (an example in the Table \ref{tab:repetition_prob}))
-  \item \textbf{response-relatedness} (efficacy in context (an example in the Table \ref{tab:response_relatedness_prob}))
-  \item \textbf{variation} (there are 2 basic forms of variation: \textit{word choice variation} and \textit{word order variation} for enriching speech)
-\end{itemize}
-
-\begin{table}[t]
+\begin{table}[ht]
 \centering
  \begin{tabular}{|p{0.5cm}|p{8cm}|} 
  \hline
@@ -129,7 +125,7 @@ As noticed in \cite{stent2005evaluating}, the main task of NLG is to select, inf
 \label{tab:adequacy_prob}
 \end{table}
 
-\begin{table}[t]
+\begin{table}[ht]
 \centering
  \begin{tabular}{|p{0.5cm}|p{8cm}|} 
  \hline
@@ -142,7 +138,7 @@ As noticed in \cite{stent2005evaluating}, the main task of NLG is to select, inf
 \label{tab:syntactic_corr_prob}
 \end{table}
 
-\begin{table}[t]
+\begin{table}[ht]
 \centering
  \begin{tabular}{|c|} 
  \hline
@@ -156,7 +152,7 @@ As noticed in \cite{stent2005evaluating}, the main task of NLG is to select, inf
 \label{tab:repetition_prob}
 \end{table}
 
-\begin{table}[t]
+\begin{table}[ht]
 \centering
  \begin{tabular}{|c|} 
  \hline
@@ -168,9 +164,16 @@ As noticed in \cite{stent2005evaluating}, the main task of NLG is to select, inf
 \label{tab:response_relatedness_prob}
 \end{table}
 
-An example in the Table \ref{tab:var_example} shows all types of variation. Sometimes this factor can be syntactically incorrect or unclear, what you can see in the forth sentence. In fifth sentnecne a variation changed the meaning of part of the sentence. In addition, the variation may add or remove meaning possibilities.
+As noticed in \cite{stent2005evaluating}, the main task of NLG is to select, inflect and order words ``to communicate the input meaning'' as completely, clearly and fluently as possible in context. That's why it is necessary to control not only syntactic correctness of output but also if output is appropriate or felicitous in a given context. A good generator usually relies on several factors:
+\begin{itemize}
+  \item \textbf{adequacy} (a sentence that is ambiguous or not contains communicates meaning in the input, is \textbf{not} adequate (an example in the Table \ref{tab:adequacy_prob}))  
+  \item \textbf{syntactic correctness} (an example in the Table \ref{tab:syntactic_corr_prob})
+  \item \textbf{repetition} (self-repetition across utterances and with utterances, repeating the conversational partner (an example in the Table \ref{tab:repetition_prob}))
+  \item \textbf{response-relatedness} (efficacy in context (an example in the Table \ref{tab:response_relatedness_prob}))
+  \item \textbf{variation} (there are 2 basic forms of variation: \textit{word choice variation} and \textit{word order variation} for enriching speech)
+\end{itemize}
 
-\begin{table}[t]
+\begin{table}[ht]
 \centering
  \begin{tabular}{|p{0.5cm}|p{8cm}|} 
  \hline
@@ -191,6 +194,9 @@ An example in the Table \ref{tab:var_example} shows all types of variation. Some
 \label{tab:var_example}
 \end{table}
 
+An example in the Table \ref{tab:var_example} shows all types of variation. Sometimes this factor can be syntactically incorrect or unclear, what you can see in the forth sentence. In fifth sentnecne a variation changed the meaning of part of the sentence. In addition, the variation may add or remove meaning possibilities.
+
+
 The main problem in text generation is a language style, which makes a response to an user more human. Language style is defined as the choice of words used by a specific group of people when they speak. Some people use obscene speech, some use a lot of expressive means or jokes to make speech more emotional. This is what distinguishes people and makes their communication more interesting, but at the same time this is the most difficult task for NLG - the ability to generate different communication styles.
 
 \chapter{Approaches to building NLG}
@@ -209,7 +215,7 @@ Artificial Neural Networks are inspired by biological neural networks that const
 \begin{figure}[hbt]
   \centering
   \includegraphics[width=0.3\textwidth, height=0.2\textheight]{figures/nn.pdf}
-  \caption{The fully-connected neural network.}
+  \caption{The fully-connected neural network with 1 hidden layer.}
   \label{nn}
 \end{figure}
 
@@ -317,12 +323,14 @@ Self-attention is an attention mechanism, where ``self'' means that the inputs i
 \begin{figure}[hbt]
   \centering
   \includegraphics[width=0.9\textwidth]{figures/transformer_attention.png}
-  \caption{The architecture of the Transformer \cite{vaswani2017attention}.}
+  \caption[Transformer architecture]{The architecture of the Transformer.\protect\footnotemark}
   \label{transformer}
 \end{figure}
+
 Transformer introduces an architecture that is based on self-attention mechanism and does not use any recurrent networks. In each step this model applies self-attention mechanism which directly models relationships between all words in a sequence, regardless of their respective position. Transformers do not require that the sentence be processed in order, that allows process parallelization during training, unlike RNN. Due to this feature, it has enabled training on much more data. 
 
 The architecture of the Transformer is illustrated in the Figure \ref{transformer}. The Transformer consists of a stack of encoders (on the left) for processing inputs of any length and another set of decoders (on the right) to output the generated sentences. $N_x$ in the Figure means that modules of encoder and decoder can be stacked on top of each other multiple times. Modules consist of multi-head attention and feed forward layers. The inputs and output are first embedded into an n-dimensional space. Words' positions are added to the embedded representation, n-dimensional vector, of each word.
+\footnotetext{\url{http://primo.ai/index.php?title=Transformer}}
 
 \begin{equation} \label{eq:transformer_attention}
 Attention(Q, K, V) = softmax(\frac{QK^T}{\sqrt{d_k}})V
@@ -344,8 +352,8 @@ In my bachelor thesis I am using 2 different dataset (Twitter data and Persona-C
 
 \subsection{Persona-Chat}
 
-\begin{table}[t]
-  \begin{tabular}{ |c|c| } 
+\begin{table}[ht]
+  \begin{tabular}{ |c|c| }
    \hline\hline
    \textbf{Persona 1} & \textbf{Persona 2}  \\ 
    \hline\hline
@@ -392,7 +400,7 @@ In my bachelor thesis I am using 2 different dataset (Twitter data and Persona-C
 
 \begin{table}[t]
 \centering
-  \begin{tabular}{|p{8cm}|p{4cm}|} 
+  \begin{tabular}{|p{8cm}|p{2cm}|} 
   \hline
   Average length of  your persona description: & 6.332 \\
   \hline
@@ -422,42 +430,32 @@ Persona-Chat models normal conversation when 2 people meet for the first meet an
 
 Persona-Chat dataset consists of small conversations between 2 crowdworkers from Amazon Mechanical Turk who were randomly paired and asked to act the part of a given provided persona (randomly assigned, and created by another set of crowdworkers). The data collection consists of persona chat (each dialogue has 6-8 turns), personas (set of 1155 possible personas, each consisting of at least 5 profile sentences), revised personas to avoid word overlap, because crowdworkers sometimes could repeat profile information in a chat(the Table \ref{tab:persona_revised}). In turn-based dialogue each message consists of a maximum of 15 words. All statistics are presented in the Table \ref{tab:persona_chat_statistics}. An example of Persona-Chat dialogue is shown in the Table \ref{tab:persona_chat}. 
 
-
-
-\begin{figure}[hbt]
-  \centering
-  \includegraphics[width=0.6\textwidth]{figures/persona_desc.pdf}
-  \caption{Histogram of your persona description lengths.}
-  \label{histogram_persona_desc}
+\begin{figure}[htb]
+\minipage{0.45\textwidth}
+  \includegraphics[width=\linewidth]{figures/persona_desc.pdf}
+  \caption{Histogram of your persona description lengths.}\label{fig:histogram_persona_desc}
+\endminipage\hfill
+\minipage{0.45\textwidth}
+  \includegraphics[width=\linewidth]{figures/partner_desc.pdf}
+  \caption{Histogram of partner's persona description lengths.}\label{fig:histogram_partner_desc}
+\endminipage
 \end{figure}
 
-\begin{figure}[hbt]
-  \centering
-  \includegraphics[width=0.6\textwidth]{figures/partner_desc.pdf}
-  \caption{Histogram of partner's persona description lengths.}
-  \label{histogram_partner_desc}
-\end{figure}
-
-\begin{figure}[hbt]
-  \centering
-  \includegraphics[width=0.6\textwidth]{figures/uttr1_length.pdf}
-  \caption{Histogram of utterances' lengths of the first person.}
-  \label{histogram_uttr1_length}
-\end{figure}
-
-\begin{figure}[hbt]
-  \centering
-  \includegraphics[width=0.6\textwidth]{figures/uttr2_length.pdf}
-  \caption{Histogram of utterances' lengths of the second person.}
-  \label{histogram_uttr2_length}
+\begin{figure}[htb]
+\minipage{0.45\textwidth}
+  \includegraphics[width=\linewidth]{figures/uttr1_length.pdf}
+  \caption{Histogram of utterances' lengths of the first person.}\label{fig:histogram_uttr1_length}
+\endminipage\hfill
+\minipage{0.45\textwidth}
+  \includegraphics[width=\linewidth]{figures/uttr2_length.pdf}
+  \caption{Histogram of utterances' lengths of the second person.}\label{fig:histogram_uttr2_length}
+\endminipage
 \end{figure}
 
 
 
 \subsection{Twitter}
-Twitter dataset contains message-response pairs from Twitter. An example of this data is presented in the Table \ref{tab:twitter_chat}. 
-
-\begin{table}[t]
+\begin{table}[ht]
 \centering
  \begin{tabular}{|p{7cm}|p{7cm}|} 
  \hline\hline
@@ -472,6 +470,10 @@ Twitter dataset contains message-response pairs from Twitter. An example of this
 \label{tab:twitter_chat}
 \end{table}
 
+Twitter dataset contains message-response pairs from Twitter. An example of this data is presented in the Table \ref{tab:twitter_chat}. 
+
+
+
 \chapter{Other}
 
 Non-task-oriented dialogue system
@@ -482,7 +484,6 @@ The aim of task-oriented dialogue systems is to complete specific tasks fo user,
 
 //TODO: Info about evaluation metrics
 
-//TODO: Description of baseline
-
 //TODO: NLP vs Computation linguistic
 
+//Implementation (describe preprocessing, baseline )

@@ -72,3 +72,9 @@ architektura:
 emotional decoder 
 https://link.springer.com/chapter/10.1007/978-3-319-73618-1_51
 attentional seq2seq model (Bahdanau et al., 2015).
+
+
+
+Cim se lisi: 
+ prior studies are heavily dependent on linguistic tools or customized
+parameters in text generation, while our model is fully datadriven without any manual adjustment;

@@ -109,7 +109,7 @@ Data sparsity is the phenomenon of not observing enough data in a corpus to mode
 
 The n-gram ``She is studying IT'' from the Table \ref{tab:n_gram} does not occur as often in texts of corpus as n-grams ``Hi'', ``New York'' and ``The Three Musketeers''. Knowing a probability to the occurrence of an N-gram in a sequence of words can be useful, because it can help to decide which N-grams can be chunked together to from single entities (like ``New York'' chuncked together as one word). It can also help make next word predictions. For example, ``tea'' is more likely than ``ball'' in the phrase ``I would like to drink''.
 
-\section{Dialogue systems} 
+\section{Dialogue systems}\label{nlg_ds_problems}
 The ability to communicate with machines in a natural language is a long-standing dream of mankind. Today's dialogue systems often encounter criticism. There are many scientific works on creating more natural dialogue systems. Markus M. Berg defines a natural dialogue system in \cite{berg2014modelling} as ``a form of dialogue system that tries to improve usability and user satisfaction by imitating human behaviour''. It affects the features of human-to-human dialogue (for example, topic changes, sub-dialogues) and seeks to integrate them into dialogue systems for human interaction with the machine. Open-ended natural dialogue systems still have flaws in generating a response to the user.
 
 \begin{table}[ht]
@@ -197,9 +197,9 @@ As noticed in \cite{stent2005evaluating}, the main task of NLG is to select, inf
 An example in the Table \ref{tab:var_example} shows all types of variation. Sometimes this factor can be syntactically incorrect or unclear, what you can see in the forth sentence. In fifth sentnecne a variation changed the meaning of part of the sentence. In addition, the variation may add or remove meaning possibilities.
 
 
-The main problem in text generation is a language style, which makes a response to an user more human. Language style is defined as the choice of words used by a specific group of people when they speak. Some people use obscene speech, some use a lot of expressive means or jokes to make speech more emotional. This is what distinguishes people and makes their communication more interesting, but at the same time this is the most difficult task for NLG - the ability to generate different communication styles.
+One of the hardest problem in text generation is a language style, which makes a response to an user more human. This task is challenging due to the difficulty of capturing emotional factors and the complex mechanism of human emotions. Some people use obscene speech, some use a lot of expressive means, jargon or jokes to make speech more emotional. This is what distinguishes people and makes their communication more interesting.
 
-\chapter{Approaches to building NLG}
+\chapter{models for Natural Language Generation}
 NLG evolution from templates to dynamic generation of sentences took a lot of time and models developed along with it. Corpus-based generation uses a generative probabilistic model what can be implemented in many ways. The model focuses on response generation in the context of dialogue, where the task is to generate a response, given an utterance. Thus, these models fit well within the sequence-to-sequence (seq2seq) (i.e. encoder-decoder) models with using neural networks (NNs), which are described in more detail in section \ref{seq2seq_section}, but first a short description what neural networks are, for a better understanding seq2seq model.
 
 \section{Neural Networks} \label{nn_section}
@@ -319,7 +319,7 @@ The attention mechanism provides the decoder with information from each hidden s
 Self-attention is an attention mechanism, where ``self'' means that the inputs interact with each other and ``attention'' means that inputs find out who they should pay more attention. Formally, in the attention mechanism the query, keys and values are from the same sequence. The query is a single element from the sequence while the keys and values are the entire sequence. The attention output is a new representation of the element that was the query. Self-attention is used to compute a new representation of the sequence.  
 
 \section{Transformer} 
-
+Information in this section is taken from \cite{vaswani2017attention}.
 \begin{figure}[hbt]
   \centering
   \includegraphics[width=0.9\textwidth]{figures/transformer_attention.png}
@@ -344,6 +344,57 @@ An equation \ref{eq:transformer_attention} represents a \textbf{scaled dot-produ
 
 An equation \ref{eq:transformer_multi_head} represents a \textbf{multi-head attention}, which allows the model to jointly track information from different representation subspaces at different positions. Averaging inhibits this with a single head of attention. The input also consists of queries, keys and values matricies, $W^O$ is a parameter matrix, $h$ is a number of parallel layers, $head_i = Attention(QW_i^Q, KW_i^K, VW_i^V)$, where $W_i^Q, W_i^K, W_i^V$ are parameter matricies. $Q$, $K$ and $V$ are different for each position of the attention modules in the structure. It depends on if they are in the encoder, the decoder or between them.
 
+
+\chapter{Related works}
+This chapter presents an overview of the most popular NLG models for building open-ended dialogue systems. Section \ref{usual_problems} presents approaches for resolving standard NLG problems, what were described in the section \ref{nlg_ds_problems}. Section \ref{emotional_problems} presents solutions for generating more emotional text.
+
+\section{Approaches for dialogue systems problems}\label{usual_problems}
+
+\section{Approaches for generating emotional conversation} \label{emotional_problems}
+
+\subsubsection{Affect Listeners}
+The concept and the constitution of Affect Listeners were introduced in the paper \cite{skowron2010affect}. Affect listeners can respond to users’ utterances both at the content- and affectrelated level. This system is able to detect and classify a user's textual expression of affective states and direct a dialog that facilates recognition of the user’s topics of interest.
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figures/affect_listeners.pdf}
+  \caption{Layers of the system architecture.}
+  \label{affect_listener}
+\end{figure}
+
+The architecture, represented in the Figure \ref{affect_listener}, includes 3 layers: perception, control and actuator-communication. Perception layer analysis the input from the system's environment and the output of tools in the actuator layer, by using NLP tools and machine learning-based classifiers. Control layer analysis information from the perception layer and manages interaction with the user. It also monitors the dialog progression and selects a response from the number of response candidates. Affect Listener Dialog Scripting (ALDS), command interpreters for Artificial Intelligence Markup Language (AIML) and User Adaptation Mechanism integrates the rule-based action selection. The actuator-communication layer provides information for generating system responses. This architecture is good for task-oriented dialogues, but for open-ended dialogues it cannot be used, because it is hard to implement all possible scenarios.
+
+
+\subsubsection{MECS}
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.9\textwidth]{figures/MECS.pdf}
+  \caption{The general framework and dataflow of MECS.}
+  \label{mecs}
+\end{figure}
+
+According to \cite{zhang2017building} in emotional interaction analysis it was found that people tend to achieve the same emotional state in conversation. This phenomenon is explained as empathy at the psychological level.
+
+In their research they create the system MECS for the NLPCC 2017 shared task on emotional conversation generation. Seq2seq architecture is used to capture the textual information of post sequence and generate responses for each type of emotions simultaneously.
+
+\begin{equation} \label{eq:intra-ranking}
+p(Y|X) = \prod_{t=1}^{N_y} p(y_t|x_1, x_2, ..., x_T, y_1, y_2, ... , y_{t-1}) = \prod_{t=1}^{N_y} \frac{exp(f(s_t, e_{y_t}))}{\sum_{y'} exp(f(s_t, e_{y'}))}
+\end{equation}
+
+The Figure \ref{mecs} represents the architecture of MECS model, where \textbf{intra-ranking} and \textbf{inter-ranking} are used, to help choosing only one reponse from all generated emotional responses. Calculation of intra-ranking is shown in the Equation \ref{eq:intra-ranking}. $N_y$ denotes the length of a response sequence $Y$, $f(s_t, e_{y_t})$ denotes the corresponding output on the last projection layer for word $y_t$. The sentence with the highest score is selected as the decoder's output. Inter-ranking selects the most appropriate response as model's output. However in MECS model the inter-ranking is calculated as the itra-ranking (the Equation \ref{eq:intra-ranking}), what means that chosen output does not depend on emotional type of input text. Therefore, it is not capable to simulate the emotion interaction in human conversation.
+
+\subsubsection{ECM}
+Emotional Chatting Machine (ECM), represented in \cite{zhou2018emotional}, can generate not only relevant and grammatical responses, but also emotionally consistent. This framework proposes seq2seq architecture. This separate responses into several categories (Angry, Disgust, Happy, Like, Sad, Other). The emotion category of the to-be-generated response is given for ECM, because, in the opinion og the authors, emotions are highly subjective. 
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=1\textwidth]{figures/ecm.png}
+  \caption{ Overview of ECM (the grey unit). The pink units are used to model emotion factors in the framework.}
+  \label{ecm}
+\end{figure}
+
+In the architecture (the Figure \ref{ecm}) a post can be answered with different emotions, depending on the attitude of the respondent. For example, for a sad story, someone may respond with anger  (as an irritable stranger), sympathy (as a friend) or happy (as an enemy). \textbf{Emotion classifier} generates labels for each response. Generated labels and responses are fed into ECM to generate emotional responses conditioned on different emotion categories. In \textbf{Emotion Category Embedding} randomly initialize the vector of an emotion category $v_e$ for each category $e$. During the training the model is learning the vectors of the emotion category. \textbf{Internal memory} captures emotion dynamics during decoding. It is achieved using the following concept: before the decoding process each category has an internal emotion state; at each step the emotion state decays by a certain amount; when decoding process is completed, the emotion state should be zero, what indicates that the emotion is completely expressed. \textbf{External memory} is used to model emotion expressions explicitly, the model can choose to generate words from  an emotion vocabulary or a generic vocabulary.
+
+ECM need an external decision maker, because this model has to specify an emotion category to be generated.
 
 \chapter{Datasets and Evaluation methods}
 Corpus is very important for successful Natural Language Generation. Dialogue systems require training data in the format of people text conversation, for example, non-fiction or movie reviews are not suitable for this. Large volumes of training data improves the decision-making ability of NLG model, so those models can use it to figure out patterns. Quality is more important for training data than the quantity of data points. Unfortunately, there are not a lot of datasets available for training NLG models, due to the high cost of creating quality datasets. 
@@ -474,7 +525,7 @@ Twitter dataset contains message-response pairs from Twitter. An example of this
 
 
 
-\chapter{Other}
+\chapter{Conclusion}
 
 Non-task-oriented dialogue system
 

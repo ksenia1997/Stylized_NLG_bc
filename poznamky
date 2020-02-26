@@ -78,3 +78,43 @@ attentional seq2seq model (Bahdanau et al., 2015).
 Cim se lisi: 
  prior studies are heavily dependent on linguistic tools or customized
 parameters in text generation, while our model is fully datadriven without any manual adjustment;
+
+
+
+
+check if it is used: 
+@MISC{open_domain_neural_ds,
+      author =       "Yun-Nung Chen and Jianfeng Gao",
+      title =        "Open-Domain Neural Dialogue Systems",
+      url =          "https://www.aclweb.org/anthology/I17-5003.pdf",
+      note =         "[Online; visited 10.11.2019]"
+    } 
+
+
+@MISC{deep_learning_ds,
+	author =	"Yun-Nung Chen and Asli Celikyilmaz and Dilek Hakkani-Tur",
+	title =		"Deep Learning for Dialogue Systems",
+	url = 		"https://www.aclweb.org/anthology/C18-3006.pdf",
+	note = 		"[Online; visited 10.11.2019]"
+	}
+
+
+
+@MISC{applied_nlg,
+	author =	"Ehud Reiter and Robert Dale",
+	title =		"Building Applied Natural Language Generation",
+	url = 		"https://pdfs.semanticscholar.org/728e/18fbf00f5a80e9a070db4f4416d66c7b28f4.pdf",
+	note = 		"[Online; visited 17.11.2019]"
+	}
+
+
+
+
+@MISC{lstm_nlg,
+	author =	"Tsung-Hsien Wen and  Milica Gašić and Nikola Mrkšić and Pei-Hao Su and David Vandyke and Steve Young",
+	title =		"Semantically Conditioned LSTM-based Natural Language Generation for Spoken Dialogue Systems",
+	url = 		"https://www.aclweb.org/anthology/D15-1199.pdf",
+	note = 		"[Online; visited 24.11.2019]"
+	}
+
+

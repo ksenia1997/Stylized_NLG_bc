@@ -9,7 +9,7 @@ Creating a non-task-oriented agent is a challenge for researches, because there 
 
 According to \cite{salovey1990emotional} one of the most important cognitive behaviors in humans is expressing and understanding emotions. That is why it is necessary to pay attention not only to generation of an adequate, semantically and syntactically correct text, but also to the emotions and language style in which person communicates to make a dialogue more diverse and interesting. 
 
-In \cite{minavrova2003souvcasna} language style is defined as a method of goal-oriented choice and arrangement (organisation) of language means which is applied in the making of the text; in the final product it is thus reflected as the principle of organizing language units which, out of parts and details, shapes a unity compatible with the communicative intention of the author. Carefully formulated speech without cliches or jargon is essential to avoid inaccurate presentation and ensure effective communication.
+In \cite{minavrova2003souvcasna} language style is defined as a method of goal-oriented choice and arrangement (organisation) of language means which is applied in the making of the text; in the final product it is thus reflected as the principle of organizing language units which, out of parts and details, shapes a unity compatible with the communicative intention of the author. Carefully formulated speech without cliches or jargon is essential to avoid inaccurate presentation and ensure effective communication. Most of the modern generative models are trained on huge corpora which include different contributions from various authors. Texts produced with such models are often not perceived as natural and characterized as non-human, because humans have recognizable writing and communication styles.
 
 
 The main purpose of this thesis was to create NLG model, which will be able to generate text in different styles.  //TODO
@@ -19,29 +19,31 @@ The main purpose of this thesis was to create NLG model, which will be able to g
 In a book \cite{alder2017handbook} Natural Language Generation is defined as ``the process by which thought is rendered into language''. NLG approaches can be grouped into two categories, one focuses on generating text using templates or (linguistic) rules (i.e. data-to-text generation), the other uses corpus-based statistical methods (i.e. text-to-text generation), where corpora is a collection of texts \cite{oh2002stochastic}.
 
 \section{Template-based approach} 
+
+\begin{table}[ht]
+\centering
+ \begin{tabular}{|c|} 
+ \hline
+ Example: \\
+ \hline
+ User's input: \\
+ ``I'm going to travel from Moscow on April 2.'' \\ 
+ \hline
+ Template: \\
+ What time would you like to travel from $\{departure\_city\}$ on $\{departure\_date\}?$ \\
+ \hline
+ Agent's output:\\
+ ``What time would you like to travel from Moscow on April 2?'' \\
+ \hline
+ \end{tabular}
+ \caption{The example of template-based approach.}
+\label{tab:tb_example}
+\end{table}
+
 Until recently Natural Language Generation component of a dialog system used primarily hand-coded generation templates, which represented model sentences in a natural language mapped to a particular semantic content.
 The template-based system selects a proper response for the current conversation from a repository with response selection algorithms. Templates are often designed for a specific task in a given domain \cite{manishina2016data}. 
 Example of template-based system is shown in the Table \ref{tab:tb_example}.
 
-  \begin{table}[t]
-  \centering
-   \begin{tabular}{|c|} 
-   \hline
-   Example: \\
-   \hline
-   User's input: \\
-   ``I'm going to travel from Moscow on April 2.'' \\ 
-   \hline
-   Template: \\
-   What time would you like to travel from $\{departure\_city\}$ on $\{departure\_date\}?$ \\
-   \hline
-   Agent's output:\\
-   ``What time would you like to travel from Moscow on April 2?'' \\
-   \hline
-   \end{tabular}
-   \caption{The example of template-based approach.}
-  \label{tab:tb_example}
-  \end{table}
 
 \subsubsection{Advantages of template-based approach}
 The output produced by this approach is likely to be grammatically correct and not contain unexpected generation errors. The process of sentence generation is fully controlled, these models are robust and reliable because they consist of clearly defined rules. 
@@ -60,7 +62,7 @@ Next level of corpus-based approaches is \textbf{Dynamic Document Creation}, wha
 Corpus-based models have ability to generate more proper responses that could have never appeared in the corpus; it is possible to mimick the language of a real domain expert and use this models for open-domain dialogue systems; dynamic approach is able to learn and to handle unknown inputs, it is also has a lot of possible variations of output.
 
 \subsubsection{Disadvantages of corpus-based approach}
-It is necessary to have a corpus, which contains a large amount of data and on a variety of topics to get a sensible output. Even if you have the corpus, process of text generation is not fully controlled and the output can be incorrect or does not make a sence. This approach still has a lot of problems, what will be described in more detail in //TODO. 
+It is necessary to have a corpus, which contains a large amount of data and on a variety of topics to get a sensible output. Even if you have the corpus, process of text generation is not fully controlled and the output can be incorrect or does not make a sence. This approach still has a lot of problems, what will be described in more detail in the section \ref{nlg_ds_problems}. 
 
 \section{Language Models}
 In corpus-based system natural language generation uses \textbf{Language Models(LMs)} to generate sequences of texts. LM is a probabilistic model which learns to predict the probability of a sequence of words. The equation \ref{eq:LM} represents the language model, where $W$ is a sequence and $w_1, w_2, ..., w_n$ are words in this sequence. The language model provides a context for distinguishing words and phrases that sound the same. For example the phrases ``but her'' and  ``butter'' sound the same, but mean different things.
@@ -90,7 +92,7 @@ An example in the Figure \ref{chain_rule} shows how to predict probability of a 
 
 Data sparsity is the phenomenon of not observing enough data in a corpus to model language accurately. The solution to resolve this issue is to make the assumption that the probability of a word depends only on the previous \textit{n} words and use \textbf{N-gram model} (N-gram is a sequence of N words).
 
-\begin{table}[t]
+\begin{table}[ht]
   \centering
    \begin{tabular}{|c|c|} 
    \hline
@@ -108,6 +110,10 @@ Data sparsity is the phenomenon of not observing enough data in a corpus to mode
 \end{table}
 
 The n-gram ``She is studying IT'' from the Table \ref{tab:n_gram} does not occur as often in texts of corpus as n-grams ``Hi'', ``New York'' and ``The Three Musketeers''. Knowing a probability to the occurrence of an N-gram in a sequence of words can be useful, because it can help to decide which N-grams can be chunked together to from single entities (like ``New York'' chuncked together as one word). It can also help make next word predictions. For example, ``tea'' is more likely than ``ball'' in the phrase ``I would like to drink''.
+
+
+According to \cite{bengio2003neural} another way to fight with data sparsity is learning a distributed representation for words, which allows each training sentence to inform the model about an exponential number of semantically neighboring sentences. The model learns simultaneously a distributed representation for each word along with the probability function for word sequences. A sequence of words that has never been seen before gets high probability if words in this sequence are similar in the sense of having a nearby representation to words forming an already seen sentence. Authors used neural networks (artificial neural networks are described in the section \ref{nn_section}) for the probability function. The proposed approach improved n-gram models and took an advantage of longer contexts.
+
 
 \section{Dialogue systems}\label{nlg_ds_problems}
 The ability to communicate with machines in a natural language is a long-standing dream of mankind. Today's dialogue systems often encounter criticism. There are many scientific works on creating more natural dialogue systems. Markus M. Berg defines a natural dialogue system in \cite{berg2014modelling} as ``a form of dialogue system that tries to improve usability and user satisfaction by imitating human behaviour''. It affects the features of human-to-human dialogue (for example, topic changes, sub-dialogues) and seeks to integrate them into dialogue systems for human interaction with the machine. Open-ended natural dialogue systems still have flaws in generating a response to the user.
@@ -199,7 +205,7 @@ An example in the Table \ref{tab:var_example} shows all types of variation. Some
 
 One of the hardest problem in text generation is a language style, which makes a response to an user more human. This task is challenging due to the difficulty of capturing emotional factors and the complex mechanism of human emotions. Some people use obscene speech, some use a lot of expressive means, jargon or jokes to make speech more emotional. This is what distinguishes people and makes their communication more interesting.
 
-\chapter{models for Natural Language Generation}
+\chapter{Models for Natural Language Generation}
 NLG evolution from templates to dynamic generation of sentences took a lot of time and models developed along with it. Corpus-based generation uses a generative probabilistic model what can be implemented in many ways. The model focuses on response generation in the context of dialogue, where the task is to generate a response, given an utterance. Thus, these models fit well within the sequence-to-sequence (seq2seq) (i.e. encoder-decoder) models with using neural networks (NNs), which are described in more detail in section \ref{seq2seq_section}, but first a short description what neural networks are, for a better understanding seq2seq model.
 
 \section{Neural Networks} \label{nn_section}
@@ -242,7 +248,7 @@ h_t = \sigma(W_hh_{t-1} + W_xx_t)
 o_t = softmax(W_oh_t)
 \end{equation}
 
-The RNN-based models have been used for NLG as a component of end-to-end trainable goal-oriented dialogue system \cite{network_nlg} and a training model with semantic aggregation \cite{rnn_nlg}. 
+The RNN-based models have been used for NLG as a component of end-to-end trainable goal-oriented dialogue system \cite{wen2016network} and a training model with semantic aggregation \cite{tran2017neural}. 
 
 Nowadays traditional RNN networks almost are not used in NLG, because they have problems with vanishing and exploding gradients. As introduced in \cite{bengio1994learning} the exploding problem refers to the large increase in the norm of the gradient during training. It happens, because long term components can grow exponentially more then short term ones. The vanishing gradients problem refers to the opposite behaviour. The long term components go exponentially fast to norm 0, which makes it impossible for the model to learn correlation between temporally distant events. This issue has motivated researchers in development of more advanced RNNs like the LSTM \cite{hochreiter1997long}.
 
@@ -346,11 +352,12 @@ An equation \ref{eq:transformer_multi_head} represents a \textbf{multi-head atte
 
 
 \chapter{Related works}
-This chapter presents an overview of the most popular NLG models for building open-ended dialogue systems. Section \ref{usual_problems} presents approaches for resolving standard NLG problems, what were described in the section \ref{nlg_ds_problems}. Section \ref{emotional_problems} presents solutions for generating more emotional text.
+This chapter presents an overview of the most popular NLG models for building open-ended dialogue systems and for resolving problems described in the section \ref{nlg_ds_problems}. Section \ref{usual_problems} presents approaches for resolving standard NLG problems. Section \ref{emotional_problems} presents solutions for generating more emotional and stylized text, which helps make the text more human.
 
 \section{Approaches for dialogue systems problems}\label{usual_problems}
+In the paper \cite{see2019makes} desctibed solutions to common NLG problems in dialogue systems.
 
-\section{Approaches for generating emotional conversation} \label{emotional_problems}
+\section{Approaches for generating stylized and emotional conversation} \label{emotional_problems}
 
 \subsubsection{Affect Listeners}
 The concept and the constitution of Affect Listeners were introduced in the paper \cite{skowron2010affect}. Affect listeners can respond to users’ utterances both at the content- and affectrelated level. This system is able to detect and classify a user's textual expression of affective states and direct a dialog that facilates recognition of the user’s topics of interest.
@@ -396,6 +403,22 @@ In the architecture (the Figure \ref{ecm}) a post can be answered with different
 
 ECM need an external decision maker, because this model has to specify an emotion category to be generated.
 
+\subsubsection{Generation of stylized texts}
+In the paper \cite{tikhonov2018guess} authors describe the problem of stylized text generation in a multilingual setup. They present a version of a language model based on a LSTM artificial neural network with extended phonetic and semantic embeddings for stylized poetry generation.
+
+\begin{equation} \label{eq:poetry_nlg}
+G(C|S) = \begin{cases} 
+          (C, \mathbb{R}^m, F) \rightarrow \{T_i^G\} \\
+          \{T_i^G|S\}  \mathtt{\sim}  \{T_i|S\} & \mbox{w.r.t. D}\\
+         \end{cases}
+\end{equation}
+
+The equation \ref{eq:poetry_nlg} represents the stylized model, where $C = \{ T_i\}^M_{i=0}$ is a corpus of $M$ literary texts written in one natural language. Every text of length $l$ is a sequence $T_i = (w_j)^l_{j=0}$ ($w_j$ is a word). Words are drawn from a vocabulary set $V = \{ w_j \}^L_{j=1}$, $L$ is a vocabulary size. $(C, \mathbb{R}^m, F)$ is all information available to us.
+
+Performance metric $D$ usually tries to minimize $D(\{T_i\}, \{T_i^G\})$, where $\{T_i^G\}$ is a randomized sample of $C$. $S$ is a subset of continuous and categorical variables out of $(\mathbb{R}^m, F)$ and metric $D$. Artificial neural networks are used for language modeling to avoid the dimensionality curse by effective mapping $(C,\mathbb{R}^m, F) \rightarrow \mathbb{R}^d$ and then train the model like that $G(C):\mathbb{R}^d \rightarrow \{ T_i^G\}$. 
+
+Advantage of this model is a customization. To control cetain parameters of the model, it is needed to include them intp $S$. The output $\{T_i^G|S\}$ will resemble original texts $\{T_i|S\}$ that satisfy $S$ conditions. The name of an author and a poetic text are used as a condition $S$. 
+
 \chapter{Datasets and Evaluation methods}
 Corpus is very important for successful Natural Language Generation. Dialogue systems require training data in the format of people text conversation, for example, non-fiction or movie reviews are not suitable for this. Large volumes of training data improves the decision-making ability of NLG model, so those models can use it to figure out patterns. Quality is more important for training data than the quantity of data points. Unfortunately, there are not a lot of datasets available for training NLG models, due to the high cost of creating quality datasets. 
 
@@ -428,7 +451,7 @@ In my bachelor thesis I am using 2 different dataset (Twitter data and Persona-C
     \multicolumn{2}{l}{[PERSON 2:] I usually spend my time painting: but, I love the show.} \\
     \hline\hline
   \end{tabular}
-  \caption{Example of a dialogue from the Persona-Chat dataset \cite{persona_chat}.}
+  \caption{Example of a dialogue from the Persona-Chat dataset \cite{zhang2018personalizing}.}
 \label{tab:persona_chat}
 \end{table}
 
@@ -445,7 +468,7 @@ In my bachelor thesis I am using 2 different dataset (Twitter data and Persona-C
    Horses are my favorite animal. & I am into equastrian sports. \\ 
    \hline
   \end{tabular}
-  \caption{Example of original and revised personas \cite{persona_chat}.}
+  \caption{Example of original and revised personas \cite{zhang2018personalizing}.}
 \label{tab:persona_revised}
 \end{table}
 

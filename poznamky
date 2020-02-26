@@ -67,6 +67,11 @@ encoded syntax trees and dialogue acts into sequences (Dusek and Jur ˇ cˇ´ıc
 
 http://primo.ai/index.php?title=Transformer
 
+IMPORTANT: 
+https://arxiv.org/pdf/1709.03010.pdf
+https://www.aclweb.org/anthology/P17-4008.pdf
+
+Li et al. (2016) defined a “persona” as the character that an artificial agent, as actor, plays or performs during conversational interactions.
 
 architektura: 
 emotional decoder 
@@ -117,4 +122,14 @@ check if it is used:
 	note = 		"[Online; visited 24.11.2019]"
 	}
 
+
+
+
+Datasets: 
+Twitter: Sordoni et al., 2015   which consists of 23 million conversational snippets randomly selected from a collection of 129M context-message-response triples
+
+https://webscope.sandbox.yahoo.com/catalog.php?datatype=l Comprehensive Questions and Answers dataset
+
+
+(DanescuNiculescu-Mizil and Lee, 2011 START WARS Cornell Movie-Dialogs Corpus
 

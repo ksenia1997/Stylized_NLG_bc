@@ -352,7 +352,7 @@ An equation \ref{eq:transformer_multi_head} represents a \textbf{multi-head atte
 
 
 \chapter{Related works}
-This chapter presents an overview of the most popular NLG models for building open-ended dialogue systems and for resolving problems described in the section \ref{nlg_ds_problems}. Section \ref{usual_problems} presents approaches for resolving standard NLG problems. Section \ref{emotional_problems} presents solutions for generating more emotional and stylized text, which helps make the text more human.
+This chapter presents an overview of the most popular NLG models for building open-ended dialogue systems and for resolving problems described in the section \ref{nlg_ds_problems}. Section \ref{usual_problems} presents approaches for resolving standard NLG problems. Section \ref{emotional_problems} presents solutions for generating more emotional and stylized text, which helps make text more human.
 
 \section{Approaches for dialogue systems problems}\label{usual_problems}
 In the paper \cite{see2019makes} described solutions to common NLG problems in dialogue systems. Authors add control (the ability to specify desired attributes of the generated text at test time) and focus on four controllable attributes of text: repetition, specificity, response-relatedness and question-asking. They measure repetitiveness as n-gram overlap, specificity as word rareness, response-relatedness as the embedding similarity of the bot’s response to the human’s last utterance. In this work, authors use \textbf{Conditional Training (CT)} \cite{peng2018towards} and \textbf{Weighted Decoding (WD)} \cite{ghazvininejad2017hafez}. 
@@ -388,6 +388,8 @@ N-gram based decoding features were defined to control repetition with WD. Exter
 resp\_rel(w; y_{<t}, x) = cos\_sim(word\_emb(w), sent\_emb(l)) 
 \end{equation}
 Response-relatedness feature is also controled with weighted decoding and represented in the Equation \ref{eq:response_relatedness}, where $word\_emb(w)$ is the GloVe embedding for the word $w$, $sent\_emb(l)$ is the sentence embedding for the partner's last utterance $l$ ($l$ is part of the context $x$), $cos\_sim$ is the cosine similarity between two.
+
+According to \cite{holtzman2019curious} decoding strategies with likelihood maximazing lead to text that is increadibly degenerate, even when using state-of-the-art models. This models generate repetitive and overly generic text. The research shows how different natural distribution of human texts and the distribution of machine text produced from maximum likelihood decoding. To resolve this problem authors introduced \textbf{Nucleus Sampling}. The concept is that the vast majority of probabilities are concentrated in a small subset (\textit{nucleus}) of the vocabulary that tends to vary from one to a few hundred candidates. Sampling from the top-$p$ portion of the probability mass expands and contracts the candidate pool dynamically.
 
 \section{Approaches for generating stylized and emotional conversation} \label{emotional_problems}
 

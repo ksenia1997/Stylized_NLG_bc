@@ -352,7 +352,7 @@ An equation \ref{eq:transformer_multi_head} represents a \textbf{multi-head atte
 
 
 \chapter{Related works}
-This chapter presents an overview of the most popular NLG models for building open-ended dialogue systems and for resolving problems described in the section \ref{nlg_ds_problems}. Section \ref{usual_problems} presents approaches for resolving standard NLG problems. Section \ref{emotional_problems} presents solutions for generating more emotional and stylized text, which helps make text more human.
+This chapter presents an overview of the most popular NLG models for building open-ended dialogue systems and for resolving problems described in the section \ref{nlg_ds_problems}. Section \ref{usual_problems} presents approaches for resolving standard NLG problems. Section \ref{stylized_problems} presents solutions for generating stylized text, which helps to create the feeling that you are talking to a person.
 
 \section{Approaches for dialogue systems problems}\label{usual_problems}
 In the paper \cite{see2019makes} described solutions to common NLG problems in dialogue systems. Authors add control (the ability to specify desired attributes of the generated text at test time) and focus on four controllable attributes of text: repetition, specificity, response-relatedness and question-asking. They measure repetitiveness as n-gram overlap, specificity as word rareness, response-relatedness as the embedding similarity of the bot’s response to the human’s last utterance. In this work, authors use \textbf{Conditional Training (CT)} \cite{peng2018towards} and \textbf{Weighted Decoding (WD)} \cite{ghazvininejad2017hafez}. 
@@ -391,54 +391,12 @@ Response-relatedness feature is also controled with weighted decoding and repres
 
 According to \cite{holtzman2019curious} decoding strategies with likelihood maximazing lead to text that is increadibly degenerate, even when using state-of-the-art models. This models generate repetitive and overly generic text. The research shows how different natural distribution of human texts and the distribution of machine text produced from maximum likelihood decoding. To resolve this problem authors introduced \textbf{Nucleus Sampling}. The concept is that the vast majority of probabilities are concentrated in a small subset (\textit{nucleus}) of the vocabulary that tends to vary from one to a few hundred candidates. Sampling from the top-$p$ portion of the probability mass expands and contracts the candidate pool dynamically.
 
-\section{Approaches for generating stylized and emotional conversation} \label{emotional_problems}
-
-\subsubsection{Affect Listeners}
-The concept and the constitution of Affect Listeners were introduced in the paper \cite{skowron2010affect}. Affect listeners can respond to users’ utterances both at the content- and affectrelated level. This system is able to detect and classify a user's textual expression of affective states and direct a dialog that facilates recognition of the user’s topics of interest.
-\begin{figure}[hbt]
-  \centering
-  \includegraphics[width=0.5\textwidth]{figures/affect_listeners.pdf}
-  \caption{Layers of the system architecture.}
-  \label{affect_listener}
-\end{figure}
-
-The architecture, represented in the Figure \ref{affect_listener}, includes 3 layers: perception, control and actuator-communication. Perception layer analysis the input from the system's environment and the output of tools in the actuator layer, by using NLP tools and machine learning-based classifiers. Control layer analysis information from the perception layer and manages interaction with the user. It also monitors the dialog progression and selects a response from the number of response candidates. Affect Listener Dialog Scripting (ALDS), command interpreters for Artificial Intelligence Markup Language (AIML) and User Adaptation Mechanism integrates the rule-based action selection. The actuator-communication layer provides information for generating system responses. This architecture is good for task-oriented dialogues, but for open-ended dialogues it cannot be used, because it is hard to implement all possible scenarios.
-
-
-\subsubsection{MECS}
-\begin{figure}[hbt]
-  \centering
-  \includegraphics[width=0.9\textwidth]{figures/MECS.pdf}
-  \caption{The general framework and dataflow of MECS.}
-  \label{mecs}
-\end{figure}
-
-According to \cite{zhang2017building} in emotional interaction analysis it was found that people tend to achieve the same emotional state in conversation. This phenomenon is explained as empathy at the psychological level.
-
-In their research they create the system MECS for the NLPCC 2017 shared task on emotional conversation generation. Seq2seq architecture is used to capture the textual information of post sequence and generate responses for each type of emotions simultaneously.
-
-\begin{equation} \label{eq:intra-ranking}
-p(Y|X) = \prod_{t=1}^{N_y} p(y_t|x_1, x_2, ..., x_T, y_1, y_2, ... , y_{t-1}) = \prod_{t=1}^{N_y} \frac{exp(f(s_t, e_{y_t}))}{\sum_{y'} exp(f(s_t, e_{y'}))}
-\end{equation}
-
-The Figure \ref{mecs} represents the architecture of MECS model, where \textbf{intra-ranking} and \textbf{inter-ranking} are used, to help choosing only one reponse from all generated emotional responses. Calculation of intra-ranking is shown in the Equation \ref{eq:intra-ranking}. $N_y$ denotes the length of a response sequence $Y$, $f(s_t, e_{y_t})$ denotes the corresponding output on the last projection layer for word $y_t$. The sentence with the highest score is selected as the decoder's output. Inter-ranking selects the most appropriate response as model's output. However in MECS model the inter-ranking is calculated as the itra-ranking (the Equation \ref{eq:intra-ranking}), what means that chosen output does not depend on emotional type of input text. Therefore, it is not capable to simulate the emotion interaction in human conversation.
-
-\subsubsection{ECM}
-Emotional Chatting Machine (ECM), represented in \cite{zhou2018emotional}, can generate not only relevant and grammatical responses, but also emotionally consistent. This framework proposes seq2seq architecture. This separate responses into several categories (Angry, Disgust, Happy, Like, Sad, Other). The emotion category of the to-be-generated response is given for ECM, because, in the opinion og the authors, emotions are highly subjective. 
-
-\begin{figure}[hbt]
-  \centering
-  \includegraphics[width=1\textwidth]{figures/ecm.png}
-  \caption{ Overview of ECM (the grey unit). The pink units are used to model emotion factors in the framework.}
-  \label{ecm}
-\end{figure}
-
-In the architecture (the Figure \ref{ecm}) a post can be answered with different emotions, depending on the attitude of the respondent. For example, for a sad story, someone may respond with anger  (as an irritable stranger), sympathy (as a friend) or happy (as an enemy). \textbf{Emotion classifier} generates labels for each response. Generated labels and responses are fed into ECM to generate emotional responses conditioned on different emotion categories. In \textbf{Emotion Category Embedding} randomly initialize the vector of an emotion category $v_e$ for each category $e$. During the training the model is learning the vectors of the emotion category. \textbf{Internal memory} captures emotion dynamics during decoding. It is achieved using the following concept: before the decoding process each category has an internal emotion state; at each step the emotion state decays by a certain amount; when decoding process is completed, the emotion state should be zero, what indicates that the emotion is completely expressed. \textbf{External memory} is used to model emotion expressions explicitly, the model can choose to generate words from  an emotion vocabulary or a generic vocabulary.
-
-ECM need an external decision maker, because this model has to specify an emotion category to be generated.
+\section{Approaches for generating stylized conversation} \label{stylized_problems}
+The idea that computers can generate stylized texts appeared half a century ago in \cite{wheatley1965computer}. There are many papers devoted to the various aspects of style, such as an expession of politeness in machine translation \cite{sennrich2016controlling}, transformation from modern English to Shakespearean English \cite{jhamtani2017shakespearizing}, sentiment of a text in \cite{shen2017style} and \cite{li2018delete}. The problem of style transfer, described in these papers, differs from the stylized text generation, because as it is shown in \cite{guu2018generating} an existing human-written source used to control the reliability of the results can significantly improve the quality of the resulting texts.
 
 \subsubsection{Generation of stylized texts}
-In the paper \cite{tikhonov2018guess} authors describe the problem of stylized text generation in a multilingual setup. They present a version of a language model based on a LSTM artificial neural network with extended phonetic and semantic embeddings for stylized poetry generation.
+
+In the paper \cite{tikhonov2018guess} authors describe the problem of stylized text generation in a multilingual setup and show the importance of phonetics for generating the author's stylized poetry. They presented a version of a language model based on a LSTM artificial neural network with extended phonetic and semantic embeddings for stylized poetry generation. The model generates texts resembling the writing style of a particular author.
 
 \begin{equation} \label{eq:poetry_nlg}
 G(C|S) = \begin{cases} 
@@ -451,9 +409,17 @@ The equation \ref{eq:poetry_nlg} represents the stylized model, where $C = \{ T_
 
 Performance metric $D$ usually tries to minimize $D(\{T_i\}, \{T_i^G\})$, where $\{T_i^G\}$ is a randomized sample of $C$. $S$ is a subset of continuous and categorical variables out of $(\mathbb{R}^m, F)$ and metric $D$. Artificial neural networks are used for language modeling to avoid the dimensionality curse by effective mapping $(C,\mathbb{R}^m, F) \rightarrow \mathbb{R}^d$ and then train the model like that $G(C):\mathbb{R}^d \rightarrow \{ T_i^G\}$. 
 
-Advantage of this model is a customization. To control cetain parameters of the model, it is needed to include them intp $S$. The output $\{T_i^G|S\}$ will resemble original texts $\{T_i|S\}$ that satisfy $S$ conditions. The name of an author and a poetic text are used as a condition $S$. 
+Advantage of this model is a customization. To control cetain parameters of the model, it is needed to include them intp $S$. The output $\{T_i^G|S\}$ will resemble original texts $\{T_i|S\}$ that satisfy $S$ conditions. The name of an author of a poetic text is used as a condition $S$ for the model. 
 
-\chapter{Datasets and Evaluation methods}
+Another key feature of the proposed model is a concatenated word representation, where one of the LSTMs works with letters from char-representation of the word and another one uses phonemes of the International Phonetic Alphabet, employing an heuristics to transcribe words into phonemes.
+ 
+\chapter{Evaluation methods and datasets}
+The majority of NLG researches published between 2005-2014 relies on automatic metrics \cite{gkatzia2015snapshot}. A lot of NLG evaluations use automatic metrics, because it is a cheap and fast method. These metrics are reasonable if they are known to be enough correlated with human preferences. According to \cite{artstein2009semi} conversational dialogue systems cannot be evaluated by automatic metrics, because dialogue is heavily dependent on context and theory of current dialogue is not precise enough to predetermine the target output.  
+
+Metrics METEOR, BLEU, ROUGE are usually used for automatic summarization. They assume that valid responses have significant word overlap with the ground truth responses. In dialogue systems these metrics cannot be used, because there is significant diversity in the space of valid responses to a given context \cite{liu2016not}.
+
+In the paper \cite{novikova2017we} the weak correlation between human and automatic evaluations is also confirmed. Authors compared different word-based (\textbf{WBM} relies on ground-truth references) and grammar-based (\textbf{GBM} does not rely on ground-truth references) metrics. Their model, combination of WBMs and GBMs, achieved high correlation with humans but only within a single domain.
+
 Corpus is very important for successful Natural Language Generation. Dialogue systems require training data in the format of people text conversation, for example, non-fiction or movie reviews are not suitable for this. Large volumes of training data improves the decision-making ability of NLG model, so those models can use it to figure out patterns. Quality is more important for training data than the quantity of data points. Unfortunately, there are not a lot of datasets available for training NLG models, due to the high cost of creating quality datasets. 
 
 In my bachelor thesis I am using 2 different dataset (Twitter data and Persona-Chat). 
@@ -577,6 +543,14 @@ Persona-Chat dataset consists of small conversations between 2 crowdworkers from
  \caption{Example of Twitter message-response pairs}
 \label{tab:twitter_chat}
 \end{table}
+
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figures/tweet.pdf}
+  \caption{Histogram of tweets' lengths.}
+  \label{tweet}
+\end{figure}
 
 Twitter dataset contains message-response pairs from Twitter. An example of this data is presented in the Table \ref{tab:twitter_chat}. 
 

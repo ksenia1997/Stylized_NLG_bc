@@ -18,6 +18,14 @@ The main purpose of this thesis was to create NLG model, which will be able to g
 \chapter{NLG problems in dialogue systems}\label{nlg_problems}
 In a book \cite{alder2017handbook} Natural Language Generation is defined as ``the process by which thought is rendered into language''. NLG approaches can be grouped into two categories, one focuses on generating text using templates or (linguistic) rules (i.e. data-to-text generation), the other uses corpus-based statistical methods (i.e. text-to-text generation), where corpora is a collection of texts \cite{oh2002stochastic}.
 
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.9\textwidth]{figures/templateVScorpus.pdf}
+  \caption{NLG tasks are existing on the following spectrum.}
+  \label{nlg_spectum}
+\end{figure}
+
 \section{Template-based approach} 
 
 \begin{table}[ht]
@@ -392,7 +400,7 @@ Response-relatedness feature is also controled with weighted decoding and repres
 According to \cite{holtzman2019curious} decoding strategies with likelihood maximazing lead to text that is increadibly degenerate, even when using state-of-the-art models. This models generate repetitive and overly generic text. The research shows how different natural distribution of human texts and the distribution of machine text produced from maximum likelihood decoding. To resolve this problem authors introduced \textbf{Nucleus Sampling}. The concept is that the vast majority of probabilities are concentrated in a small subset (\textit{nucleus}) of the vocabulary that tends to vary from one to a few hundred candidates. Sampling from the top-$p$ portion of the probability mass expands and contracts the candidate pool dynamically.
 
 \section{Approaches for generating stylized conversation} \label{stylized_problems}
-The idea that computers can generate stylized texts appeared half a century ago in \cite{wheatley1965computer}. There are many papers devoted to the various aspects of style, such as an expession of politeness in machine translation \cite{sennrich2016controlling}, transformation from modern English to Shakespearean English \cite{jhamtani2017shakespearizing}, sentiment of a text in \cite{shen2017style} and \cite{li2018delete}. The problem of style transfer, described in these papers, differs from the stylized text generation, because as it is shown in \cite{guu2018generating} an existing human-written source used to control the reliability of the results can significantly improve the quality of the resulting texts.
+The idea that computers can generate stylized texts appeared half a century ago in \cite{wheatley1965computer}. Authors choose a variety of text characteristics as style, such as an expession of politeness in machine translation \cite{sennrich2016controlling}, transformation from modern English to Shakespearean English \cite{jhamtani2017shakespearizing}, sentiment of a text in \cite{shen2017style} and \cite{li2018delete}. In \cite{gao2019structuring} authors used a structured latent space to generate stylized dialogue responses. Another approach was proposed in \cite{john2018disentangled}, where authors applied an adversarial loss to separate style from content. The problem of style transfer, described in these papers, differs from the stylized text generation, because as it is shown in \cite{guu2018generating} an existing human-written source used to control the reliability of the results can significantly improve the quality of the resulting texts. 
 
 \subsubsection{Generation of stylized texts}
 

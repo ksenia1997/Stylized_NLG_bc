@@ -363,6 +363,7 @@ An equation \ref{eq:transformer_multi_head} represents a \textbf{multi-head atte
 This chapter presents an overview of the most popular NLG models for building open-ended dialogue systems and for resolving problems described in the section \ref{nlg_ds_problems}. Section \ref{usual_problems} presents approaches for resolving standard NLG problems. Section \ref{stylized_problems} presents solutions for generating stylized text, which helps to create the feeling that you are talking to a person.
 
 \section{Approaches for dialogue systems problems}\label{usual_problems}
+\subsubsection{Text generation methods}
 In the paper \cite{see2019makes} described solutions to common NLG problems in dialogue systems. Authors add control (the ability to specify desired attributes of the generated text at test time) and focus on four controllable attributes of text: repetition, specificity, response-relatedness and question-asking. They measure repetitiveness as n-gram overlap, specificity as word rareness, response-relatedness as the embedding similarity of the bot’s response to the human’s last utterance. In this work, authors use \textbf{Conditional Training (CT)} \cite{peng2018towards} and \textbf{Weighted Decoding (WD)} \cite{ghazvininejad2017hafez}. 
 
 \begin{figure}[hbt]
@@ -375,28 +376,27 @@ In the paper \cite{see2019makes} described solutions to common NLG problems in d
 
 A \textbf{CT} model learns probabilities $P(y|x,z)$, where $y$ is the output text, $x$ is the input text and $z$ is a control variable, which specifies the desired output attribute. In the model $z$ is presented with learned embedding and is concatenated to each decoder input (the Figure \ref{ct}). For example, to get very generic or very specific response, $z$ can be set to LOW or HIGH. If it is necessary simultaneously control several attributes, multiple control embeddings ($z_1, z_2, ..., z_n$) can be concatenated and the model learns $P(y|x, z_1, z_2, ..., z_n)$. Disadvantage of Conditional Training is that it can’t control attributes without sufficient training data. CT model learns only a very weak connection between $z$ and the semantic relatedness of the output.
 
-\begin{equation} \label{eq:nidf}
-NIDF(w) = \frac{IDF(w) - min\_idf}{max\_idf - min\_idf}
-\end{equation}
-Normalized Inverse Document Frequency (NIDF) is used as a measure of word rareness (as $z$ variable) for condition training (Equation \ref{eq:nidf}). $IDF(w) = \log(\frac{R}{c_w})$ is a Inverse Document Frequency of a word $w$, where $R$ is the number of responses in the dataset, $c_w$ is the number of those responses that contain $w$. $min\_idf$ and $max\_idf$ are the minimum and maximum IDF's.
-
-Question-asking problem is resolved by setting the variable $z$ to 1 of 11 possible values: $\{0, 1, ..., 10\}$, where $z=i$ means that the model should produce, on average, utterances containing ``?'' with probability $\frac{i}{10}$.
-
-A \textbf{WD} is a technique applied during decoding to increase/decrease the probability of words with certain features. In the paper Weighted Decoding is used for controling specificity by increasing the probability of rare words. On each step of the decoding, the probability of each word in the vocabulary is updated in proportion to its rareness. The size of the update is controlled by a weight parameter. 
-
+A \textbf{WD} is a technique applied during decoding to increase/decrease the probability of words with certain features. 
 \begin{equation} \label{eq:wd}
 score(w, y_{<t}; x) = score(y_{<t}; x) + \log P_{RNN}(w|y_{<t}, x) + \sum_i w_i * f_i(w; y_{<t}, x)
 \end{equation}
+In weighted decoding (Equation \ref{eq:wd}), a particial hypothesis $y_{<t} = y_1, ..., y_{t-1}$ is expanded by computing the score for each possible next word $w$ in the vocabulary on the $t^{th}$ step of decoding. $\log P_{RNN}(w|y_{<t}, x)$ is the log-probability of the word $w$ calculated by the RNN. $score(y_{<t}; x)$ is the accumulated score of the already-generated words in the hypothesis $y_{<t}$. $f_i(w; y_{<t}, x)$ is a decoding feature with associated weights $w_i$ (hyperparameters to be chosen). Each feature presents a specific controlling attribute.
 
-In WD, a particial hypothesis $y_{<t} = y_1, ..., y_{t-1}$ is expanded by computing the score for each possible next word $w$ in the vocabulary on the $t^{th}$ step of decoding (Equation \ref{eq:wd}). $\log P_{RNN}(w|y_{<t}, x)$ is the log-probability of the word $w$ calculated by the RNN. $score(y_{<t}; x)$ is the accumulated score of the already-generated words in the hypothesis $y_{<t}$. $f_i(w; y_{<t}, x)$ are decoding features with associated weights $w_i$ (hyperparameters to be chosen). Each feature presents a specific controlling attribute.
+\begin{equation} \label{eq:nidf}
+NIDF(w) = \frac{IDF(w) - min\_idf}{max\_idf - min\_idf}
+\end{equation}
+\textbf{Normalized Inverse Document Frequency (NIDF)} is used as a measure of word rareness. In condition training the metric is represented as $z$ variable and in weighted decoding as a parameter of rareness for a word prediction (On each step of the decoding, the probability of each word in the vocabulary is updated in proportion to its rareness. The size of the update is controlled by a weight parameter.) (Equation \ref{eq:nidf}). $IDF(w) = \log(\frac{R}{c_w})$ is a Inverse Document Frequency of a word $w$, where $R$ is the number of responses in the dataset, $c_w$ is the number of those responses that contain $w$. $min\_idf$ and $max\_idf$ are the minimum and maximum IDF's, which are used for normalising the NIDF (ranges from 0 to 1).
 
-N-gram based decoding features were defined to control repetition with WD. External (self-repetition across utterances), internal (self-repetition within utterances) and partner (repeating the conversational partner) repetition fetures identify repeating bigrams. Other features identify repeating content words. Negative weight is applied to these features to reduse repetition.
+Question-asking problem is resolved in CT by setting the variable $z$ to 1 of 11 possible values: $\{0, 1, ..., 10\}$, where $z=i$ means that the model should produce, on average, utterances containing ``?'' with probability $\frac{i}{10}$. In weighted decoding the binary decoding feature is used, which is equal to 1 if a word $w$ is in a pre-defined list of words: ``how, what, when, where, which, who, whom, whose, why, ?'', 0 otherwise.
 
+N-gram based decoding features were defined to control repetition with WD. External (self-repetition across utterances), internal (self-repetition within utterances) and partner (repeating the conversational partner) repetition fetures identify repeating bigrams. Other features identify repeating content words. Negative weight is applied to these features to reduse repetition. 
 \begin{equation} \label{eq:response_relatedness}
 resp\_rel(w; y_{<t}, x) = cos\_sim(word\_emb(w), sent\_emb(l)) 
 \end{equation}
-Response-relatedness feature is also controled with weighted decoding and represented in the Equation \ref{eq:response_relatedness}, where $word\_emb(w)$ is the GloVe embedding for the word $w$, $sent\_emb(l)$ is the sentence embedding for the partner's last utterance $l$ ($l$ is part of the context $x$), $cos\_sim$ is the cosine similarity between two.
+Response-relatedness feature with weighted decoding is represented in the Equation \ref{eq:response_relatedness}, where $word\_emb(w)$ is the GloVe embedding for the word $w$, $sent\_emb(l)$ is the sentence embedding for the partner's last utterance $l$ ($l$ is part of the context $x$), $cos\_sim$ is the cosine similarity between two.
+The control response-relatedness in condition training is represented by variable $z$ as $cos\_sim(sent\_emb(y), sent\_emb(l))$, where $cos\_sim$ is a cosine similarity between the model's response $y$ and the partner's last utterance $l$.
 
+\subsubsection{Decoding strategies}
 According to \cite{holtzman2019curious} decoding strategies with likelihood maximazing lead to text that is increadibly degenerate, even when using state-of-the-art models. This models generate repetitive and overly generic text. The research shows how different natural distribution of human texts and the distribution of machine text produced from maximum likelihood decoding. To resolve this problem authors introduced \textbf{Nucleus Sampling}. The concept is that the vast majority of probabilities are concentrated in a small subset (\textit{nucleus}) of the vocabulary that tends to vary from one to a few hundred candidates. Sampling from the top-$p$ portion of the probability mass expands and contracts the candidate pool dynamically.
 
 \section{Approaches for generating stylized conversation} \label{stylized_problems}
@@ -562,6 +562,10 @@ Persona-Chat dataset consists of small conversations between 2 crowdworkers from
 
 Twitter dataset contains message-response pairs from Twitter. An example of this data is presented in the Table \ref{tab:twitter_chat}. 
 
+
+\chapter{Implementation and experiments}
+\section{Implementation}
+\section{Experiments}
 
 
 \chapter{Conclusion}

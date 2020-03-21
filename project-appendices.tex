@@ -1,3 +1,155 @@
+\chapter{Results of experiments}
+
+\begin{table}[ht]
+\centering
+ \begin{tabular}{|p{7cm}|p{7cm}|} 
+ \hline\hline
+ \textbf{Input} & \textbf{Generated Output} \\
+ \hline\hline
+ Person description: as a child, i won a national spelling bee. \# i have been published in the new yorker magazine. \# i am a gourmet cook. \# i have perfect pitch. & Person description: i am very athletic. \# i wear contacts. \# i have brown hair. \# i love bicycling. \# i hate carrots. \\
+ \hline
+ (Silence) & hi, how are you doing today?\\ 
+ \hline
+ hi! i work as a gourmet cook & that is cool. i am a chef. \\
+ \hline
+ i do not like carrots. i throw them away. & i do not like carrots either. i am a gourmet cook. \\
+ \hline 
+ really. but, i can sing pitch perfect. & i am very athletic. i love to play sports. \\
+ \hline
+ i also cook, and i ride my bike to work. & i ride my bike to work as well. \\
+ \hline 
+ great! i had won an award for spelling bee. & that is awesome. i am very athletic, so i love spelling. \\
+ \hline\hline
+ \end{tabular}
+ \caption{Experiment BART conversation}
+\label{tab:bart_conversation}
+\end{table}
+
+
+\begin{table}[ht]
+\centering
+ \begin{tabular}{|p{7cm}|p{7cm}|} 
+ \hline\hline
+ \textbf{Input} & \textbf{Generated Output} \\
+ \hline\hline
+ Person description: as a child, i won a national spelling bee. \# i have been published in the new yorker magazine. \# i am a gourmet cook. \# i have perfect pitch. & Person description: i am very athletic. \# i wear contacts. \# i have brown hair. \# i love bicycling. \# i hate carrots. \\
+ \hline
+ (Silence) & hello , how are you doing today?\\ 
+ \hline
+ hi! i work as a gourmet cook & what kind of gourmet cook do you cook?\\
+ \hline
+ i do not like carrots. i throw them away. & what kind of carrots do you discard? \\
+ \hline 
+ really. but, i can sing pitch perfect. & what kind of music do you sing pitch perfect? \\
+ \hline
+ i also cook, and i ride my bike to work. & that sounds fun! i ride my bike to work as well. \\
+ \hline 
+ great! i had won an award for spelling bee. & awesome! what kind of spelling bee did you win? \\
+ \hline\hline
+ \end{tabular}
+ \caption{Experiment BART conversation with specifity, weight = 5}
+\label{tab:bart_conversation_idf5}
+\end{table}
+
+\begin{table}[ht]
+\centering
+ \begin{tabular}{|p{7cm}|p{8cm}|} 
+ \hline\hline
+ \textbf{Input} & \textbf{Generated Output} \\
+ \hline\hline
+ Person description: as a child, i won a national spelling bee. \# i have been published in the new yorker magazine. \# i am a gourmet cook. \# i have perfect pitch. & Person description: i am very athletic. \# i wear contacts. \# i have brown hair. \# i love bicycling. \# i hate carrots. \\
+ \hline
+ (Silence) & email ...\\ 
+ \hline
+ hi! i work as a gourmet cook & providing Gourmet Cookery Cookeries produces artisanal artisan sauces costing \$300-\$400 apiece apiece.\\
+ \hline
+ i do not like carrots. i throw them away. & Carrots contain potassium chloride Sodium sulfoxide oxide oxide coating saltspoon salts iodophenophenols iodidine sulfamate sulfoxin sulfuronium sulphuronicum sulphuranicum sulfuranium sulfenium sulfurous sulfury sulphury sulfioxide sulphurous sulphoric oxide sulphurate sulphur iodassium iodidation sulphuration sulfurate sulfidation sulfurious sulphurized sulphural sulforic acid sulphurus sulfacid sulfural iodoric sulphorus sulfuration iodacid iodidated sulphurred sulphurious sulfitious sulfimony sulf \\
+ \hline 
+ really. but, i can sing pitch perfect. & sung pitch perfect pitches Perfect?!?!!? !!?! !! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! !!!!!!!!!!!!!!! !!!!!!!!!!!!! !!!!! !!!!!!!!!!!!!!! !!!--!--!!!!!!!!~~~~~~~~~~~~~~ !!~~~~!!!!!--~~~~>>>>>>>>~~~~ === ===>>>> ===~~~~== ========== === == === =======>>>>===>>>>==== ===== ======== =====>>>> ===== ==>>>> == ===== ===== ==================== ========= ======>>>> ================= ...\\
+ \hline
+ i also cook, and i ride my bike to work. & bike Riders Ride Their Bike To Work?!?!!? !!?! !! ... \\
+ \hline 
+ great! i had won an award for spelling bee. & speech bee Awards Awards Award Award Awards Prize Award Prize Prize Winner Award Winner PrizeWinner AwardWinner Winner WinnerWinnerWinner Prize Winners Award Winners Prize Winning Winner WinningWinner Winning Winners Winners Winning winners Winning finalists Winning losers Winning prizes Winning votes Winning Votes WinningvotesWinner votesWinner Votes WinnersWinner WinnersWinnersWinishersWinessesWinerersWinotersWin finalistsWinner finalistsWin winnersWinner \\
+ \hline\hline
+ \end{tabular}
+ \caption{Experiment BART conversation with specifity, weight = 10}
+\label{tab:bart_conversation_idf5}
+\end{table}
+
+\begin{table}[ht]
+\centering
+ \begin{tabular}{|p{7cm}|p{7cm}|} 
+ \hline\hline
+ \textbf{Input} & \textbf{Generated Output} \\
+ \hline\hline
+ Person description: as a child, i won a national spelling bee. \# i have been published in the new yorker magazine. \# i am a gourmet cook. \# i have perfect pitch. & Person description: i am very athletic. \# i wear contacts. \# i have brown hair. \# i love bicycling. \# i hate carrots. \\
+ \hline
+ (Silence) & hi, how are you today? \\ 
+ \hline
+ hi! i work as a gourmet cook & i am a chef. i love to cook \\
+ \hline
+ i do not like carrots. i throw them away. & i do not like carrots. i am not a fan. \\
+ \hline 
+ really. but, i can sing pitch perfect. & i am not sure. i do not have a good voice. \\
+ \hline
+ i also cook, and i ride my bike to work. & i have a bike to work. i love it. \\
+ \hline 
+ great! i had won an award for spelling bee. & that is great. do you have a favorite color? \\
+ \hline\hline
+ \end{tabular}
+ \caption{Experiment BART conversation with specifity, weight = -5}
+\label{tab:bart_conversation_idf5}
+\end{table}
+
+\begin{table}[ht]
+\centering
+ \begin{tabular}{|p{7cm}|p{7cm}|} 
+ \hline\hline
+ \textbf{Input} & \textbf{Generated Output} \\
+ \hline\hline
+ Person description: as a child, i won a national spelling bee. \# i have been published in the new yorker magazine. \# i am a gourmet cook. \# i have perfect pitch. & Person description: i am very athletic. \# i wear contacts. \# i have brown hair. \# i love bicycling. \# i hate carrots. \\
+ \hline
+ (Silence) & hi, i am a cook. do you have a job? \\ 
+ \hline
+ hi! i work as a gourmet cook & i am a cook. i love to cook \\
+ \hline
+ i do not like carrots. i throw them away. & i do not have a favorite. i am not a fan. \\
+ \hline 
+ really. but, i can sing pitch perfect. & i am not a very good singer. \\
+ \hline
+ i also cook, and i ride my bike to work. & i have a bike to work. i love to ride. \\
+ \hline 
+ great! i had won an award for spelling bee. & that is a good one. i have a lot of fun.. \\
+ \hline\hline
+ \end{tabular}
+ \caption{Experiment BART conversation with specifity, weight = -10}
+\label{tab:bart_conversation_idf5}
+\end{table}
+
+\begin{table}[ht]
+\centering
+ \begin{tabular}{|p{7cm}|p{7cm}|} 
+ \hline\hline
+ \textbf{Input} & \textbf{Generated Output} \\
+ \hline\hline
+ Person description: as a child, i won a national spelling bee. \# i have been published in the new yorker magazine. \# i am a gourmet cook. \# i have perfect pitch. & Person description: i am very athletic. \# i wear contacts. \# i have brown hair. \# i love bicycling. \# i hate carrots. \\
+ \hline
+ (Silence) & hey! how are you today? \\ 
+ \hline
+ hi! i work as a gourmet cook & i was just about to go to a gourmet cook shop. \\
+ \hline
+ i do not like carrots. i throw them away. & i am a chef for carrots.\\
+ \hline 
+ really. but, i can sing pitch perfect. & i love the chorus. \\
+ \hline
+ i also cook, and i ride my bike to work. & i love riding my bike. \\
+ \hline 
+ great! i had won an award for spelling bee. & that is awesome. i am sure! \\
+ \hline\hline
+ \end{tabular}
+ \caption{Experiment BART with GPT-2 7:3}
+\label{tab:bart_conversation_gpt2}
+\end{table}
 
 \chapter{Luong attention}
 \label{luong}

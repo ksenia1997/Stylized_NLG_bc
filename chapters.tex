@@ -363,8 +363,11 @@ An equation \ref{eq:transformer_multi_head} represents a \textbf{multi-head atte
 This chapter presents an overview of the most popular NLG models for building open-ended dialogue systems and for resolving problems described in the section \ref{nlg_ds_problems}. Section \ref{usual_problems} presents approaches for resolving standard NLG problems. Section \ref{stylized_problems} presents solutions for generating stylized text, which helps to create the feeling that you are talking to a person.
 
 \section{Approaches for dialogue systems problems}\label{usual_problems}
+Modeling conversations with generative probabilistic models was first proposed in \cite{ritter2011data}. They present a data-driven approach to generating responses to Twitter status posts, based on
+phrase-based Statistical Machine Translation. In \cite{shang2015neural} authors proposed a framework for generating responses on micro-blogging websites with using recurrent neural networks. Their model can generate grammatically correct and content-wise appropriate responses to over 75\% of the input text.
+
 \subsubsection{Text generation methods}
-In the paper \cite{see2019makes} described solutions to common NLG problems in dialogue systems. Authors add control (the ability to specify desired attributes of the generated text at test time) and focus on four controllable attributes of text: repetition, specificity, response-relatedness and question-asking. They measure repetitiveness as n-gram overlap, specificity as word rareness, response-relatedness as the embedding similarity of the bot’s response to the human’s last utterance. In this work, authors use \textbf{Conditional Training (CT)} \cite{peng2018towards} and \textbf{Weighted Decoding (WD)} \cite{ghazvininejad2017hafez}. 
+In the paper \cite{see2019makes} solutions to common NLG problems in dialogue systems described. Authors add control (the ability to specify desired attributes of the generated text at test time) and focus on four controllable attributes of text: repetition, specificity, response-relatedness and question-asking. They measure repetitiveness as n-gram overlap, specificity as word rareness, response-relatedness as the embedding similarity of the bot’s response to the human’s last utterance. In this work, authors use \textbf{Conditional Training (CT)} \cite{peng2018towards} and \textbf{Weighted Decoding (WD)} \cite{ghazvininejad2017hafez}. 
 
 \begin{figure}[hbt]
   \centering
@@ -397,10 +400,45 @@ Response-relatedness feature with weighted decoding is represented in the Equati
 The control response-relatedness in condition training is represented by variable $z$ as $cos\_sim(sent\_emb(y), sent\_emb(l))$, where $cos\_sim$ is a cosine similarity between the model's response $y$ and the partner's last utterance $l$.
 
 \subsubsection{Decoding strategies}
-According to \cite{holtzman2019curious} decoding strategies with likelihood maximazing lead to text that is increadibly degenerate, even when using state-of-the-art models. This models generate repetitive and overly generic text. The research shows how different natural distribution of human texts and the distribution of machine text produced from maximum likelihood decoding. To resolve this problem authors introduced \textbf{Nucleus Sampling}. The concept is that the vast majority of probabilities are concentrated in a small subset (\textit{nucleus}) of the vocabulary that tends to vary from one to a few hundred candidates. Sampling from the top-$p$ portion of the probability mass expands and contracts the candidate pool dynamically.
+According to \cite{holtzman2019curious} decoding strategies with likelihood maximazing lead to text that is increadibly degenerate, even when using state-of-the-art models. If the most likely word is always sampled, the model generates repetitive and overly generic text, like ``I don't know'', because it is a typical answer to any question. Popular sampling methods for generation texts are based on sampling from the distribution. Temperature and top k sampling are the most popular methods to combat sampling from the tail.
+
+\textbf{Temperature sampling} is inspired by statistical thermodynamics, where high temperature means low energy states are more likely encountered. In a probability model logits are divided by the temperature, before feeding them into softmax (Equation \ref{eq:temperature_sampling}, where $t$ is a temperature, $u_{1:|V|}$ are logits). Setting $t \in [0,1)$ skews the distribution towards high probability events, which implicitly lowers the mass in the tail distribution. The temperature parameter controls the shape of distribution without sufficiently suppressing the unreliable tail.
+
+\begin{equation} \label{eq:temperature_sampling}
+p(x=V_l|x_{1:i-1}) = \frac{exp(u_l / t)}{\sum_{l'} exp(u_l' / t)}
+\end{equation}
+
+\textbf{Top-k sampling} means sorting by probability and probabilities for anything below the token $k$ are set to 0. But in some cases, there are few words to choose, there is a risk of generating bland or generic text, while if $k$ is large the top-k vocabulary will include inappropriate candidates which will have their probability of being sampled increased by the renormalization. The top-k vocabulary $V^{(k)} \subset V$ (the set of size $k$) maximizes $p' = \sum_{x \in V^{(k)}} P(x|x_{1:i-1})$. The distribution is then re-scaled as in Equation \ref{eq:top_K_sampling}.
+
+\begin{equation} \label{eq:top_K_sampling}
+P'(x|x_{1:i-1}) = \begin{cases} 
+          P(x|x_{1:i-1}) / p' & \mbox{if $x \in V^{(k)}$} \\
+          0 & \mbox{otherwise}\\
+         \end{cases}
+\end{equation}
+
+The research shows how different natural distribution of human texts and the distribution of machine text produced from maximum likelihood decoding. To resolve this problem authors introduced \textbf{Nucleus Sampling}. The concept is that the vast majority of probabilities are concentrated in a small subset (\textit{nucleus}) of the vocabulary that tends to vary from one to a few hundred candidates. Sampling from the top-$p$ portion of the probability mass expands and contracts the candidate pool dynamically. Formally, given a distribution $P(x|x_{1:i-1}$, the top-p vocabulary $V^{(p)} \in V$ is defined to satisfy the condition in the Equation \ref{eq:nucleus_sampling}.
+
+\begin{equation} \label{eq:nucleus_sampling}
+\sum_{x \in V^{(p)}} P(x|x_{1:i-1})  \geqslant p
+\end{equation}
 
 \section{Approaches for generating stylized conversation} \label{stylized_problems}
 The idea that computers can generate stylized texts appeared half a century ago in \cite{wheatley1965computer}. Authors choose a variety of text characteristics as style, such as an expession of politeness in machine translation \cite{sennrich2016controlling}, transformation from modern English to Shakespearean English \cite{jhamtani2017shakespearizing}, sentiment of a text in \cite{shen2017style} and \cite{li2018delete}. In \cite{gao2019structuring} authors used a structured latent space to generate stylized dialogue responses. Another approach was proposed in \cite{john2018disentangled}, where authors applied an adversarial loss to separate style from content. The problem of style transfer, described in these papers, differs from the stylized text generation, because as it is shown in \cite{guu2018generating} an existing human-written source used to control the reliability of the results can significantly improve the quality of the resulting texts. 
+
+\subsubsection{ECM}
+Emotional Chatting Machine (ECM), represented in \cite{zhou2018emotional}, can generate not only relevant and grammatical responses, but also emotionally consistent. This framework proposes seq2seq architecture. This separate responses into several categories (Angry, Disgust, Happy, Like, Sad, Other). The emotion category of the to-be-generated response is given for ECM, because, in the opinion og the authors, emotions are highly subjective. 
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=1\textwidth]{figures/ecm.png}
+  \caption{ Overview of ECM (the grey unit). The pink units are used to model emotion factors in the framework.}
+  \label{ecm}
+\end{figure}
+
+In the architecture (the Figure \ref{ecm}) a post can be answered with different emotions, depending on the attitude of the respondent. For example, for a sad story, someone may respond with anger  (as an irritable stranger), sympathy (as a friend) or happy (as an enemy). \textbf{Emotion classifier} generates labels for each response. Generated labels and responses are fed into ECM to generate emotional responses conditioned on different emotion categories. In \textbf{Emotion Category Embedding} randomly initialize the vector of an emotion category $v_e$ for each category $e$. During the training the model is learning the vectors of the emotion category. \textbf{Internal memory} captures emotion dynamics during decoding. It is achieved using the following concept: before the decoding process each category has an internal emotion state; at each step the emotion state decays by a certain amount; when decoding process is completed, the emotion state should be zero, what indicates that the emotion is completely expressed. \textbf{External memory} is used to model emotion expressions explicitly, the model can choose to generate words from  an emotion vocabulary or a generic vocabulary.
+
+ECM need an external decision maker, because this model has to specify an emotion category to be generated.
 
 \subsubsection{Generation of stylized texts}
 

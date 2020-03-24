@@ -332,7 +332,7 @@ The attention mechanism provides the decoder with information from each hidden s
 
 Self-attention is an attention mechanism, where ``self'' means that the inputs interact with each other and ``attention'' means that inputs find out who they should pay more attention. Formally, in the attention mechanism the query, keys and values are from the same sequence. The query is a single element from the sequence while the keys and values are the entire sequence. The attention output is a new representation of the element that was the query. Self-attention is used to compute a new representation of the sequence.  
 
-\section{Transformer} 
+\section{Transformer} \label{sec_transformer}
 Information in this section is taken from \cite{vaswani2017attention}.
 \begin{figure}[hbt]
   \centering
@@ -358,6 +358,22 @@ An equation \ref{eq:transformer_attention} represents a \textbf{scaled dot-produ
 
 An equation \ref{eq:transformer_multi_head} represents a \textbf{multi-head attention}, which allows the model to jointly track information from different representation subspaces at different positions. Averaging inhibits this with a single head of attention. The input also consists of queries, keys and values matricies, $W^O$ is a parameter matrix, $h$ is a number of parallel layers, $head_i = Attention(QW_i^Q, KW_i^K, VW_i^V)$, where $W_i^Q, W_i^K, W_i^V$ are parameter matricies. $Q$, $K$ and $V$ are different for each position of the attention modules in the structure. It depends on if they are in the encoder, the decoder or between them.
 
+\section{GPT}
+\section{BART} 
+BART is a denoising autoencoder for pretraining sequence-to-sequence models, that maps a corrupted document to the original document it was derived from. The model uses a standard Transformer-based neural machine translation architecture, with a bidirectional encoder and left-to-right decoder.
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.6\textwidth]{figures/BART.pdf}
+  \caption{BART: Inputs to the encoder need not be aligned with decoder outputs, allowing arbitary noise transformations. Here, a document has been corrupted by replacing spans of text with mask symbols. The corrupted document (left) is encoded with a bidirectional model, and then the likelihood of the original document (right) is calculated with an autoregressive decoder. For fine-tuning, an uncorrupted document is input to both the encoder and decoder, and we use representations from the final hidden state of the decoder\cite{lewis2019bart}.}
+  \label{bart}
+\end{figure}
+
+Bidirectional encoder consists of $N$ transformer encoder blocks stacked on top of each other (Section \ref{sec_transformer}), the final block is the output. The input is a sequence of tokens, which are first embedded into vectors and the processed in the model. The output is a sequence of vectors of size $H$, in which each vector corresponds to an input token with the same index. Bidirectional encoder uses 2 training strategies: \textbf{Masked LM (MLM)} and \textbf{Next Sentence Prediction (NSP)}. 
+
+In \textbf{MLM} 15\% of words in each sequence are replaced with a [MASK] token before embedding. The model then tries to predict the original value of the masked words, based on the context provided non-masked words in the sequence. Bidirectional encoder loss function takes into consideration only the prediction of masked values. Pretraining on this task allows the model to learn general features of the language.
+
+\textbf{Next Sentence Prediction}. The bidirectional encoder in the training process receives pairs of sequences as input and the task of the model is to say whether the second sentence is a subsequent of the first sentence in the original document. During training, part of the inputs are a pair in which the second sentence is a subsequent in the original document and in the other part a random sentence from the corpus is chosen as the second sentence. The assumption is that the random sentence will be disconnected from the first sentence. Pre-training on this task allows the model to learn relationships between sentences.
 
 \chapter{Related works}
 This chapter presents an overview of the most popular NLG models for building open-ended dialogue systems and for resolving problems described in the section \ref{nlg_ds_problems}. Section \ref{usual_problems} presents approaches for resolving standard NLG problems. Section \ref{stylized_problems} presents solutions for generating stylized text, which helps to create the feeling that you are talking to a person.

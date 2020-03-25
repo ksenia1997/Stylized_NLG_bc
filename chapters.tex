@@ -358,7 +358,7 @@ An equation \ref{eq:transformer_attention} represents a \textbf{scaled dot-produ
 
 An equation \ref{eq:transformer_multi_head} represents a \textbf{multi-head attention}, which allows the model to jointly track information from different representation subspaces at different positions. Averaging inhibits this with a single head of attention. The input also consists of queries, keys and values matricies, $W^O$ is a parameter matrix, $h$ is a number of parallel layers, $head_i = Attention(QW_i^Q, KW_i^K, VW_i^V)$, where $W_i^Q, W_i^K, W_i^V$ are parameter matricies. $Q$, $K$ and $V$ are different for each position of the attention modules in the structure. It depends on if they are in the encoder, the decoder or between them.
 
-\section{GPT}
+\section{GPT} \label{sec_gpt}
 Information in this section is taken from \cite{radford2018improving}.
 GPT is a transformer-based (Section \ref{sec_transformer}) language model. The model works in 2 stages. First of all transformer model trained on a very large amount of data in an unsupervised manner (There are only input variables and no correspoding output variables in unsupervised dataset.), then the model is fine-tuned on much smaller supervised dataset (There are input and output variable in supervised dataset. The model learns the mapping function from the input to the output.) to help it solve specific tasks.
 
@@ -414,6 +414,40 @@ Bidirectional encoder consists of $N$ transformer encoder blocks stacked on top 
 In \textbf{MLM} 15\% of words in each sequence are replaced with a [MASK] token before embedding. The model then tries to predict the original value of the masked words, based on the context provided non-masked words in the sequence. Bidirectional encoder loss function takes into consideration only the prediction of masked values. Pretraining on this task allows the model to learn general features of the language.
 
 \textbf{Next Sentence Prediction}. The bidirectional encoder in the training process receives pairs of sequences as input and the task of the model is to say whether the second sentence is a subsequent of the first sentence in the original document. During training, part of the inputs are a pair in which the second sentence is a subsequent in the original document and in the other part a random sentence from the corpus is chosen as the second sentence. The assumption is that the random sentence will be disconnected from the first sentence. Pre-training on this task allows the model to learn relationships between sentences.
+
+\begin{eqfloat}
+\begin{equation} \label{eq:relu}
+f(x) = x^+ = max(0, x)
+\end{equation}
+\caption{Rectified Linear Unit (ReLU)}
+\end{eqfloat}
+
+\begin{eqfloat}
+\begin{equation} \label{eq:gelu}
+GELU(x) = xP(X \leq x) = x \Phi(x)
+\end{equation}
+\caption{Gaussian Error Linear Unit (GELU)}
+\end{eqfloat}
+
+\begin{eqfloat}
+\begin{equation} \label{eq:gelu_approx}
+\begin{array}{lcl} 
+GELU(x) = 0.5x(1 + tanh[\sqrt{2/\pi}(x + 0.044715x^3)]) \\ 
+GELU(x) = x\sigma(1.702x) \\
+\end{array}
+\end{equation}
+\caption{Approximations of GELU}
+\end{eqfloat}
+Autoregressive decoder is GPT model (Section \ref{sec_gpt}). Authors modified ReLU activation functions (Equation \ref{eq:relu}) to GELU (Equation \ref{eq:gelu}) and initialized parameters from $\mathcal{N}(0, 0.2)$. Autoregressive decoder can be directly fine tuned for sequence generation tasks.
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.6\textwidth]{figures/bart_doc_corruptions.pdf}
+  \caption{Transformations for noising the input. These transformations can be composed.}
+  \label{bart_doc_corruption}
+\end{figure}
+
+BART allows to apply any type of document corruption, such as token masking, sentence permutation, document rotation, token deletion, text infilling (Figure \ref{bart_doc_corruption}).
 
 \chapter{Related works}
 This chapter presents an overview of the most popular NLG models for building open-ended dialogue systems and for resolving problems described in the section \ref{nlg_ds_problems}. Section \ref{usual_problems} presents approaches for resolving standard NLG problems. Section \ref{stylized_problems} presents solutions for generating stylized text, which helps to create the feeling that you are talking to a person.

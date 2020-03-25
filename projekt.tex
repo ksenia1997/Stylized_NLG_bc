@@ -14,7 +14,22 @@
 \usepackage{url}
 
 
+\usepackage{float}
+\usepackage{aliascnt}
+\newaliascnt{eqfloat}{equation}
+\newfloat{eqfloat}{h}{eqflts}
+\floatname{eqfloat}{Equation}
 
+\newcommand*{\ORGeqfloat}{}
+\let\ORGeqfloat\eqfloat
+\def\eqfloat{%
+  \let\ORIGINALcaption\caption
+  \def\caption{%
+    \addtocounter{equation}{-1}%
+    \ORIGINALcaption
+  }%
+  \ORGeqfloat
+}
 % =======================================================================
 % "hyperref" package create clickable links in pdf if you are using pdflatex.
 % Problem is that this package have to be introduced as the last one so it 

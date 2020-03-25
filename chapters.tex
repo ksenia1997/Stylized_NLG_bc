@@ -359,6 +359,46 @@ An equation \ref{eq:transformer_attention} represents a \textbf{scaled dot-produ
 An equation \ref{eq:transformer_multi_head} represents a \textbf{multi-head attention}, which allows the model to jointly track information from different representation subspaces at different positions. Averaging inhibits this with a single head of attention. The input also consists of queries, keys and values matricies, $W^O$ is a parameter matrix, $h$ is a number of parallel layers, $head_i = Attention(QW_i^Q, KW_i^K, VW_i^V)$, where $W_i^Q, W_i^K, W_i^V$ are parameter matricies. $Q$, $K$ and $V$ are different for each position of the attention modules in the structure. It depends on if they are in the encoder, the decoder or between them.
 
 \section{GPT}
+Information in this section is taken from \cite{radford2018improving}.
+GPT is a transformer-based (Section \ref{sec_transformer}) language model. The model works in 2 stages. First of all transformer model trained on a very large amount of data in an unsupervised manner (There are only input variables and no correspoding output variables in unsupervised dataset.), then the model is fine-tuned on much smaller supervised dataset (There are input and output variable in supervised dataset. The model learns the mapping function from the input to the output.) to help it solve specific tasks.
+
+\subsubsection{Unsupervised pre-training}
+In unsupervised pre-training a standard language modeling is used and the aim is to maximize the likelihood (Equation \ref{eq:unsupervised_pre_training}, where $U = {u_1, u_2, ... , u_n}$ is an unsupervised corpus of tokens, $k$ is the size of context window, $P$ is modeled using a neural network with parameter $\Theta$).
+
+\begin{equation} \label{eq:unsupervised_pre_training}
+L_1(U) = \sum_i \log P(u_i|u_{i-k}, ... , u_{i-1}; \Theta)
+\end{equation}
+
+Multi-layer Transformer decoder is used for the language model. The model applies a multi-headed self-attention operation over the input context tokens followed by position-wise feedforward layers to produce an output distribution
+over target tokens (Equation \ref{eq:unsupervised_decoder}, where $U = (u_{-k}, ... , u_{-1})$ is the context vector of tokens, $n$ is the number of layers, $W_e$ is the token embedding matrix, $W_p$ is the position embedding matrix).
+
+\begin{equation}  \label{eq:unsupervised_decoder}
+\begin{array}{lcl} 
+h_0 & = &UW_e + W_p \\
+
+h_1 & = & transformer\_block(h_{l-1}) \forall l \in [1,n] \\
+
+P(u) & = & softmax(h_n, W_e^T) \\
+\end{array}
+\end{equation}
+
+\subsubsection{Supervised fine-tuning}
+After training the model, the parameters are adapted to the supervised target task. Given a labeled dataset $C$, where an instance represents a sequence of input tokens $(x^1, ... , x^m)$, along with a label $y$. The inputs are passed through the pre-trained model to get the final transformer block's activation $h_l^m$, which is then fed into an additional linear output layer with $W_y$ parameters for predicting $y$ (Equation \ref{eq:supervised_fine_tune}). 
+
+\begin{equation} \label{eq:supervised_fine_tune}
+P(y|x^1, ... , x^m) = softmax(h_l^m, W_y)
+\end{equation}
+
+\begin{equation} \label{eq:supervised_maximize}
+L_2(C) = \sum_{(x,y)} \log P(y|x^1, ... , x^m)
+\end{equation}
+
+Authors found that including language modeling as an auxiliary objective to the fine-tuning helped learning. First of all it improves the generalization of the supervised model. Secondly it accelerates convergence. They optimize the objective with weight $\lambda$ (Equation \ref{eq:objective_optimalization}).
+
+\begin{equation} \label{eq:objective_optimalization}
+L_3(C) = L_2(C) + \lambda * L_1(C)
+\end{equation}
+
 \section{BART} 
 BART is a denoising autoencoder for pretraining sequence-to-sequence models, that maps a corrupted document to the original document it was derived from. The model uses a standard Transformer-based neural machine translation architecture, with a bidirectional encoder and left-to-right decoder.
 

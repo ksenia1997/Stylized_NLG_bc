@@ -7,8 +7,6 @@
 %---tt------------
 \renewcommand{\ttdefault}{lmtt}% zavede Latin Modern tt jako tt
 
-% vypne funkci šablony, která automaticky nahrazuje uvozovky,
-% aby nebyly prováděny nevhodné náhrady v popisech API apod.
 % disables function of the template which replaces quotation marks
 % to avoid unnecessary replacements in the API descriptions etc.
 \csdoublequotesoff
@@ -18,14 +16,11 @@
 
 
 % =======================================================================
-% balíček "hyperref" vytváří klikací odkazy v pdf, pokud tedy použijeme pdflatex
-% problém je, že balíček hyperref musí být uveden jako poslední, takže nemůže
-% být v šabloně
 % "hyperref" package create clickable links in pdf if you are using pdflatex.
 % Problem is that this package have to be introduced as the last one so it 
 % can not be placed in the template file.
 \ifWis
-\ifx\pdfoutput\undefined % nejedeme pod pdflatexem / we are not using pdflatex
+\ifx\pdfoutput\undefined % we are not using pdflatex
 \else
   \usepackage{color}
   \usepackage[unicode,colorlinks,hyperindex,plainpages=false,pdftex]{hyperref}
@@ -38,11 +33,11 @@
 	filecolor=magenta,
 	urlcolor=hrcolor-urls
   }
-  \def\pdfBorderAttrs{/Border [0 0 0] }  % bez okrajů kolem odkazů / without margins around links
+  \def\pdfBorderAttrs{/Border [0 0 0] }  % without margins around links
   \pdfcompresslevel=9
 \fi
-\else % pro tisk budou odkazy, na které se dá klikat, černé / for the print clickable links will be black
-\ifx\pdfoutput\undefined % nejedeme pod pdflatexem / we are not using pdflatex
+\else % for the print clickable links will be black
+\ifx\pdfoutput\undefined % we are not using pdflatex
 \else
   \usepackage{color}
   \usepackage[unicode,colorlinks,hyperindex,plainpages=false,pdftex,urlcolor=black,linkcolor=black,citecolor=black]{hyperref}
@@ -50,11 +45,10 @@
   \definecolor{anchors}{rgb}{0,0,0}
   \def\AnchorColor{anchors}
   \def\LinkColor{links}
-  \def\pdfBorderAttrs{/Border [0 0 0] } % bez okrajů kolem odkazů / without margins around links
+  \def\pdfBorderAttrs{/Border [0 0 0] } % without margins around links
   \pdfcompresslevel=9
 \fi
 \fi
-% Řešení problému, kdy klikací odkazy na obrázky vedou za obrázek
 % This solves the problems with links which leads after the picture
 \usepackage[all]{hypcap}
 
@@ -135,8 +129,7 @@
   \setlength{\parskip}{0pt}
 
   {\hypersetup{hidelinks}\tableofcontents}
-  
-  % Seznam obrazku a tabulek (pokud prace obsahuje velke mnozstvi obrazku, tak se to hodi)
+
   % List of figures and list of tables (if the thesis contains a lot of pictures, it is good)
   \ifczech
     \renewcommand\listfigurename{Seznam obrázků}

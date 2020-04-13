@@ -1,15 +1,12 @@
 \chapter{Introduction}\label{introduction}
-Dialogue system (i.e. conversational agent) is a computer system which interacts with a human in natural language. These systems are used in cars (hands-free car-specific functions, Android Auto, Apple CarPlay, vendor-specific solutions), web, robots, computer games etc, because a conversation is a natural way for people to get information. 
-
+Dialogue system (i.e. conversational agent) is a computer system which interacts with a human in natural language. These systems are used in cars (hands-free car-specific functions, Android Auto, Apple CarPlay), web, robots, computer games etc, because a conversation is a natural way for people to get information. 
 
 Natural Language Generation (NLG) is an important component of dialogue systems, which has a significant impact on system quality, because NLG goal is to imitate human behaviour. The conversational agent can be classified into task-oriented (i.e. goal-oriented), which focused on completing a certain tasks and adhere to a determined script for each stage of the conversation, and non-task-oriented, which do not have a stated goal to work towards. A lot of devices have incorporated goal-oriented dialogue systems, such as Yandex’s Alisa, Apple’s Siri, Microsoft’s Cortana, Amazon Alexa, and Google Assistant. Goal-oriented dialogue acts make conversations more interpetable and controllable. On the other hand, they also hinder scaling such systems to new domains (i.e. conversation topics). To escape from the limitation, recent interest of research started moving to non-task-oriented chitchat dialogues (chatbots). Chitchat dialogues are systems designed to mimic the unstructured human-human conversation. This kind of conversational agent often have an entertainment value, such as Cleverbot, Microsoft's XiaoIce system etc. Chatbots have also been used for testing theories of psychological counseling.
 
 The ability to communicate freely in a natural language is one of the hallmarks of human intelligence, and is likely one of the requirements for true artificial intelligence. Many researches work on open-ended (i.e. there is a huge range of appropriate outputs given the input) chitchat dialogues to explore this aspect of intelligence, because in goal-oriented dialogue systems there is a relatively narrow range of correct outputs given the input. 
 Creating a non-task-oriented agent is a challenge for researches, because there are a lot of topics of conversations as well as user reactions and responses to them. Such bots are not able to generate meaningful conversations. Their replies are often too generic, because non-specific responses sound quite natural (e.g. ``Ok, I see'', ``I don't know''). There are still a lot of problems in the Natural Language Generation, such as response-relatedness, semantic errors, repetition etc., which will be described in more detail in the chapture \ref{nlg_problems}. 
 
-According to \cite{salovey1990emotional} one of the most important cognitive behaviors in humans is expressing and understanding emotions. That is why it is necessary to pay attention not only to generation of an adequate, semantically and syntactically correct text, but also to the emotions and language style in which person communicates to make a dialogue more diverse and interesting. 
-
-In \cite{minavrova2003souvcasna} language style is defined as a method of goal-oriented choice and arrangement (organisation) of language means which is applied in the making of the text; in the final product it is thus reflected as the principle of organizing language units which, out of parts and details, shapes a unity compatible with the communicative intention of the author. Carefully formulated speech without cliches or jargon is essential to avoid inaccurate presentation and ensure effective communication. Most of the modern generative models are trained on huge corpora which include different contributions from various authors. Texts produced with such models are often not perceived as natural and characterized as non-human, because humans have recognizable writing and communication styles.
+According to \cite{salovey1990emotional} one of the most important cognitive behaviors in humans is expressing and understanding emotions. That is why it is necessary to pay attention not only to generation of a semantically and syntactically correct text, but also to the emotions and language style in which person communicates to make a dialogue more diverse and interesting. Carefully formulated speech without cliches or jargon is essential to avoid inaccurate presentation and ensure effective communication. Most of the modern generative models are trained on huge corpora which include different contributions from various authors. Texts produced with such models are often not perceived as natural and characterized as non-human, because humans have recognizable writing and communication styles.
 
 
 The main purpose of this thesis was to create NLG model, which will be able to generate text in different styles.  //TODO
@@ -22,7 +19,7 @@ In a book \cite{alder2017handbook} Natural Language Generation is defined as ``t
 \begin{figure}[hbt]
   \centering
   \includegraphics[width=0.9\textwidth]{figures/templateVScorpus.pdf}
-  \caption{NLG tasks are existing on the following spectrum.}
+  \caption{Spectrum of the NLG tasks.}
   \label{nlg_spectum}
 \end{figure}
 
@@ -260,7 +257,7 @@ The RNN-based models have been used for NLG as a component of end-to-end trainab
 
 Nowadays traditional RNN networks almost are not used in NLG, because they have problems with vanishing and exploding gradients. As introduced in \cite{bengio1994learning} the exploding problem refers to the large increase in the norm of the gradient during training. It happens, because long term components can grow exponentially more then short term ones. The vanishing gradients problem refers to the opposite behaviour. The long term components go exponentially fast to norm 0, which makes it impossible for the model to learn correlation between temporally distant events. This issue has motivated researchers in development of more advanced RNNs like the LSTM \cite{hochreiter1997long}.
 
-\section{Long short-term memory (LSTM)} 
+\section{Long short-term memory (LSTM)} \label{lstm_section}
 
 \begin{figure}[hbt]
   \centering
@@ -316,7 +313,7 @@ Seq2seq models were introduced by Google in 2014 \cite{sutskever2014sequence}. T
 
 The Figure \ref{encoder_decoder} presents traditional encoder-decoder arhitecture. Encoder converts an input sequence of words to a corresponding fixed size hidden vector. Each vector represents the current word and the context of the word. Every time step, it takes a vector that represents a word and pass its output to the next layer. The last hidden state of encoder passes its output to the first layer of the decoder. The final hidden state of the encoder is also called context vector. The decoder input is an output encoder vector and start token, which characterizes the beginning of the generated sentence. The generated word depends on the previous decoder state and the last generated word. Many optimizations have led to other seq2seq components, such as attention, beam search, bucketing.
 
-\section{Attention}
+\section{Attention} \label{attention_section}
 A neural attention mechanism is based on the human visual attention mechanism. Visual attention is able to focus on a certain region of an image with ``high resolution'', while perceiving the surrounding image in “low resolution”, and then adjusting the focal point over time.
 
 In \cite{vaswani2017attention} attention is described as mapping a query and a set of key-value pairs to an output, where the query, keys, values, and output are all vectors. The output is computed as a weighted sum of the values, where the weight assigned to each value is computed by a compatibility function of the query with the corresponding key.
@@ -560,7 +557,7 @@ Corpus is very important for successful Natural Language Generation. Dialogue sy
 
 In my bachelor thesis I am using 2 different dataset (Twitter data and Persona-Chat). 
 
-\subsection{Persona-Chat}
+\subsection{Persona-Chat} \label{persona_chat_subsec}
 
 \begin{table}[ht]
   \begin{tabular}{ |c|c| }
@@ -663,8 +660,45 @@ Persona-Chat dataset consists of small conversations between 2 crowdworkers from
 \end{figure}
 
 
+\subsection{Datasets for stylisation and preprocessing}
 
-\subsection{Twitter}
+\begin{table}[ht]
+\centering
+ \begin{tabular}{|p{0.5cm}|p{2cm}|p{1cm}|p{2cm}|p{7cm}|} 
+ \hline\hline
+ \textbf{\#} & \textbf{Author} & \textbf{Title} & \textbf{Poetry Foundation ID} & \textbf{Content} \\
+ \hline\hline
+ 0 & Wendy Videlock & ! & 55489 & Dear Writers, I’m compiling the first in what I hope is a series of publications I’m calling artists among artists. The theme for issue 1 is “Faggot Dinosaur.” I hope to hear from you! Thank you and b... \\ 
+ \hline
+ 1 &  Hailey Leithauser & 0 & 41729 & Philosophic in its complex, ovoid emptiness, a skillful pundit coined it as a sort of stopgap doorstop for those quaint equations Romans never dreamt of. In form completely clever and discrete—a mirr... \\
+ \hline\hline
+ \end{tabular}
+ \caption{Example of kaggle poem dataset}
+\label{tab:poetic}
+\end{table}
+
+For poetic style the kaggle poem dataset was used, which contains most poems available on poetryfoundation.org (Table \ref{tab:poetic}).
+
+\begin{table}[ht]
+\centering
+ \begin{tabular}{|p{4cm}|p{3cm}|p{3cm}|} 
+ \hline\hline
+ reddit\_jokes.json & 195K jokes & 7.40M tokens \\
+ \hline
+ stupidstuff.json & 3.77K jokes & 396K tokens \\
+ \hline
+ wocka.json & 10.0K jokes & 1.11M tokens \\
+ \hline\hline
+ TOTAL & 208K jokes & 8.91M tokens \\
+ \hline\hline
+ \end{tabular}
+ \caption{Statistics of jokes' dataset}
+\label{tab:jokes}
+\end{table}
+
+For funny style a dataset of english plaintext jokes was used. There are about 208 000 jokes scraped from 3 sources (Table \ref{tab:jokes}). stupidstuff.json is scrapped from stupidstuff.org, wocka.jsom from \url{http://wocka.com}, reddit\_jokes.json is scraped from \url{https://www.reddit.com/r/Jokes} and contains all submissions to the subreddit as of 13.02.2017.
+
+
 \begin{table}[ht]
 \centering
  \begin{tabular}{|p{7cm}|p{7cm}|} 
@@ -691,8 +725,34 @@ Persona-Chat dataset consists of small conversations between 2 crowdworkers from
 Twitter dataset contains message-response pairs from Twitter. An example of this data is presented in the Table \ref{tab:twitter_chat}. 
 
 
-\chapter{Implementation and experiments}
-\section{Implementation}
+\chapter{Implementation, experiments and evaluations}
+The goal was to create a model that generates a stylistic response to the utterance of an opponent. The designed architecture is represented in the Figure \ref{architecture_nlg}. This capture aspires to give a comprehensive description of the implementation of stylized NLG model and conducted experiments. All models were implemented in Python 3.7.3 with using PyTorch 1.4.0 framework.
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.7\textwidth]{figures/model.pdf}
+  \caption{An architecture of stylized Natural Language Generation model.}
+  \label{architecture_nlg}
+\end{figure}
+
+\section{Baseline}
+Baseline model represents LSTM sequence-to-sequence language model with Luong attention and LSTM-based model as stylized language model. LSTM networks have been described in detail in the section \ref{lstm_section}, seq2seq model is described in the section \ref{seq2seq_section} and Luong attention is described in the appendix \ref{luong_attn_appendix}.
+
+\begin{equation} \label{eq:baseline}
+p(y_1, ... , y_{T'}|x_1, ... , x_T) = \prod_{t=1}^{T'} \sum_i w_i * p_i(y_t|v, y_1, ... , y_{t-1})
+\end{equation}
+
+In the Equation \ref{eq:baseline} each $p_i(y_t|v, y_1, ... , y_{t-1})$ distribution for stylized language model is represented with a softmax over all the words in the vocabulary, where $x_1, ... , x_T$ is an input sequence and $y_1, ... , y_{T'}$ is its corresponding output sequence  whose length $T'$ may differ from $T$.
+
+The model is trained on the Persona-Chat dataset, described in subsection \ref{persona_chat_subsec}. As the input $x$ to the encoder-decoder model, the entire dialogue history, separated by unique token, is used. The sequence-to-sequence model was pretrained on a Twitter message-response pairs dataset. 
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=1\textwidth]{figures/combine_models.pdf}
+  \caption{Stylized Natural Language Generation baseline model.}
+  \label{implementation_architecture}
+\end{figure}
+
 \section{Experiments}
 
 

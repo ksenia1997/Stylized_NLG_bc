@@ -609,17 +609,17 @@ In my bachelor thesis I am using 2 different dataset (Twitter data and Persona-C
 \centering
   \begin{tabular}{|p{8cm}|p{2cm}|} 
   \hline
-  Average length of  your persona description: & 6.332 \\
+  Average number of words in first persona description: & 6.332 \\
   \hline
-  Average length of partner's persona description: & 6.321 \\
+  Average number of words in second persona description: & 6.321 \\
   \hline
-  Average length of the first person's utterances: & 11.419 \\
+  Average number of words in the first person's utterances: & 11.419 \\
   \hline
-  Average length of the second person's utterances: & 11.929 \\
+  Average number of words in the second person's utterances: & 11.929 \\
   \hline
-  Number of your persona description's sentences: & 40239 \\
+  Number of first persona description's sentences: & 40239 \\
   \hline
-  Number of partner's  persona description's sentences: & 40126 \\
+  Number of second persona description's sentences: & 40126 \\
   \hline
   Number of the first person's utterances: & 65719 \\
   \hline
@@ -660,7 +660,7 @@ Persona-Chat dataset consists of small conversations between 2 crowdworkers from
 \end{figure}
 
 
-\subsection{Datasets for stylisation and preprocessing}
+\subsection{Datasets for stylisation and pretraining} \label{stylistic_dataset_section}
 
 \begin{table}[ht]
 \centering
@@ -726,7 +726,7 @@ Twitter dataset contains message-response pairs from Twitter. An example of this
 
 
 \chapter{Implementation, experiments and evaluations}
-The goal was to create a model that generates a stylistic response to the utterance of an opponent. The designed architecture is represented in the Figure \ref{architecture_nlg}. This capture aspires to give a comprehensive description of the implementation of stylized NLG model and conducted experiments. All models were implemented in Python 3.7.3 with using PyTorch 1.4.0 framework.
+The goal was to create a model that generates a stylistic response to the utterance of an opponent. The designed architecture is represented in the Figure \ref{architecture_nlg}. All models were implemented in Python 3.7.3 with using PyTorch 1.4.0 framework. This capture aspires to give a comprehensive description of the implementation of stylized NLG model and conducted experiments.
 
 \begin{figure}[hbt]
   \centering
@@ -735,16 +735,17 @@ The goal was to create a model that generates a stylistic response to the uttera
   \label{architecture_nlg}
 \end{figure}
 
-\section{Baseline}
-Baseline model represents LSTM sequence-to-sequence language model with Luong attention and LSTM-based model as stylized language model. LSTM networks have been described in detail in the section \ref{lstm_section}, seq2seq model is described in the section \ref{seq2seq_section} and Luong attention is described in the appendix \ref{luong_attn_appendix}.
-
 \begin{equation} \label{eq:baseline}
-p(y_1, ... , y_{T'}|x_1, ... , x_T) = \prod_{t=1}^{T'} \sum_i w_i * p_i(y_t|v, y_1, ... , y_{t-1})
+p(y_1, ... , y_{T'}|x_1, ... , x_T) = \prod_{t=1}^{T'} ( w_1 * p_1(y_t|v, y_1, ... , y_{t-1}) + \sum_{i=2}^n w_i * p_i(y_t| y_1, ... , y_{t-1}))
 \end{equation}
 
-In the Equation \ref{eq:baseline} each $p_i(y_t|v, y_1, ... , y_{t-1})$ distribution for stylized language model is represented with a softmax over all the words in the vocabulary, where $x_1, ... , x_T$ is an input sequence and $y_1, ... , y_{T'}$ is its corresponding output sequence  whose length $T'$ may differ from $T$.
+The Equation \ref{eq:baseline} is a formal description of the designed model, where $x_1, ... , x_T$ is an input sequence and $y_1, ... , y_{T'}$ is its corresponding output sequence whose length $T'$ may differ from $T$. $p_1(y_t|v, y_1, ... , y_{t-1})$ is a distribution for encoder-decoder language model, in which $v$ is the last hidden state of the encoder. $p_i(y_t|v, y_1, ... , y_{t-1})$ is a distribution for each stylized language model, $n$ is a number of stylized models. All distributions are represented with a softmax over all the words in the vocabulary and multiplied by a corresponding weight $w$, a hyperparameter to be chosen. 
 
-The model is trained on the Persona-Chat dataset, described in subsection \ref{persona_chat_subsec}. As the input $x$ to the encoder-decoder model, the entire dialogue history, separated by unique token, is used. The sequence-to-sequence model was pretrained on a Twitter message-response pairs dataset. 
+Sequence-to-sequence model was trained on the Persona-Chat dataset, described in the subsection \ref{persona_chat_subsec}. As the input $x$ to the encoder-decoder model, the entire dialogue history, separated by unique token, is used. Each stylized model was trained on the corresponding stylistic dataset described in the subsection \ref{stylistic_dataset_section}.
+
+\section{Baseline}
+Encoder-decoder model in baseline is implemented as LSTM sequence-to-sequence language model with Luong attention and stylized language model is implemented as LSTM-based model. LSTM neural networks are described in detail in the section \ref{lstm_section}, seq2seq model is described in the section \ref{seq2seq_section} and Luong attention is described in the appendix \ref{luong_attn_appendix}.
+
 
 \begin{figure}[hbt]
   \centering
@@ -753,7 +754,34 @@ The model is trained on the Persona-Chat dataset, described in subsection \ref{p
   \label{implementation_architecture}
 \end{figure}
 
-\section{Experiments}
+
+\subsection{Experiment}
+
+\begin{table}[ht]
+\centering
+ \begin{tabular}{|p{14cm}|}
+ \hline\hline
+ \textbf{Person 1 description:} 1. as a child, i won a national spelling bee. 2. i have been published in the new yorker magazine. 3. i am a gourmet cook. 4. i have perfect pitch. \\
+ \hline
+ \textbf{Person 2 description:} 1. i am very athletic. 2. i wear contacts. 3. i have brown hair. 4. i love bicycling. 5. i hate carrots. \\
+ \hline\hline
+ \textbf{Person1:} i am afraid. \\
+ \textbf{Person2:} i am a business employee.  \\ 
+ \textbf{Person1:} i am a surfer. \\
+ \textbf{Person2:} i am not much of a foodie. \\
+ \textbf{Person1:} i am afraid. \\
+ \textbf{Person2:} that is cool. \\
+ \textbf{Person1:} i do. i like to starve. \\
+ \textbf{Person2:} i like to go to the homeless. \\
+ \textbf{Person1:} i am not really a fan of harry potter. \\
+ \textbf{Person2:} i am good. i am in tampa. \\
+ \textbf{Person1:} i am from boston ma. \\
+ \textbf{Person2:} i am in boston. \\
+ \hline\hline
+ \end{tabular}
+ \caption{Example of a dialogue conversation generated by baseline model.}
+\label{tab:baseline_experiment}
+\end{table}
 
 
 \chapter{Conclusion}

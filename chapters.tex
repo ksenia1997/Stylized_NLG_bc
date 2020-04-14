@@ -637,26 +637,18 @@ Persona-Chat models normal conversation when 2 people meet for the first meet an
 
 Persona-Chat dataset consists of small conversations between 2 crowdworkers from Amazon Mechanical Turk who were randomly paired and asked to act the part of a given provided persona (randomly assigned, and created by another set of crowdworkers). The data collection consists of persona chat (each dialogue has 6-8 turns), personas (set of 1155 possible personas, each consisting of at least 5 profile sentences), revised personas to avoid word overlap, because crowdworkers sometimes could repeat profile information in a chat(the Table \ref{tab:persona_revised}). In turn-based dialogue each message consists of a maximum of 15 words. All statistics are presented in the Table \ref{tab:persona_chat_statistics}. An example of Persona-Chat dialogue is shown in the Table \ref{tab:persona_chat}. 
 
-\begin{figure}[htb]
-\minipage{0.45\textwidth}
-  \includegraphics[width=\linewidth]{figures/persona_desc.pdf}
-  \caption{Histogram of your persona description lengths.}\label{fig:histogram_persona_desc}
-\endminipage\hfill
-\minipage{0.45\textwidth}
-  \includegraphics[width=\linewidth]{figures/partner_desc.pdf}
-  \caption{Histogram of partner's persona description lengths.}\label{fig:histogram_partner_desc}
-\endminipage
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.7\textwidth]{figures/persona_desc.pdf}
+  \caption{Histogram of persona description lengths.}
+  \label{fig:histogram_persona_desc}
 \end{figure}
 
-\begin{figure}[htb]
-\minipage{0.45\textwidth}
-  \includegraphics[width=\linewidth]{figures/uttr1_length.pdf}
-  \caption{Histogram of utterances' lengths of the first person.}\label{fig:histogram_uttr1_length}
-\endminipage\hfill
-\minipage{0.45\textwidth}
-  \includegraphics[width=\linewidth]{figures/uttr2_length.pdf}
-  \caption{Histogram of utterances' lengths of the second person.}\label{fig:histogram_uttr2_length}
-\endminipage
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.7\textwidth]{figures/uttr_length.pdf}
+  \caption{Histogram of utterances' lengths of a person.}
+  \label{fig:histogram_uttr_length}
 \end{figure}
 
 
@@ -746,6 +738,8 @@ Sequence-to-sequence model was trained on the Persona-Chat dataset, described in
 \section{Baseline}
 Encoder-decoder model in baseline is implemented as LSTM sequence-to-sequence language model with Luong attention and stylized language model is implemented as LSTM-based model. LSTM neural networks are described in detail in the section \ref{lstm_section}, seq2seq model is described in the section \ref{seq2seq_section} and Luong attention is described in the appendix \ref{luong_attn_appendix}.
 
+GloVe (Global Vectors) model was used for distributed word representation \cite{pennington2014glove}. It is an algorithm, which maps words into a meaningful space where the distance between words is related to semantic similarity. The model was trained only on the nonzero elements in a word-word cooccurrence matrix.
+
 
 \begin{figure}[hbt]
   \centering
@@ -756,6 +750,8 @@ Encoder-decoder model in baseline is implemented as LSTM sequence-to-sequence la
 
 
 \subsection{Experiment}
+
+Baseline model was trained with hyperparameters, but some terms need to be explained first. embedding size is 300, hidden dimmension is 512, number of layers is 2, number of epochs is 10, where 1 epoch means processing the entire dataset through the model, batch size is 32, a dataset is divided into number of batches.
 
 \begin{table}[ht]
 \centering

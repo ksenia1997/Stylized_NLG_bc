@@ -1,3 +1,47 @@
+\chapter{Datasets statistics}
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.7\textwidth]{figures/persona_desc.pdf}
+  \caption{Histogram of persona description lengths.}
+  \label{fig:histogram_persona_desc}
+\end{figure}
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.7\textwidth]{figures/uttr_length.pdf}
+  \caption{Histogram of utterances' lengths of a person.}
+  \label{fig:histogram_uttr_length}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.7\textwidth]{figures/sst.pdf}
+  \caption{Histogram of Stanford Sentiment Treebank labeled reviews.}
+  \label{fig:sst}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.7\textwidth]{figures/shakespeare.pdf}
+  \caption{Histogram of Shakespeare's plays.}
+  \label{fig:shakespeare}
+\end{figure}
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.7\textwidth]{figures/jokes.pdf}
+  \caption{Histogram of jokes lengths.}
+  \label{fig:jokes}
+\end{figure}
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.7\textwidth]{figures/tweet.pdf}
+  \caption{Histogram of tweets' lengths.}
+  \label{fig:tweet}
+\end{figure}
+
 \chapter{Results of experiments}
 
 \begin{table}[ht]
@@ -23,7 +67,7 @@
  \hline\hline
  \end{tabular}
  \caption{Example of real conversation}
-\label{tab:real_conversation}
+\label{tab:real_conversation_ap}
 \end{table}
 
 \begin{table}[ht]
@@ -48,7 +92,7 @@
  \hline\hline
  \end{tabular}
  \caption{Experiment BART conversation}
-\label{tab:bart_conversation}
+\label{tab:bart_conversation_ap}
 \end{table}
 
 
@@ -75,7 +119,7 @@
  \hline\hline
  \end{tabular}
  \caption{Experiment BART conversation with specifity, weight = 5}
-\label{tab:bart_conversation_idf5}
+\label{tab:bart_conversation_idf5_ap}
 \end{table}
 
 \begin{table}[ht]
@@ -100,7 +144,7 @@
  \hline\hline
  \end{tabular}
  \caption{Experiment BART conversation with specifity, weight = 10}
-\label{tab:bart_conversation_idf5}
+\label{tab:bart_conversation_idf10_ap}
 \end{table}
 
 \begin{table}[ht]
@@ -126,7 +170,7 @@
  \hline\hline
  \end{tabular}
  \caption{Experiment BART conversation with specifity, weight = -5}
-\label{tab:bart_conversation_idf5}
+\label{tab:bart_conversation_idf-5_ap}
 \end{table}
 
 \begin{table}[ht]
@@ -151,7 +195,7 @@
  \hline\hline
  \end{tabular}
  \caption{Experiment BART conversation with specifity, weight = -10}
-\label{tab:bart_conversation_idf5}
+\label{tab:bart_conversation_idf-10_ap}
 \end{table}
 
 \begin{table}[ht]
@@ -175,8 +219,8 @@
  great! i had won an award for spelling bee. & that is awesome. i am sure! \\
  \hline\hline
  \end{tabular}
- \caption{Experiment BART with GPT-2 7:3}
-\label{tab:bart_conversation_gpt2}
+ \caption{Experiment BART with GPT-2 trained on dataset with jokes weights: 7:3}
+\label{tab:bart_conversation_gpt2_ap}
 \end{table}
 
 \begin{table}[ht]
@@ -202,7 +246,7 @@
  \hline\hline
  \end{tabular}
  \caption{Example 2 of real conversation.}
-\label{tab:real_conversation_2}
+\label{tab:real_conversation_2_ap}
 \end{table}
 
 \begin{table}[ht]
@@ -226,7 +270,7 @@
  \hline\hline
  \end{tabular}
  \caption{Experiment BART with tf-idf of SST positive.}
-\label{tab:bart_tfidf_sst_pos}
+\label{tab:bart_tfidf_sst_pos_ap}
 \end{table}
 
 \begin{table}[ht]
@@ -252,7 +296,7 @@
  \hline\hline
  \end{tabular}
  \caption{Experiment BART and GPT2 with Shakespear style}
-\label{tab:poetic_shakespear}
+\label{tab:poetic_shakespear_ap}
 \end{table}
 
 \chapter{Luong attention} \label{luong_attn_appendix}

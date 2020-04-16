@@ -487,7 +487,11 @@ Response-relatedness feature with weighted decoding is represented in the Equati
 The control response-relatedness in condition training is represented by variable $z$ as $cos\_sim(sent\_emb(y), sent\_emb(l))$, where $cos\_sim$ is a cosine similarity between the model's response $y$ and the partner's last utterance $l$.
 
 \subsubsection{Decoding strategies}
-According to \cite{holtzman2019curious} decoding strategies with likelihood maximazing lead to text that is increadibly degenerate, even when using state-of-the-art models. If the most likely word is always sampled, the model generates repetitive and overly generic text, like ``I don't know'', because it is a typical answer to any question. Popular sampling methods for generation texts are based on sampling from the distribution. Temperature and top k sampling are the most popular methods to combat sampling from the tail.
+According to \cite{holtzman2019curious} decoding strategies with likelihood maximazing lead to text that is increadibly degenerate, even when using state-of-the-art models. If the most likely word is always sampled, the model generates repetitive and overly generic text, like ``I don't know'', because it is a typical answer to any question.
+
+Maximization-based decoding methods such as \textbf{beam search} make text incoherent and repetitive. A beam search is a limited-width breadth first search. This method starts from an empty sequence $(t=0)$, at every step $t=0, 1, 2, 3,...$ beam search expands at most $k$ partial sequences (with highest probabilities) and computes the probabilities of sequences with length $t+1$. It terminates with a beam of $k$ complete sequences. 
+
+Popular sampling methods for generation texts are based on sampling from the distribution. Temperature and top k sampling are the most popular methods to combat sampling from the tail.
 
 \textbf{Temperature sampling} is inspired by statistical thermodynamics, where high temperature means low energy states are more likely encountered. In a probability model logits are divided by the temperature, before feeding them into softmax (Equation \ref{eq:temperature_sampling}, where $t$ is a temperature, $u_{1:|V|}$ are logits). Setting $t \in [0,1)$ skews the distribution towards high probability events, which implicitly lowers the mass in the tail distribution. The temperature parameter controls the shape of distribution without sufficiently suppressing the unreliable tail.
 
@@ -665,7 +669,8 @@ Twitter dataset contains 867,710 message-response pairs from Twitter and is used
 
 
 \chapter{Implementation, experiments and evaluations}
-The goal was to create a model that generates a stylistic response to the utterance of an opponent. The designed architecture is represented in the Figure \ref{architecture_nlg}. All models were implemented in Python 3.7.3 with using PyTorch 1.4.0 framework. This capture aspires to give a comprehensive description of the implementation of stylized NLG model and conducted experiments.
+This chapter describes implemented model for stylized text generation and the experiments performed. 
+The designed architecture is represented in the Figure \ref{architecture_nlg}. All parts of the model were implemented in Python 3.7.3 with using PyTorch 1.4.0 framework.
 
 \begin{figure}[hbt]
   \centering
@@ -680,7 +685,11 @@ p(y_1, ... , y_{T'}|x_1, ... , x_T) = \prod_{t=1}^{T'} ( w_1 * p_1(y_t|v, y_1, .
 
 The Equation \ref{eq:baseline} is a formal description of the designed model, where $x_1, ... , x_T$ is an input sequence and $y_1, ... , y_{T'}$ is its corresponding output sequence whose length $T'$ may differ from $T$. $p_1(y_t|v, y_1, ... , y_{t-1})$ is a distribution for encoder-decoder language model, in which $v$ is the last hidden state of the encoder. $p_i(y_t|v, y_1, ... , y_{t-1})$ is a distribution for each stylized language model, $n$ is a number of stylized models. All distributions are represented with a softmax over all the words in the vocabulary and multiplied by a corresponding weight $w$, a hyperparameter to be chosen. 
 
-Sequence-to-sequence model was trained on the Persona-Chat dataset, described in the subsection \ref{persona_chat_subsec}. As the input $x$ to the encoder-decoder model, the entire dialogue history, separated by unique token, is used. Each stylized model was trained on the corresponding stylistic dataset described in the subsection \ref{stylistic_dataset_section}.
+Sequence-to-sequence model was trained on the Persona-Chat dataset, described in the subsection \ref{persona_chat_subsec}. As the input $x$ to the encoder-decoder model, the entire dialogue history, separated by unique token, is used. Each stylized model was trained on the corresponding stylistic dataset described in the subsection \ref{stylistic_dataset_section}. Data are tokenized, where tokenization is a process of splitting text into units represented at model's input and replacing sensitive data with unique identification symbols that retain all the essential information about the data without compromising its security. Spacy\protect\footnotemark library is used with few handcrafted rules for tokenization.
+
+\footnotetext{\url{https://spacy.io/}}
+
+Beam search, nucleus and temperature sampling were used to generate more varied answers. These decoding methods are described in detail in the section \ref{related_work_ds_section}.
 
 \section{Baseline}
 Encoder-decoder model in baseline is implemented as LSTM sequence-to-sequence language model with Luong attention and stylized language model is implemented as LSTM-based model. LSTM neural networks are described in detail in the section \ref{lstm_section}, seq2seq model is described in the section \ref{seq2seq_section} and Luong attention is described in the appendix \ref{luong_attn_appendix}.
@@ -698,7 +707,14 @@ GloVe (Global Vectors) model was used for distributed word representation \cite{
 
 \subsection{Experiment}
 
-Baseline model was trained with hyperparameters, but some terms need to be explained first. embedding size is 300, hidden dimmension is 512, number of layers is 2, number of epochs is 10, where 1 epoch means processing the entire dataset through the model, batch size is 32, a dataset is divided into number of batches.
+\begin{eqfloat}
+\begin{equation} \label{eq:cross_entropy}
+H(p,q) = -\sum_{x \in X} p(x)\log(q(x))
+\end{equation}
+\caption{$p$ is the target distribution, $q$ is the approximation of the target distribution. $p(x)$ is the probability of the event $x$ in $p$, $q(x)$ is the probability of the event $x$ in $q$.}
+\end{eqfloat}
+
+2 hidden layers were used in both the encoder and decoder with 512 hidden unites in each hidden layer. A dropout \cite{srivastava2014dropout} was used with the probability of $50\%$ to prevent neural networks from overfitting. \textit{Cross-entropy} (measure of the difference between 2 probability distributions for a given random variable or set of events) was used as a loss function. Formally representation of cross-entropy is in the Equation \ref{eq:cross_entropy}. \textit{Adam} \cite{kingma2014adam} is used as the optimization algorithm.
 
 \begin{table}[ht]
 \centering
@@ -726,91 +742,73 @@ Baseline model was trained with hyperparameters, but some terms need to be expla
 \label{tab:baseline_experiment}
 \end{table}
 
+The example, represented in the Table \ref{tab:baseline_experiment}, shows a repetition problem, such as repetition of the part of an utterance (``I am''), repetition of phrases (``I am afraid''). Another problem is that very often expressions do not make sense in the context. These problems can be because of the small amount of data and LSTM neural networks still has a problem to hold a context. To solve it, I have used transformer-based pretrained models.
+
 \section{BART and GPT-2}
 BART and GPT-2 models are used to explore all features of the created architecture (the Figure \ref{architecture_nlg}). GPT-2 is a successor to GPT, described in the section \ref{sec_gpt} and used as stylized language model. GPT-2 is a direct scale-up of GPT, with more parameters (1.5 billion parameters) and trained on more amount of data. It is a large transformer-based language model, which was trained to predict the next word in 40GB of Internet text. 
 
 BART is an autoencoder for pretraining sequence-to-sequence models, described in the section \ref{bart_section}.
 
-\begin{table}[ht]
-\centering
- \begin{tabular}{|p{7cm}|p{7cm}|} 
- \hline\hline
- \textbf{Person1} & \textbf{Person2} \\
- \hline\hline
- Person's description: 1. as a child, i won a national spelling bee. 2. i have been published in the new yorker magazine. 3. i am a gourmet cook. 4. i have perfect pitch. & Person's description: 1. i am very athletic. 2. i wear contacts. 3. i have brown hair. 4. i love bicycling. 5. i hate carrots. \\
- \hline
- hi, how are you doing today? & that is cool. I am a chef\\ 
- \hline
- i don't like carrots either. I am a gourmet cook.& i am very athletic. i love to play sports \\
- \hline
- i ride my bike to work as well. & that is awesome. i am very athletic, so i love spelling \\
- \hline 
- i have been published in a new yorker magazine & that is cool. i have never heard of it \\
- \hline
- i do not make any spelling mistakes & that is great! \\
- \hline 
- i am from california. my hair is brown & what is your ethnicity? i am asian. \\
- \hline\hline
- \end{tabular}
- \caption{Experiment BART conversation}
-\label{tab:bart_conversation}
-\end{table}
-
 \subsection{Experiments}
 
 \subsubsection{Experiment with NIDF}
-The first experiment was with Normalized Inverse Document Frequency as a decoding feature, described in the section \ref{related_work_ds_section}. This approach makes generated text more specific, because the less often a word is found in a dataset the more weight is setted for the word probability. Example of the generated dialogue is shown in the Table \ref{tab:bart_conversation_idf5}.
+The first experiment was with Normalized Inverse Document Frequency as a decoding feature, described in the section \ref{related_work_ds_section}. This approach makes generated text more specific, because the less often a word is found in a dataset the more weight is setted for the word probability. Example of the generated dialogue is shown in the Table \ref{tab:compare_nidf}.
+
+
+\begin{table}[ht]
+ \begin{tabular}{|p{7cm}|p{7cm}|}
+ \hline\hline
+ \textbf{Generated BART conversation.} & \textbf{Experiment of BART conversation with specifity, weight = 5.}\\
+ \hline\hline
+ \multicolumn{2}{|p{14cm}|}{\textbf{Person 1 description:} 1. as a child, i won a national spelling bee. 2. i have been published in the new yorker magazine. 3. i am a gourmet cook. 4. i have perfect pitch.} \\
+ \hline
+ \multicolumn{2}{|p{14cm}|}{\textbf{Person 2 description:} 1. i am very athletic. 2. i wear contacts. 3. i have brown hair. 4. i love bicycling. 5. i hate carrots.} \\
+ \hline\hline
+ \textbf{Person1:} hi, how are you doing today?  & \textbf{Person1:} (Silence) \\
+ \textbf{Person2:} that is cool. I am a chef & \textbf{Person2:} hello , how are you doing today? \\ 
+ \textbf{Person1:} i don't like carrots either. I am a gourmet cook. & \textbf{Person1:} hi! i work as a gourmet cook \\
+ \textbf{Person2:} i am very athletic. i love to play sports & \textbf{Person2:} what kind of gourmet cook do you cook?\\
+ \textbf{Person1:} i ride my bike to work as well. & \textbf{Person1:} i do not like carrots. i throw them away.\\
+ \textbf{Person2:} that is awesome. i am very athletic, so i love spelling & \textbf{Person2:} what kind of carrots do you discard? \\
+ \textbf{Person1:} i have been published in a new yorker magazine & \textbf{Person1:} really. but, i can sing pitch perfect.\\
+ \textbf{Person2:} that is cool. i have never heard of it & \textbf{Person2:} what kind of music do you sing pitch perfect?\\
+ \textbf{Person1:} i do not make any spelling mistakes & \textbf{Person1:} i also cook, and i ride my bike to work.\\
+ \textbf{Person2:} that is great! & \textbf{Person2:} that sounds fun! i ride my bike to work as well. \\
+ \textbf{Person1:} i am from california. my hair is brown & \textbf{Person1:} great! i had won an award for spelling bee. \\
+ \textbf{Person2:} what is your ethnicity? i am asian. & \textbf{Person2:} awesome! what kind of spelling bee did you win?\\
+ \hline\hline
+ \end{tabular}
+\caption{Comparison of 2 generated dialogues.}
+\label{tab:compare_nidf}
+\end{table}
+
+
+\subsubsection{Experiment with weighted decoding}
+Examples represented in the Tables \ref{tab:bart_conversation_gpt2}, \ref{tab:poetic_shakespear} shows the generated stylized dialogues with using stylistic datasets.
 
 \begin{table}[ht]
 \centering
  \begin{tabular}{|p{14cm}|} 
  \hline\hline
- \textbf{Person 1 description:} as a child, i won a national spelling bee. \# i have been published in the new yorker magazine. \# i am a gourmet cook. \# i have perfect pitch. \\
+ \textbf{Person 1 description:} 1. as a child, i won a national spelling bee. 2. i have been published in the new yorker magazine. 3. i am a gourmet cook. 4. i have perfect pitch. \\
  \hline
- \textbf{Person 2 description:} i am very athletic. \# i wear contacts. \# i have brown hair. \# i love bicycling. \# i hate carrots. \\
+ \textbf{Person 2 description:} 1. i am very athletic. 2. i wear contacts. 3. i have brown hair. 4. i love bicycling. 5. i hate carrots. \\
  \hline\hline
  \textbf{Person 1:} (Silence) \\
- \textbf{Person 2:} hello , how are you doing today? \\ 
+ \textbf{Person 2:} hey! how are you today? \\ 
  \textbf{Person 1:} hi! i work as a gourmet cook \\
- \textbf{Person 2:} what kind of gourmet cook do you cook?\\
+ \textbf{Person 2:} i was just about to go to a gourmet cook shop. \\
  \textbf{Person 1:} i do not like carrots. i throw them away. \\
- \textbf{Person 2:} what kind of carrots do you discard? \\
+ \textbf{Person 2:} i am a chef for carrots.\\
  \textbf{Person 1:} really. but, i can sing pitch perfect. \\
- \textbf{Person 2:} what kind of music do you sing pitch perfect? \\
+ \textbf{Person 2:} i love the chorus. \\
  \textbf{Person 1:} i also cook, and i ride my bike to work. \\
- \textbf{Person 2:} that sounds fun! i ride my bike to work as well. \\
+ \textbf{Person 2:} i love riding my bike. \\
  \textbf{Person 1:} great! i had won an award for spelling bee. \\
- \textbf{Person 2:} awesome! what kind of spelling bee did you win? \\
+ \textbf{Person 2:} that is awesome. i am sure! \\
  \hline\hline
  \end{tabular}
- \caption{Experiment BART conversation with specifity, weight = 5}
-\label{tab:bart_conversation_idf5}
-\end{table}
-
-\subsubsection{Experiment with weighted decoding}
-
-\begin{table}[ht]
-\centering
- \begin{tabular}{|p{7cm}|p{7cm}|} 
- \hline\hline
- \textbf{Person1} & \textbf{Person2} \\
- \hline\hline
- Person description: as a child, i won a national spelling bee. \# i have been published in the new yorker magazine. \# i am a gourmet cook. \# i have perfect pitch. & Person description: i am very athletic. \# i wear contacts. \# i have brown hair. \# i love bicycling. \# i hate carrots. \\
- \hline
- (Silence) & hey! how are you today? \\ 
- \hline
- hi! i work as a gourmet cook & i was just about to go to a gourmet cook shop. \\
- \hline
- i do not like carrots. i throw them away. & i am a chef for carrots.\\
- \hline 
- really. but, i can sing pitch perfect. & i love the chorus. \\
- \hline
- i also cook, and i ride my bike to work. & i love riding my bike. \\
- \hline 
- great! i had won an award for spelling bee. & that is awesome. i am sure! \\
- \hline\hline
- \end{tabular}
- \caption{Experiment BART with GPT-2 trained on dataset with jokes weights: 7:3}
+ \caption{Experiment BART with GPT-2 trained on dataset with jokes.}
 \label{tab:bart_conversation_gpt2}
 \end{table}
 
@@ -836,20 +834,12 @@ The first experiment was with Normalized Inverse Document Frequency as a decodin
  \textbf{Person2:} i am not a fool. But I am a man of color  \\
  \hline\hline
  \end{tabular}
- \caption{Experiment BART and GPT2 with Shakespear style}
+ \caption{Experiment BART and GPT2 with Shakespear style.}
 \label{tab:poetic_shakespear}
 \end{table}
 
+\subsubsection{Experiment of switching models}
+
 \chapter{Conclusion}
+The goal was to create a model that generates a stylistic response to the utterance of an opponent in the dialogue. 
 
-Non-task-oriented dialogue system
-
-The aim of task-oriented dialogue systems is to complete specific tasks fo user, non-task-oriented dialogue systems focus on conversing with human on open domains. 
-
-//TODO: Info about datasets
-
-//TODO: Info about evaluation metrics
-
-//TODO: NLP vs Computation linguistic
-
-//Implementation (describe preprocessing, baseline )

@@ -8,7 +8,7 @@ Creating a non-task-oriented agent is a challenge for researches, because there 
 
 According to \cite{salovey1990emotional} one of the most important cognitive behaviors in humans is expressing and understanding emotions. That is why it is necessary to pay attention not only to generation of a semantically and syntactically correct text, but also to the emotions and language style in which person communicates to make a dialogue more diverse and interesting. Carefully formulated speech without cliches or jargon is essential to avoid inaccurate presentation and ensure effective communication. Most of the modern generative models are trained on huge corpora which include different contributions from various authors. Texts produced with such models are often not perceived as natural and characterized as non-human, because humans have recognizable writing and communication styles.
 
-The main purpose of this thesis was to create NLG model, which is able to generate text in different styles. Chapter \ref{nlg_problems} presents common NLG problems, as well as the specific NLG problems that arise during the dialogue. Chapter \ref{nlg_models} contains the overview of models used in the Natural Language Generation. It starts off with an explanation of fundamental techniques common to a lot of machine learning approaches and then continues to describe models specific for NLG and used in the experiments in this thesis. Chapter \ref{related_works} contains a portfolio of current methods and models for solving the problems described in the chapter \ref{nlg_problems}. Chapter \ref{eval_datasets_section} describes evaluation methods for NLG in dialogue systems and  publicly available datasets, which are used for the models training in the thesis. Chapter \ref{designed_experiments} presents the results of the experiments, their analysis and evaluation of the designed model. Chapter \ref{conclusion} concludes the results of experiments reported in the previous chapter and providing recommendations on future research, which are based on the thesis' results. 
+The main purpose of this thesis was to create NLG model, which is able to generate text in different styles. Chapter \ref{nlg_problems} presents common NLG problems, as well as the specific NLG problems that arise during the dialogue. Chapter \ref{nlg_models} contains the overview of models used in the Natural Language Generation. It starts off with an explanation of fundamental techniques common to a lot of machine learning approaches and then continues to describe models specific for NLG and used in the experiments in this thesis. Chapter \ref{related_works} contains a portfolio of current methods and models for solving the problems described in the chapter \ref{nlg_problems}. Chapter \ref{eval_datasets_section} describes evaluation methods for NLG in dialogue systems and  publicly available datasets, which are used for the models training in the thesis. Chapter \ref{solution_design} presents the results of the experiments, their analysis and evaluation of the designed model. Chapter \ref{conclusion} concludes the results of experiments reported in the previous chapter and providing recommendations on future research, which are based on the thesis' results. 
 
 \chapter{NLG problems in dialogue systems}\label{nlg_problems}
 In a book \cite{alder2017handbook} Natural Language Generation is defined as ``the process by which thought is rendered into language''. NLG approaches can be grouped into two categories, one focuses on generating text using templates or (linguistic) rules (i.e. data-to-text generation), the other uses corpus-based statistical methods (i.e. text-to-text generation), where corpora is a collection of texts \cite{oh2002stochastic}.
@@ -638,7 +638,7 @@ Persona-Chat models normal conversation when 2 people meet for the first meet an
 Persona-Chat dataset consists of small conversations between 2 crowdworkers from Amazon Mechanical Turk who were randomly paired and asked to act the part of a given provided persona (randomly assigned, and created by another set of crowdworkers). The data collection consists of persona chat (each dialogue has 6-8 turns), personas (set of 1155 possible personas, each consisting of at least 5 profile sentences), revised personas to avoid word overlap, because crowdworkers sometimes could repeat profile information in a chat(the Table \ref{tab:persona_revised}). In turn-based dialogue each message consists of a maximum of 15 words. All statistics are presented in the Table \ref{tab:persona_chat_statistics}, the Figure \ref{fig:histogram_persona_desc} and the Figure \ref{fig:histogram_uttr_length}. An example of Persona-Chat dialogue is shown in the Table \ref{tab:persona_chat}. The dataset contains 262,848 message-responses pairs and splitted into train data - 70\%, valid data - 20\% and test data - 10\%.
 
 \subsection{Datasets for stylisation and pretraining} \label{stylistic_dataset_section}
-\textbf{Stanford Sentiment Treebank (SST)} contains sentences from movie reviews and includes labels for every syntactically plausible phrase in thousands of sentences. To create SST the corpus of movie review excerpts from the paper \cite{pang2005seeing} is used, where HTML tags and sentences that are not in English are deleted from this dataset. The Stanford Parser is used to parse all 10,662 sentences and some snippet were splitted into multiple sentences. The resulting 215,154 phrases were labeled by Amazon Mechanical Trunk. There are 25 different labels from \textit{very negative} to \textit{very positive}. Annotators most often used only 5-class classification: negative, somewhat negative, neutral, positive or somewhat positive. Many of sentences could be considered neutral, therefore, to generate text with positive and negative sentiment I have used negative and somewhat negative classes as one negative class and positive, somewhat positive classes as one positive class. A histogram for SST is represented in the Figure \ref{fig:sst}.
+\textbf{Stanford Sentiment Treebank (SST)} contains sentences from movie reviews and includes labels for every syntactically plausible phrase in thousands of sentences. This corpus represents mood style to make a text more positive or negative. To create SST the corpus of movie review excerpts from the paper \cite{pang2005seeing} is used, where HTML tags and sentences that are not in English are deleted from this dataset. The Stanford Parser is used to parse all 10,662 sentences and some snippet were splitted into multiple sentences. The resulting 215,154 phrases were labeled by Amazon Mechanical Trunk. There are 25 different labels from \textit{very negative} to \textit{very positive}. Annotators most often used only 5-class classification: negative, somewhat negative, neutral, positive or somewhat positive. Many of sentences could be considered neutral, therefore, to generate text with positive and negative sentiment I have used negative and somewhat negative classes as one negative class and positive, somewhat positive classes as one positive class. A histogram for SST is represented in the Figure \ref{fig:sst}.
 
 For poetic style the Shakespeare dataset was used, which contains all of Shakespeare's plays. A histogram for this dataset is shown in the Figure \ref{fig:shakespeare}.
 
@@ -660,18 +660,18 @@ For poetic style the Shakespeare dataset was used, which contains all of Shakesp
 \end{table}
 
 
-A dataset of english plaintext jokes was used for generating funny text. There are about 208 000 jokes scraped from 3 sources (Table \ref{tab:jokes}). stupidstuff.json is scrapped from stupidstuff.org, wocka.jsom from \url{http://wocka.com}, reddit\_jokes.json is scraped from \url{https://www.reddit.com/r/Jokes} and contains all submissions to the subreddit as of 13.02.2017. A histogram for the dataset is shown in the Figure \ref{fig:jokes}.
+A dataset of english plaintext jokes was used for generating text with humor style. There are about 208 000 jokes scraped from 3 sources (Table \ref{tab:jokes}). stupidstuff.json is scrapped from stupidstuff.org, wocka.jsom from \url{http://wocka.com}, reddit\_jokes.json is scraped from \url{https://www.reddit.com/r/Jokes} and contains all submissions to the subreddit as of 13.02.2017. A histogram for the dataset is shown in the Figure \ref{fig:jokes}.
 
 Twitter dataset contains 867,710 message-response pairs from Twitter and is used for pretraining baseline model. The dataset is splitted into train data - 85\%, valid data - 10\% and test data - 5\%. A histogram for the dataset is shown in the Figure \ref{fig:tweet}
 
 
-\chapter{Designed experiments and evaluation} \label{designed_experiments}
-This chapter describes the model for stylized text generation and performed experiments. All experiments can be divided into 3 parts: decoding strategies, feature-based decoding modifications and weighted decoding. The designed architecture for WD is represented in the Figure \ref{architecture_nlg} and implemented in 2 variant. First, a LSTM-based baseline model was implemented and trained. The second variant uses state-of-the-art models. All parts of the architecture were implemented in Python 3.7.3 with using PyTorch 1.4.0 framework.
+\chapter{Solution design and implementation} \label{solution_design}
+This chapter describes the model for stylized text generation in dialogue systems and performed experiments. All experiments can be divided into 3 parts: decoding strategies, feature-based decoding modifications and weighted decoding of a combination of language models. The designed architecture for WD of a language models combination is represented in the Figure \ref{architecture_nlg} and implemented in 2 variant. First, a LSTM-based baseline model was implemented and trained. The second variant uses state-of-the-art models. All parts of the architecture were implemented in Python 3.7.3 with using PyTorch 1.4.0 framework.
 
 \begin{figure}[hbt]
   \centering
   \includegraphics[width=0.7\textwidth]{figures/model.pdf}
-  \caption{An architecture of stylized Natural Language Generation model.}
+  \caption{An architecture of combination models for stylized Natural Language Generation. $w_n$ is a hyperparameter.}
   \label{architecture_nlg}
 \end{figure}
 
@@ -718,7 +718,10 @@ BART and GPT-2 models are used to explore all features of the created architectu
 \label{tab:bart_statistic}
 \end{table}
 
+
 BART decoder is an equivalent to the GPT model. GPT-2 is a direct scale-up of GPT, with more parameters (1.5 billion parameters) and trained on more amount of data. GPT-2 model uses more words in a vocabulary than GPT, what means that before a combination of these models, it is necessary to convert a distribution of probabilities of the next word in a sequene over all the words in the smallest vocabulary to the distribution over the biggest one and add 0 if word does not exist. 
+
+Each GPT-2 model represents one style. 4 such models are fine-tuned for humor, positive, negative and poetic styles. BART is fine-tuned on Persona-Chat dataset.
 
 \section{Experiments}
 This section represents designed experiments with different features during test time of the designed models to generate stylized dialogues.
@@ -750,7 +753,7 @@ For the Fisher's exact test, 2 questionaire were created, where there was only 1
 \chapter{Results and discussion}
 In this chapter, results of the experiments described in the previous section are presented and their implications are discussed. Human evaluation occurred only for those experiments that are subjectively considered more successful.
 
-All experiments with features, decoding strategies and combination of models are carried out on pretrained models, because the dialogs generated by the baseline model do not make sense in the context. The example in the Table \ref{tab:baseline_experiment} shows that the model also has a repetition problem, such as repetition of the part of an utterance (``I am''), repetition of phrases (``I am afraid''). These problems can be because of the small amount of data and LSTM neural networks still has a problem to hold a context. In comparison with the baseline model the dialogue generated using the BART model (Table \ref{tab:bart_experiment}) is more logical and diverse.
+All experiments with features, decoding strategies and combination of models are carried out on pretrained models, because the dialogs generated by the baseline model do not make sense in the context. The example in the Table \ref{tab:baseline_experiment} shows that the model also has a repetition problem, such as repetition of the part of an utterance (``I am''), repetition of phrases (``I am afraid''). These problems can be because of the small amount of data and LSTM neural networks still have a problem to hold a context. In comparison with the baseline model the dialogue generated using the BART model (Table \ref{tab:bart_experiment}) is more logical and diverse.
 
 Results of using beam search and Nucleus sampling methods are shown in the Tables \ref{tab:beam_search} and \ref{tab:nucleus_sampling}. All these decoding strategies are described in detail in the section \ref{related_work_ds_section}.
 \begin{table}[ht]
@@ -801,7 +804,7 @@ Results of using beam search and Nucleus sampling methods are shown in the Table
 
 In Nucleus sampling cumulative distribution (CDF) is computed and cutted off as soon as CDF exceeds P. Determined the set of tokens, to be sampled from, may be very large, which can take a very long time. There is no visible difference in the results, so in other experiments beam search is used because of the time.
 
-\subsection{Experiment with feature-based decoding modifications}
+\section{Experiment with feature-based decoding modifications}
 \subsubsection{NIDF feature}
 In the experiment the Normalized Inverse Document Frequency is used as a decoding feature. This approach makes generated text more specific, because the less often a word is found in a dataset the more weight is setted for the word probability. 
 
@@ -832,7 +835,7 @@ For this experiment 2 lengths of a sequence were chosen: 5 and 20 words. With ea
 Generated sequences with this feature are shown in the Table \ref{tab:set_len}. In some cases, when generating long sentences, many punctuation marks were added, as in the sentence ``i do not like carrots either.....''. \textbf{71.4\%} people consider, that dialogues generated with a lot of words in a sentence are more interesting.
 
 \subsubsection{Deleted stop words feature}
-Stop words are used from NLTK\protect\footnotemark (suite of libraries and programs for symbolic and statistical NLP). During decoding in each iteration, when selecting the next word in the sequence, it was checked if this word is not contained in stop words.
+Stop words are used from NLTK\protect\footnotemark (suite of libraries and programs for symbolic and statistical NLP). During decoding in each iteration, when selecting the next word in the sequence, it is checked if this word is not contained in stop words.
 
 \footnotetext{\url{https://www.nltk.org/}}
 \begin{table}[ht]
@@ -855,16 +858,69 @@ Stop words are used from NLTK\protect\footnotemark (suite of libraries and progr
 \end{table}
 Represented results of the experiment in the Table \ref{tab:stop_words} shows that generated utterances are very generic and don't make sense in a context. For this experiment, there was no human evaluation.
 
-\subsection{Experiment of weighted decoding with using BART and GPT-2 models}
-Examples represented in the Tables \ref{tab:bart_conversation_gpt2}, \ref{tab:poetic_shakespear}, \ref{tab:sst_wd} shows the generated stylized dialogues with using stylistic datasets. 
+\section{Experiment of weighted decoding of combination BART and GPT-2 models}
+Results of this experiment are generated dialogues from BART model and one GPT-2 model for stylization, the weights for other stylistic language models are set to 0.
 
-In the Table \ref{tab:sst_wd} GPT-2 is trained on SST dataset. As a result generated sentences are short. It could be because sentences in the courpus are ranging from 10 to 20 words (a histogram of the SST dataset is in the Figure \ref{fig:sst}).
+Example of a generated dialogue with humor is shown in the Table \ref{tab:combo_bart_gpt2_jokes}. The weight for encoder-decoder model is set to 0.3, the weight for stylized language model is set to 0.7. These hyperparameters are manual tunned. Compared to the generated dialogue using only the BART model (Table \ref{tab:bart_experiment}), this conversation is not very different, although, for example, the phrase: ``i am a chef for carrots'' may seem rather funny, because the opponent does not like carrots and \textbf{57.14\%} people consider that this dialogue is comical.
 
-\subsection{Experiment of switching BART and GPT-2 models}
-In this experiment $n$ words in a sequence are generated over BART and $n$ words are generated over GPT-2 model, where $n$ is a hyperparameter. Sequence generation stops when the end mark of the sequence is generated or the length of the sequence is equal to the maximum length.
+Generated dialogue with poetic style is represented in the Table \ref{tab:poetic_shakespear}. Hyperparameters for weighted decoding are set to 0.2 for BART and 0.8 for GPT-2 model. In the example a poetic appeal to a person (``My Lord'') is used, which means a manifestation of style. \textbf{64.3\%} people consider that this dialogue is more poetic than the real one.
 
-Examples of this experiment are represanted in the Tables \ref{tab:jokes_switch} \ref{tab:shakespeare_switch}, \ref{tab:sst_switch}.
+In the Table \ref{tab:sst_wd} GPT-2 is trained on SST dataset. As a result generated sentences are short. It could be because sentences in the courpus are ranging from 10 to 20 words (a histogram of the SST dataset is in the Figure \ref{fig:sst}). The negative and positive moods are not expressed in the example. Generated dialogues were compared with the real conversation and in case of positive sentiment only \textbf{21.4\%} people consider that generated dialogue is positive, in case of negative sentiment - \textbf{50\%} people think that generated conversation is more negative than the real one. 
 
+General conclusion from this experiment is that the more weight was set on generating the style, the more the context began to get lost. Generated sentences were often unrelated in context. Therefore, the following experiment was conducted with the alternate use of models.
+
+\section{Experiment of switching BART and GPT-2 models}
+In this experiment, alternating the generation of words by the encoder-decoder and stylized language models. $n$ words in a sequence are generated over BART and $n$ words are generated over GPT-2 model, where $n$ is a hyperparameter. Sequence generation stops when the end mark of the sequence is generated or the length of the sequence is equal to the maximum length.
+
+Example of the experiment is represented in the Table \ref{tab:jokes_switch}. When generating sequences, there is still a problem of context, but already the model sometimes generates answers to the opponent's utterance (``-i love carrots but I hate carrots too. -i don't like it either.''). \textbf{71.4\%} people consider that this dialogue is more comic than the real one.
+
+The sentiment and poetic style are not expressed in the examples shown in the Tables \ref{tab:shakespeare_switch}, \ref{tab:sst_switch}. For the conversation generated by the model fine-tuned on the Shakespeare dataset only \textbf{37.5\%} of people consider this dialogue poetic. \textbf{33.3\%} is a human evaluation for negative sentiment and \textbf{23.8\%} is for positive sentiment.
+
+\section{Fisher's exact test}
+Fisher's exact test is carried out to check if human evaluation is statistically significant, with the help of which the independence of the dialogue from the order of its display is checked. 2 questionnaires are created for the test. In the first one a dialogue with poetic style is displayed as first and real conversation is shown as a second dialogue after that the participant chooses a more poetic dialogue. The second questionnaire is almost the same, only the order in which dialogs are displayed is changed.
+
+The Table \ref{tab:fisher} represents results of the responses of the questionnaire. If the generated dialogue was shown first, then out of 7 people only 4 people chose it as a more stylish dialogue. If the real dialogue was shown first, then out of 8 people, only 3 people chose the generated conversation as a more stylish one.
+
+
+\begin{table}[ht]
+\centering
+ \begin{tabular}{|p{4cm}|p{4cm}|p{3cm}|p{2cm}|} 
+ \hline\hline
+  & Generated dialogue & Real dialogue & Total\\
+ \hline
+  Generated dialogue first & 4 & 3 & 7 \\
+ \hline
+  Real dialogue first & 3 & 5 & 8 \\
+ \hline
+  Total & 7 & 8 & 15\\
+ \hline\hline
+ \end{tabular}
+ \caption{Results from questionaires.}
+\label{tab:fisher}
+\end{table}
+
+\begin{table}[ht]
+\centering
+ \begin{tabular}{|p{4cm}|p{4cm}|p{3cm}|} 
+ \hline\hline
+  & Generated dialogue & Real dialogue \\
+ \hline
+  Generated dialogue first & 3.267 & 3.733 \\
+ \hline
+  Real dialogue first & 3.733 & 4.267 \\
+ \hline\hline
+ \end{tabular}
+ \caption{Expected values.}
+\label{tab:expected_vals}
+\end{table}
+
+To use Fisher's exact test, it is necessary that no more than 80\% of the expected values are more than 5. For the experiment this condition is satisfied (Table \ref{tab:expected_vals}).
+
+\begin{equation} \label{eq:hypergeometric_distribution}
+p = \frac{\binom{7}{4} \binom{8}{3}}{\binom{15}{7}} = \frac{\binom{7}{3} \binom{8}{5}}{\binom{15}{8}} = 0.305
+\end{equation}
+
+The probability of obtaining any such set of values is given by the hypergeometric distribution
 
 \chapter{Conclusion} \label{conclusion}
 The goal was to create a model that generates a stylistic response to the utterance of an opponent in the dialogue. 

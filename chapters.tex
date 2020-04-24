@@ -719,7 +719,7 @@ BART and GPT-2 models are used to explore all features of the created architectu
 \end{table}
 
 
-BART decoder is an equivalent to the GPT model. GPT-2 is a direct scale-up of GPT, with more parameters (1.5 billion parameters) and trained on more amount of data. GPT-2 model uses more words in a vocabulary than GPT, what means that before a combination of these models, it is necessary to convert a distribution of probabilities of the next word in a sequene over all the words in the smallest vocabulary to the distribution over the biggest one and add 0 if word does not exist. 
+BART decoder is an equivalent to the GPT model. GPT-2 is a direct scale-up of GPT, with more parameters (1.5 billion parameters) and trained on more amount of data. GPT-2 model uses more words in a vocabulary than GPT, what means that before a combination of these models, it is necessary to convert a distribution of probabilities of the next word in a sequene over all the words in the smallest vocabulary to the distribution over the biggest one and add 0 if word does not exist. Outputs of BART model, transformed to GPT-2 vocabulary, and GPT-2 models (probabilities of words) are multiplied by weights to increase or decrease the probability of words and finally these outputs are added up.
 
 Each GPT-2 model represents one style. 4 such models are fine-tuned for humor, positive and negative sentiment and poetic style. The model is trained with batch size parameter set to 1, learning rate for Adam is 0.0001, 50000 chars is a minimum size to concatenate input files with $<|endoftext|>$ separator. 
 

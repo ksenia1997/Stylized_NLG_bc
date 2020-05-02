@@ -235,13 +235,13 @@ Nowadays traditional RNN networks almost are not used in NLG, because they have 
 \begin{figure}[hbt]
   \centering
   \includegraphics[width=0.5\textwidth]{figures/lstmCell.pdf}
-  \caption{A node in an LSTM network.}
+  \caption{A cell in an LSTM network.}
   \label{lstm}
 \end{figure}
 
 LSTM networks are a special kind of RNN, which reduce the vanishing gradient problem. It makes them much more effective on capturing long-term dependencies. All recurrent neural networks have the form of a chain of repeating modules of neural network. LSTM network also has this chain structure, but the repeating module has a different structure. The key of the solution is usage of multiple gates and a cell state, which runs through all the cells and is manipulated using these gates – parts of the state may be added or removed. Each gate is a sigmoid layer that outputs a number between 0 and 1, which represents the degree of the cell state modification.
 
-The Figure \ref{lstm} represents a structure of a LSTM cell. First, the network decides how much of information from previous steps to keep stored in its cell state, by using the forget gate, which consists of a sigmoid function applied to weighted sum of previous output, input and bias (equation \ref{eq:lstm_1}). $W$ are updated through the backpropagation algorithm weights, $b_f$ is a bias, $x_t$ is an input, $h_{t-1}$ is a hidden state from previous step.
+The Figure \ref{lstm} represents a structure of a LSTM cell. LSTM cell processes data sequentially for 1 time step and keeps its hidden state through time. First, the network decides how much of information from previous steps to keep stored in its cell state, by using the forget gate, which consists of a sigmoid function applied to weighted sum of previous output, input and bias (Equation \ref{eq:lstm_1}). $W$ are updated through the backpropagation algorithm weights, $b_f$ is a bias, $x_t$ is an input, $h_{t-1}$ is a hidden state from previous step.
 \begin{equation} \label{eq:lstm_1}
 f_t = \sigma(W_{xf}x_t + W_{hf}h_{t-1}+b_f)
 \end{equation}
@@ -256,7 +256,7 @@ After calculating the state modification, it is necessary to compute the new val
 \tilde{c_{t}}=tanh(W_{xc}x_t + W_{hc}h_{t-1} + b_c)
 \end{equation}
 
-Updating the cell state is based on the previous state and the candidate values (equation \ref{eq:lstm_4}).
+Updating the cell state is based on the previous state and the candidate values (Equation \ref{eq:lstm_4}).
 \begin{equation} \label{eq:lstm_4}
 c_t = \tilde{c_{t}} \odot i_t + c_{t-1} \odot f_t
 \end{equation}
@@ -271,7 +271,7 @@ And the final step producing the hidden state for the next timestep. It is based
 h_t = o_t \odot tanh(c_t)
 \end{equation}
 
-This model does not have a problem with vanishing gradient, but still the capacity of the LSTM memory is limited, because of inherently complex sequential words' paths from the previous unit to the current unit. The same complexity results in high computational requirements that make LSTM difficult to train. 
+This model does not suffer from vanishing gradient, but still the capacity of the LSTM memory is limited and high computational requirements make learning LSTM difficult. 
 
 \section{Sequence-to-sequence model (seq2seq)} \label{seq2seq_section}
 
@@ -280,25 +280,39 @@ Seq2seq models were introduced in 2014 \cite{sutskever2014sequence}. This model 
 \begin{figure}[hbt]
   \centering
   \includegraphics[width=0.8\textwidth]{figures/encoder_decoder.pdf}
-  \caption{Architecture of sequence-to-sequence model.}
+  \caption{Architecture of sequence-to-sequence model. $h_i$ represents a hidden state.}
   \label{encoder_decoder}
 \end{figure}
 
-The Figure \ref{encoder_decoder} presents traditional encoder-decoder arhitecture. Encoder converts an input sequence of words to a corresponding fixed size hidden vector. Each vector represents the current token and the context of the word. Every time step, it takes a vector that represents a word and pass its output to the next layer. The last hidden state of encoder passes its output to the first layer of the decoder. The final hidden state of the encoder is also called context vector. The decoder input is an output encoder vector and start token, which characterizes the beginning of the generated sentence. The generated word depends on the previous decoder state and the last generated word. Many optimizations have led to other seq2seq components, such as attention, beam search, bucketing.
+The Figure \ref{encoder_decoder} presents traditional encoder-decoder arhitecture. Encoder converts an input sequence of words to a corresponding fixed size hidden vector. Each vector represents the current token and the context of it. Every time step, it takes a vector that represents a word and pass its output to the next layer. The last hidden state of encoder passes its output to the first layer of the decoder. The final hidden state of the encoder is also called context vector. The decoder input is an output encoder vector and start token, which characterizes the beginning of the generated sentence. The generated word depends on the previous decoder state and the last generated word. Many improvements have led to other seq2seq components, such as attention, beam search, bucketing.
 
 \section{Attention} \label{attention_section}
 A neural attention mechanism is based on the human visual attention mechanism. Visual attention is able to focus on a certain region of an image with ``high resolution'', while perceiving the surrounding image in “low resolution”, and then adjusting the focal point over time.
 
-In \cite{vaswani2017attention} attention is described as mapping a query and a set of key-value pairs to an output, where the query, keys, values, and output are all vectors. The output is computed as a weighted sum of the values, where the weight assigned to each value is computed by a compatibility function of the query with the corresponding key.
-
-The attention mechanism provides the decoder with information from each hidden state of the encoder and it gives a model the ability to selectively focus on useful parts of the input sequence and learn the alignment between them (Figure \ref{attention}).
+The attention mechanism provides the decoder with information from each hidden state of the encoder and it gives a model the ability to selectively focus on useful parts of the input sequence and learn the alignment between them (Figure \ref{fig:attention}).
 
 \begin{figure}[hbt]
   \centering
-  \includegraphics[width=0.5\textwidth]{figures/attention.pdf}
-  \caption{When we see ``eating'', we expect to encounter a food word very soon. The color term describes the food, but probably not so much with ``eating'' directly.}
-  \label{attention}
+  \includegraphics[width=0.5\textwidth]{figures/attention_example.png}
+  \caption{An example of attention mechanism. The x-axis and y-axis correspond to the words in the input sequence in English and the generated translation in French. Each pixel represents a weight.}
+  \label{fig:attention}
 \end{figure}
+
+\begin{eqfloat}
+\begin{equation} \label{eq:attention}
+output_i = \sum_{j=1}^{T} \alpha_{ij} h_j
+\end{equation}
+\caption{An output of the attention mechanism, where $T$ is a length of input sequence, $h_j$ is a hidden state representing a value, $\alpha_{ij}$ (Equation \ref{eq:attention_w}) is a weight of each annotation $h_j$.} 
+\end{eqfloat}
+
+\begin{eqfloat}
+\begin{equation} \label{eq:attention_w}
+\alpha_{ij} = \frac{exp(e_{ij})}{\sum_{k=1}^{T} exp(e_{ik})}
+\end{equation}
+\caption{Computation of $\alpha_{ij}$ of each annotation $h_j$, where $e_{ij}$ is an alignment model, represented as feedforward neural network, which scores how well match the inputs around position $j$ and the output at position $i$.} 
+\end{eqfloat}
+
+In \cite{vaswani2017attention} attention is described as ``mapping a query and a set of key-value pairs to an output, where the query, keys, values, and output are all vectors''. The output represents a computed weighted sum of the values (Equation \ref{eq:attention}). A weight for each value is computed by a compatibility function of the query with the corresponding key. Weights for keys corresponding to important values will be greater than for unimportant ones, which means that important values will be a bigger part of the output. 
 
 Self-attention is an attention mechanism, where ``self'' means that the inputs interact with each other and ``attention'' means that inputs find out who they should pay more attention. Formally, in the attention mechanism the query, keys and values are from the same sequence. The query is a single element from the sequence while the keys and values are the entire sequence. The attention output is a new representation of the element that was the query. Self-attention is used to compute a new representation of the sequence.  
 
@@ -306,7 +320,7 @@ Self-attention is an attention mechanism, where ``self'' means that the inputs i
 Information in this section is taken from \cite{vaswani2017attention}.
 \begin{figure}[hbt]
   \centering
-  \includegraphics[width=0.9\textwidth]{figures/transformer_attention.png}
+  \includegraphics[width=0.9\textwidth]{figures/transformer_attention.pdf}
   \caption[Transformer architecture]{The architecture of the Transformer.\protect\footnotemark}
   \label{transformer}
 \end{figure}
@@ -324,9 +338,9 @@ Attention(Q, K, V) = softmax(\frac{QK^T}{\sqrt{d_k}})V
 MultiHead(Q, K, V) = Concat(head_1, head_2, ..., head_h)W^O
 \end{equation}
 
-An equation \ref{eq:transformer_attention} represents a \textbf{scaled dot-product attention}. The input consists of values of dimension $d_v$, queries and keys of dimension $d_k$, where queries, keys and values are matricies.
+An Equation \ref{eq:transformer_attention} represents a \textbf{scaled dot-product attention}. The input consists of values of dimension $d_v$, queries and keys of dimension $d_k$, where queries, keys and values are matricies.
 
-An equation \ref{eq:transformer_multi_head} represents a \textbf{multi-head attention}, which allows the model to jointly track information from different representation subspaces at different positions. Averaging inhibits this with a single head of attention. The input also consists of queries, keys and values matricies, $W^O$ is a parameter matrix, $h$ is a number of parallel layers, $head_i = Attention(QW_i^Q, KW_i^K, VW_i^V)$, where $W_i^Q, W_i^K, W_i^V$ are parameter matricies. $Q$, $K$ and $V$ are different for each position of the attention modules in the structure. It depends on if they are in the encoder, the decoder or between them.
+An Equation \ref{eq:transformer_multi_head} represents a \textbf{multi-head attention}, which allows the model to jointly track information from different representation subspaces at different positions. Averaging inhibits this with a single head of attention. The input also consists of queries, keys and values matricies, $W^O$ is a parameter matrix, $h$ is a number of parallel layers, $head_i = Attention(QW_i^Q, KW_i^K, VW_i^V)$, where $W_i^Q, W_i^K, W_i^V$ are parameter matricies. $Q$, $K$ and $V$ are different for each position of the attention modules in the structure. It depends on if they are in the encoder, the decoder or between them.
 
 \section{GPT} \label{sec_gpt}
 Information in this section is taken from \cite{radford2018improving}.

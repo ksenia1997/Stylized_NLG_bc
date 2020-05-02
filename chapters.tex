@@ -205,6 +205,8 @@ Artificial Neural Networks are inspired by biological neural networks that const
 
 Neurons' outputs can be connected to inputs of other neurons and the calculation is propagated through the network. In NNs neurons are organized into layers where generally the output of the layer is the input for a next layer. The Figure \ref{nn} represents the most common type of layer -- the fully-connected layer where all neurons between adjacent layers are connected with each other.
 
+Training process of neural networks is minimising an error (i.e. loss) between predicted and real outputs of NN with help of \textbf{Gradient Descent} algorithm \cite{lemarechal2012cauchy}. Gradient Descent finds a local minimum of a differentiable function. \textbf{Backpropagation} \cite{rumelhart1986learning} is used for computing a gradient descent with respect to the weights of NN and for fine-tuning weights. Tuning of the weights ensures lower error rates, what makes a model reliable. 
+
 \section{Elman Networks} \label{rnn_section}
 Elman Networks are a form of recurrent neural networks (RNN) used in natural language processing (NLP) as they allow modeling temporal depedencies of variable length in the data (like context) to be captured. RNNs share the same structure as NNs described in the section \ref{nn_section}, except each layer also has an internal state (i.e. hidden state), which captures information about the previous layer inputs. This allows the network to keep track of past data while processing current inputs.
 
@@ -216,7 +218,7 @@ Elman Networks are a form of recurrent neural networks (RNN) used in natural lan
 \end{figure}
 
 The architecture of Elman Networks is illustrated in the Figure \ref{rnn}. A hidden state \textbf{h} is a vector, which calculated from the input $x$ and the previous hidden state. An output \textbf{o} is calculated from this new hidden state. 
-The equations \ref{eq:rnn_h} and \ref{eq:rnn_o} show the formulas for a traditional recurrent neural network.
+The Equations \ref{eq:rnn_h} and \ref{eq:rnn_o} show the formulas for a traditional recurrent neural network.
 
 \begin{equation} \label{eq:rnn_h}
 h_t = \sigma(W_hh_{t-1} + W_xx_t)
@@ -275,8 +277,6 @@ This model does not suffer from vanishing gradient, but still the capacity of th
 
 \section{Sequence-to-sequence model (seq2seq)} \label{seq2seq_section}
 
-Seq2seq models were introduced in 2014 \cite{sutskever2014sequence}. This model uses an encoder-decoder architecture (Figure \ref{encoder_decoder}). Both the encoder and the decoder are recurrent neural networks (vanilla version of RNN is rarely used, because of the problems described in the section \ref{rnn_section}). The role of the encoder is to encode the input, a sequence of variable length data, to a fixed length vector. Decoder based on this vector generates an output sequence of data of different length. These 2 neural networks are connected into one model to maximise the learning effect. Seq2seq model is very effective to solve NLP problems, because input and output sequences can have different lengths and recurrent neural networks can work with context. This model is often used in machine translation, text summarization, dialogue systems etc.
-
 \begin{figure}[hbt]
   \centering
   \includegraphics[width=0.8\textwidth]{figures/encoder_decoder.pdf}
@@ -284,7 +284,37 @@ Seq2seq models were introduced in 2014 \cite{sutskever2014sequence}. This model 
   \label{encoder_decoder}
 \end{figure}
 
+Seq2seq models were introduced in 2014 \cite{sutskever2014sequence}. This model uses an encoder-decoder architecture (Figure \ref{encoder_decoder}). Both the encoder and the decoder are recurrent neural networks (vanilla version of RNN is rarely used, because of the problems described in the section \ref{rnn_section}). The role of the encoder is to encode the input, a sequence of variable length data, to a fixed length vector. Decoder based on this vector generates an output sequence of data of different length. These two neural networks are connected into one model to maximise the learning effect. Seq2seq model is very effective to solve NLP problems, because input and output sequences can have different lengths and recurrent neural networks can work with context. This model is often used in machine translation, text summarization, dialogue systems etc.
+
 The Figure \ref{encoder_decoder} presents traditional encoder-decoder arhitecture. Encoder converts an input sequence of words to a corresponding fixed size hidden vector. Each vector represents the current token and the context of it. Every time step, it takes a vector that represents a word and pass its output to the next layer. The last hidden state of encoder passes its output to the first layer of the decoder. The final hidden state of the encoder is also called context vector. The decoder input is an output encoder vector and start token, which characterizes the beginning of the generated sentence. The generated word depends on the previous decoder state and the last generated word. Many improvements have led to other seq2seq components, such as attention, beam search, bucketing.
+
+\section{Decoding strategies}
+According to \cite{holtzman2019curious} decoding strategies with likelihood maximazing lead to text that is increadibly degenerate, even when using state-of-the-art models. If the most likely word is always sampled, the model generates repetitive and overly generic text, like ``I don't know'', because it is a typical answer to any question.
+
+Maximization-based decoding methods such as \textbf{beam search} make text incoherent and repetitive. A beam search is a limited-width breadth first search. This method starts from an empty sequence $(t=0)$, at every step $t=0, 1, 2, 3,...$ beam search expands at most $k$ partial sequences (with highest probabilities) and computes the probabilities of sequences with length $t+1$. It terminates with a beam of $k$ complete sequences. 
+
+Popular sampling methods for generation texts are based on sampling from the distribution. Temperature and top k sampling are the most popular methods to combat sampling from the tail.
+
+\textbf{Temperature sampling} is inspired by statistical thermodynamics, where high temperature means low energy states are more likely encountered. In a probability model logits are divided by the temperature, before feeding them into softmax (Equation \ref{eq:temperature_sampling}, where $t$ is a temperature, $u_{1:|V|}$ are logits). Setting $t \in [0,1)$ skews the distribution towards high probability events, which implicitly lowers the mass in the tail distribution. The temperature parameter controls the shape of distribution without sufficiently suppressing the unreliable tail.
+
+\begin{equation} \label{eq:temperature_sampling}
+p(x=V_l|x_{1:i-1}) = \frac{exp(u_l / t)}{\sum_{l'} exp(u_l' / t)}
+\end{equation}
+
+\textbf{Top-k sampling} means sorting by probability and probabilities for anything below the token $k$ are set to 0. But in some cases, there are few words to choose, there is a risk of generating bland or generic text, while if $k$ is large the top-k vocabulary will include inappropriate candidates which will have their probability of being sampled increased by the renormalization. The top-k vocabulary $V^{(k)} \subset V$ (the set of size $k$) maximizes $p' = \sum_{x \in V^{(k)}} P(x|x_{1:i-1})$. The distribution is then re-scaled as in Equation \ref{eq:top_K_sampling}.
+
+\begin{equation} \label{eq:top_K_sampling}
+P'(x|x_{1:i-1}) = \begin{cases} 
+          P(x|x_{1:i-1}) / p' & \mbox{if $x \in V^{(k)}$} \\
+          0 & \mbox{otherwise}\\
+         \end{cases}
+\end{equation}
+
+The research shows how different natural distribution of human texts and the distribution of machine text produced from maximum likelihood decoding. To resolve this problem authors introduced \textbf{Nucleus Sampling}. The concept is that the vast majority of probabilities are concentrated in a small subset (\textit{nucleus}) of the vocabulary that tends to vary from one to a few hundred candidates. Sampling from the top-$p$ portion of the probability mass expands and contracts the candidate pool dynamically. Formally, given a distribution $P(x|x_{1:i-1})$, the top-p vocabulary $V^{(p)} \in V$ is defined to satisfy the condition in the Equation \ref{eq:nucleus_sampling}.
+
+\begin{equation} \label{eq:nucleus_sampling}
+\sum_{x \in V^{(p)}} P(x|x_{1:i-1})  \geqslant p
+\end{equation}
 
 \section{Attention} \label{attention_section}
 A neural attention mechanism is based on the human visual attention mechanism. Visual attention is able to focus on a certain region of an image with ``high resolution'', while perceiving the surrounding image in “low resolution”, and then adjusting the focal point over time.
@@ -294,15 +324,16 @@ The attention mechanism provides the decoder with information from each hidden s
 \begin{figure}[hbt]
   \centering
   \includegraphics[width=0.5\textwidth]{figures/attention_example.png}
-  \caption{An example of attention mechanism. The x-axis and y-axis correspond to the words in the input sequence in English and the generated translation in French. Each pixel represents a weight.}
+  \caption{An example of attention mechanism. The x-axis and y-axis correspond to the words in the input sequence in English and the generated translation in French. Each pixel represents a weight.\protect\footnotemark}
   \label{fig:attention}
 \end{figure}
 
+\footnotetext{\url{https://arxiv.org/pdf/1409.0473.pdf}}
 \begin{eqfloat}
 \begin{equation} \label{eq:attention}
 output_i = \sum_{j=1}^{T} \alpha_{ij} h_j
 \end{equation}
-\caption{An output of the attention mechanism, where $T$ is a length of input sequence, $h_j$ is a hidden state representing a value, $\alpha_{ij}$ (Equation \ref{eq:attention_w}) is a weight of each annotation $h_j$.} 
+\caption{An output of the attention mechanism, where $T$ is a length of an input sequence, $h_j$ is a hidden state representing a value, $\alpha_{ij}$ (Equation \ref{eq:attention_w}) is a weight of each annotation $h_j$.} 
 \end{eqfloat}
 
 \begin{eqfloat}
@@ -327,7 +358,7 @@ Information in this section is taken from \cite{vaswani2017attention}.
 
 Transformer introduces an architecture that is based on self-attention mechanism and does not use any recurrent networks. In each step this model applies self-attention mechanism which directly models relationships between all words in a sequence, regardless of their respective position. Transformers do not require that the sentence be processed in order, that allows process parallelization during training, unlike RNN. Due to this feature, it has enabled training on much more data. 
 
-The architecture of the Transformer is illustrated in the Figure \ref{transformer}. The Transformer consists of a stack of encoders (on the left) for processing inputs of any length and another set of decoders (on the right) to output the generated sentences. $N_x$ in the Figure means that modules of encoder and decoder can be stacked on top of each other multiple times. Modules consist of multi-head attention and feed forward layers. The inputs and output are first embedded into an n-dimensional space. Words' positions are added to the embedded representation, n-dimensional vector, of each word.
+The architecture of the Transformer is illustrated in the Figure \ref{transformer}. The Transformer consists of a stack of encoders for processing inputs of any length and another set of decoders to output the generated sentences. $N_x$ in the Figure means that modules of encoder and decoder can be stacked on top of each other multiple times. Modules consist of multi-head attention and feed forward layers. The inputs and output are first embedded into an n-dimensional space. Words' positions are added to the embedded representation, n-dimensional vector, of each word. In encoder each layer has two sub-layers, where the first one is a multi-head self-attention mechanism and a second one is a fully connected feed-forward network. Unprocessed input and the output of the sub-layer are connected by residual connections, followed by layer normalization. Another sub-layer added to the decoder, which represents multi-head attention over the output of the encoder stack. In the decoder stack self-attention sub-layer is modified to prevent positions from attending to subsequent positions. This masking ensures that the predictions for a position can depend only on the known outputs at previous positions.
 \footnotetext{\url{http://primo.ai/index.php?title=Transformer}}
 
 \begin{equation} \label{eq:transformer_attention}
@@ -344,7 +375,7 @@ An Equation \ref{eq:transformer_multi_head} represents a \textbf{multi-head atte
 
 \section{GPT} \label{sec_gpt}
 Information in this section is taken from \cite{radford2018improving}.
-GPT is a transformer-based (Section \ref{sec_transformer}) language model. The model works in 2 stages. First of all transformer model trained on a very large amount of data in an unsupervised manner (There are only input variables and no correspoding output variables in unsupervised dataset.), then the model is fine-tuned on much smaller supervised dataset (There are input and output variable in supervised dataset. The model learns the mapping function from the input to the output.) to help it solve specific tasks.
+GPT is a transformer-based (Section \ref{sec_transformer}) language model. The model works in 2 stages. First of all transformer model trained on a very large amount of data in an unsupervised manner, then the model is fine-tuned on much smaller supervised dataset to help it solve specific tasks.
 
 \subsubsection{Unsupervised pre-training}
 In unsupervised pre-training a standard language modeling is used and the aim is to maximize the likelihood (Equation \ref{eq:unsupervised_pre_training}, where $U = {u_1, u_2, ... , u_n}$ is an unsupervised corpus of tokens, $k$ is the size of context window, $P$ is modeled using a neural network with parameter $\Theta$).
@@ -384,20 +415,17 @@ L_3(C) = L_2(C) + \lambda * L_1(C)
 \end{equation}
 
 \section{BART} \label{bart_section}
-BART is a denoising autoencoder for pretraining sequence-to-sequence models, that maps a corrupted document to the original document it was derived from. The model uses a standard Transformer-based neural machine translation architecture, with a bidirectional encoder and left-to-right decoder.
 
 \begin{figure}[hbt]
   \centering
-  \includegraphics[width=0.6\textwidth]{figures/BART.pdf}
-  \caption{BART: Inputs to the encoder need not be aligned with decoder outputs, allowing arbitary noise transformations. Here, a document has been corrupted by replacing spans of text with mask symbols. The corrupted document (left) is encoded with a bidirectional model, and then the likelihood of the original document (right) is calculated with an autoregressive decoder. For fine-tuning, an uncorrupted document is input to both the encoder and decoder, and we use representations from the final hidden state of the decoder\cite{lewis2019bart}.}
-  \label{bart}
+  \includegraphics[width=0.5\textwidth]{figures/BART.pdf}
+  \caption{BART: Encoder inputs need not be aligned with decoder outputs, it allows arbitary noise transformations. A document is corrupted by replacing spans of text with mask symbols. The corrupted document is encoded with a bidirectional model, and then the likelihood of the original document is calculated with an autoregressive decoder. For fine-tuning, an uncorrupted document is input to both the encoder and decoder, and representations from the final hidden state of the decoder are used\cite{lewis2019bart}.}
+  \label{fig:bart}
 \end{figure}
 
-Bidirectional encoder consists of $N$ transformer encoder blocks stacked on top of each other (Section \ref{sec_transformer}), the final block is the output. The input is a sequence of tokens, which are first embedded into vectors and the processed in the model. The output is a sequence of vectors of size $H$, in which each vector corresponds to an input token with the same index. Bidirectional encoder uses 2 training strategies: \textbf{Masked LM (MLM)} and \textbf{Next Sentence Prediction (NSP)}. 
+BART (Figure \ref{fig:bart}) is a denoising autoencoder for pre-training sequence-to-sequence models that maps a corrupted document to the original document it was derived from. The model uses a standard Transformer-based seq2seq architecture, with a bidirectional encoder and left-to-right decoder.
 
-In \textbf{MLM} 15\% of words in each sequence are replaced with a [MASK] token before embedding. The model then tries to predict the original value of the masked words, based on the context provided non-masked words in the sequence. Bidirectional encoder loss function takes into consideration only the prediction of masked values. Pretraining on this task allows the model to learn general features of the language.
-
-\textbf{Next Sentence Prediction}. The bidirectional encoder in the training process receives pairs of sequences as input and the task of the model is to say whether the second sentence is a subsequent of the first sentence in the original document. During training, part of the inputs are a pair in which the second sentence is a subsequent in the original document and in the other part a random sentence from the corpus is chosen as the second sentence. The assumption is that the random sentence will be disconnected from the first sentence. Pre-training on this task allows the model to learn relationships between sentences.
+Bidirectional encoder consists of $N$ transformer encoder blocks stacked on top of each other (Section \ref{sec_transformer}), the final block is the output. The input is a sequence of tokens, which are first embedded into vectors and the processed in the model. The output is a sequence of vectors of size $H$, in which each vector corresponds to an input token with the same index. Autoregressive decoder is GPT model (Section \ref{sec_gpt}). Authors modified ReLU activation functions (Equation \ref{eq:relu}) to GELU (Equation \ref{eq:gelu}) and initialized parameters from $\mathcal{N}(0, 0.2)$. Autoregressive decoder can be directly fine tuned for sequence generation tasks.
 
 \begin{eqfloat}
 \begin{equation} \label{eq:relu}
@@ -405,7 +433,6 @@ f(x) = x^+ = max(0, x)
 \end{equation}
 \caption{Rectified Linear Unit (ReLU)}
 \end{eqfloat}
-
 \begin{eqfloat}
 \begin{equation} \label{eq:gelu}
 GELU(x) = xP(X \leq x) = x \Phi(x)
@@ -413,25 +440,24 @@ GELU(x) = xP(X \leq x) = x \Phi(x)
 \caption{Gaussian Error Linear Unit (GELU)}
 \end{eqfloat}
 
-\begin{eqfloat}
-\begin{equation} \label{eq:gelu_approx}
-\begin{array}{lcl} 
-GELU(x) = 0.5x(1 + tanh[\sqrt{2/\pi}(x + 0.044715x^3)]) \\ 
-GELU(x) = x\sigma(1.702x) \\
-\end{array}
-\end{equation}
-\caption{Approximations of GELU}
-\end{eqfloat}
-Autoregressive decoder is GPT model (Section \ref{sec_gpt}). Authors modified ReLU activation functions (Equation \ref{eq:relu}) to GELU (Equation \ref{eq:gelu}) and initialized parameters from $\mathcal{N}(0, 0.2)$. Autoregressive decoder can be directly fine tuned for sequence generation tasks.
+Pre-training has two stages: text corruption with an arbitrary noising function and learning to reconstruct the original text. BART allows to apply any type of document corruption, such as token masking, sentence permutation, document rotation, token deletion, text infilling (Figure \ref{fig:bart_doc_corruption}).
 
 \begin{figure}[hbt]
   \centering
   \includegraphics[width=0.6\textwidth]{figures/bart_doc_corruptions.pdf}
-  \caption{Transformations for noising the input. These transformations can be composed.}
-  \label{bart_doc_corruption}
+  \caption{Corruptions for noising the input. These transformations can be composed.}
+  \label{fig:bart_doc_corruption}
 \end{figure}
 
-BART allows to apply any type of document corruption, such as token masking, sentence permutation, document rotation, token deletion, text infilling (Figure \ref{bart_doc_corruption}).
+In \textbf{Token Masking} part of words in each sequence are replaced with a \texttt{[MASK]} token before embedding. The model then tries to predict the original value of the masked words, based on the context provided non-masked words in the sequence. Bidirectional encoder loss function takes into consideration only the prediction of masked values. Pre-training on this task allows the model to learn general features of the language.
+
+In \textbf{Token Deletion} random tokens are deleted from the input. It is needed to decide which positions are missing inputs.
+
+For \textbf{Text Infilling} a number of text spans are sampled. Span lengths represent a Poisson distribution ($\lambda=3$) and each span is replaced with a single \texttt{[MASK]} token. The model learns to predict how many tokens are missing from a span.
+
+In \textbf{Document Rotation} a token is chosen uniformly at random. A document rotation starts with that token. The model learns to identify the start of the document.
+
+For \textbf{Sentence Permutation} a document is divided into sentences based on full stops. These sentences are randomly shuffled.
 
 \chapter{Related work} \label{related_work}
 This chapter presents an overview of the most popular NLG models for building open-ended dialogue systems and for resolving problems described in the section \ref{nlg_ds_problems}. Section \ref{related_work_ds_section} presents approaches for resolving standard NLG problems. Section \ref{stylized_problems} presents solutions for generating stylized text, which helps to create the feeling that you are talking to a person.
@@ -472,34 +498,6 @@ resp\_rel(w; y_{<t}, x) = cos\_sim(word\_emb(w), sent\_emb(l))
 \end{equation}
 Response-relatedness feature with weighted decoding is represented in the Equation \ref{eq:response_relatedness}, where $word\_emb(w)$ is the GloVe embedding for the word $w$, $sent\_emb(l)$ is the sentence embedding for the partner's last utterance $l$ ($l$ is part of the context $x$), $cos\_sim$ is the cosine similarity between two.
 The control response-relatedness in condition training is represented by variable $z$ as $cos\_sim(sent\_emb(y), sent\_emb(l))$, where $cos\_sim$ is a cosine similarity between the model's response $y$ and the partner's last utterance $l$.
-
-\subsubsection{Decoding strategies}
-According to \cite{holtzman2019curious} decoding strategies with likelihood maximazing lead to text that is increadibly degenerate, even when using state-of-the-art models. If the most likely word is always sampled, the model generates repetitive and overly generic text, like ``I don't know'', because it is a typical answer to any question.
-
-Maximization-based decoding methods such as \textbf{beam search} make text incoherent and repetitive. A beam search is a limited-width breadth first search. This method starts from an empty sequence $(t=0)$, at every step $t=0, 1, 2, 3,...$ beam search expands at most $k$ partial sequences (with highest probabilities) and computes the probabilities of sequences with length $t+1$. It terminates with a beam of $k$ complete sequences. 
-
-Popular sampling methods for generation texts are based on sampling from the distribution. Temperature and top k sampling are the most popular methods to combat sampling from the tail.
-
-\textbf{Temperature sampling} is inspired by statistical thermodynamics, where high temperature means low energy states are more likely encountered. In a probability model logits are divided by the temperature, before feeding them into softmax (Equation \ref{eq:temperature_sampling}, where $t$ is a temperature, $u_{1:|V|}$ are logits). Setting $t \in [0,1)$ skews the distribution towards high probability events, which implicitly lowers the mass in the tail distribution. The temperature parameter controls the shape of distribution without sufficiently suppressing the unreliable tail.
-
-\begin{equation} \label{eq:temperature_sampling}
-p(x=V_l|x_{1:i-1}) = \frac{exp(u_l / t)}{\sum_{l'} exp(u_l' / t)}
-\end{equation}
-
-\textbf{Top-k sampling} means sorting by probability and probabilities for anything below the token $k$ are set to 0. But in some cases, there are few words to choose, there is a risk of generating bland or generic text, while if $k$ is large the top-k vocabulary will include inappropriate candidates which will have their probability of being sampled increased by the renormalization. The top-k vocabulary $V^{(k)} \subset V$ (the set of size $k$) maximizes $p' = \sum_{x \in V^{(k)}} P(x|x_{1:i-1})$. The distribution is then re-scaled as in Equation \ref{eq:top_K_sampling}.
-
-\begin{equation} \label{eq:top_K_sampling}
-P'(x|x_{1:i-1}) = \begin{cases} 
-          P(x|x_{1:i-1}) / p' & \mbox{if $x \in V^{(k)}$} \\
-          0 & \mbox{otherwise}\\
-         \end{cases}
-\end{equation}
-
-The research shows how different natural distribution of human texts and the distribution of machine text produced from maximum likelihood decoding. To resolve this problem authors introduced \textbf{Nucleus Sampling}. The concept is that the vast majority of probabilities are concentrated in a small subset (\textit{nucleus}) of the vocabulary that tends to vary from one to a few hundred candidates. Sampling from the top-$p$ portion of the probability mass expands and contracts the candidate pool dynamically. Formally, given a distribution $P(x|x_{1:i-1})$, the top-p vocabulary $V^{(p)} \in V$ is defined to satisfy the condition in the Equation \ref{eq:nucleus_sampling}.
-
-\begin{equation} \label{eq:nucleus_sampling}
-\sum_{x \in V^{(p)}} P(x|x_{1:i-1})  \geqslant p
-\end{equation}
 
 \section{Generating stylized conversation} \label{stylized_problems}
 The idea that computers can generate stylized texts already appeared half a century ago in \cite{wheatley1965computer}. Authors choose a variety of text characteristics as style, such as an expession of politeness in machine translation \cite{sennrich2016controlling}, transformation from modern English to Shakespearean English \cite{jhamtani2017shakespearizing}, sentiment of a text in \cite{shen2017style} and \cite{li2018delete}. In \cite{gao2019structuring} authors used a structured latent space to generate stylized dialogue responses. Another approach was proposed in \cite{john2018disentangled}, where authors applied an adversarial loss to separate style from content. The problem of style transfer, described in these papers, differs from the stylized text generation, because as it is shown in \cite{guu2018generating} an existing human-written source used to control the reliability of the results can significantly improve the quality of the resulting texts. 
@@ -640,7 +638,7 @@ Persona-Chat models normal conversation when 2 people meet for the first meet an
 
 Persona-Chat dataset consists of small conversations between 2 crowdworkers from Amazon Mechanical Turk who were randomly paired and asked to act the part of a given provided persona (randomly assigned, and created by another set of crowdworkers). The data collection consists of persona chat (each dialogue has 6-8 turns), personas (set of 1155 possible personas, each consisting of at least 5 profile sentences), revised personas to avoid word overlap, because crowdworkers sometimes could repeat profile information in a chat(the Table \ref{tab:persona_revised}). In turn-based dialogue each message consists of a maximum of 15 words. All statistics are presented in the Table \ref{tab:persona_chat_statistics}, the Figure \ref{fig:histogram_persona_desc} and the Figure \ref{fig:histogram_uttr_length}. An example of Persona-Chat dialogue is shown in the Table \ref{tab:persona_chat}. The dataset contains 262,848 message-responses pairs and splitted into train data -- 70\%, valid data -- 20\% and test data -- 10\%.
 
-\section{Datasets for stylisation and pretraining} \label{stylistic_dataset_section}
+\section{Datasets for stylisation and pre-training} \label{stylistic_dataset_section}
 \textbf{Stanford Sentiment Treebank (SST)} contains sentences from movie reviews and includes labels for every syntactically plausible phrase in thousands of sentences. This corpus represents sentiment of reviews. To create SST the corpus of movie review excerpts from the paper \cite{pang2005seeing} is used, where HTML tags and sentences that are not in English are deleted from this dataset. The Stanford Parser is used to parse all 10,662 sentences and some snippet were splitted into multiple sentences. The resulting 215,154 phrases were labeled by Amazon Mechanical Trunk. There are 25 different labels from \textit{very negative} to \textit{very positive}. Annotators most often used only 5-class classification: negative, somewhat negative, neutral, positive or somewhat positive. Many of sentences could be considered neutral, therefore, to generate text with positive and negative sentiment I have used negative and somewhat negative classes as one negative class and positive, somewhat positive classes as one positive class. A histogram for SST is represented in the Figure \ref{fig:sst}.
 
 For poetic style the \textbf{Shakespeare} dataset was used, which contains all of Shakespeare's plays. A histogram for this dataset is shown in the Figure \ref{fig:shakespeare}.
@@ -665,7 +663,7 @@ For poetic style the \textbf{Shakespeare} dataset was used, which contains all o
 
 A dataset of \textbf{english plaintext jokes} was used for generating text with humor style. There are about 208 000 jokes scraped from 3 sources (Table \ref{tab:jokes}). stupidstuff.json is scrapped from stupidstuff.org, wocka.jsom from \url{http://wocka.com}, reddit\_jokes.json is scraped from \url{https://www.reddit.com/r/Jokes} and contains all submissions to the subreddit as of 13.02.2017. A histogram for the dataset is shown in the Figure \ref{fig:jokes}.
 
-\textbf{Twitter} dataset contains 867,710 message-response pairs from Twitter and is used for pretraining baseline model. The dataset is splitted into train data -- 85\%, valid data -- 10\% and test data -- 5\%. A histogram for the dataset is shown in the Figure \ref{fig:tweet}
+\textbf{Twitter} dataset contains 867,710 message-response pairs from Twitter and is used for pre-training baseline model. The dataset is splitted into train data -- 85\%, valid data -- 10\% and test data -- 5\%. A histogram for the dataset is shown in the Figure \ref{fig:tweet}
 
 
 \begin{figure}
@@ -706,7 +704,7 @@ This chapter describes the model for stylized text generation in dialogue system
 \end{figure}
 
 \section{Baseline}
-Encoder-decoder model in baseline is implemented as LSTM sequence-to-sequence language model, represented in the chapter \ref{nlg_models}, with Luong attention, described in the appendix \ref{luong_attn_appendix}. This model is pretrained on message-response pairs from Twitter dataset (subsection \ref{stylistic_dataset_section}) and trained on the Persona-Chat dataset, described in the subsection \ref{persona_chat_subsec}. As the input $x$ to the encoder-decoder model, the entire dialogue history, separated by unique token, is used.
+Encoder-decoder model in baseline is implemented as LSTM sequence-to-sequence language model, represented in the chapter \ref{nlg_models}, with Luong attention, described in the appendix \ref{luong_attn_appendix}. This model is pre-trained on message-response pairs from Twitter dataset (subsection \ref{stylistic_dataset_section}) and trained on the Persona-Chat dataset, described in the subsection \ref{persona_chat_subsec}. As the input $x$ to the encoder-decoder model, the entire dialogue history, separated by unique token, is used.
 
 Stylized language model is implemented as LSTM-based RNN model. Each stylized language model is trained separately on the corresponding stylistic dataset described in the subsection \ref{stylistic_dataset_section}.
 
@@ -731,7 +729,7 @@ H(p,q) = -\sum_{x \in X} p(x)\log q(x)
 For all experiments with the baseline 2 hidden layers were used in both the encoder and decoder with 512 hidden unites in each hidden layer. A dropout \cite{srivastava2014dropout} was used with the probability of $50\%$ to prevent neural networks from overfitting. \textit{Cross-entropy} (measure of the difference between 2 probability distributions for a given random variable or set of events) was used as a loss function. Formally representation of cross-entropy is in the Equation \ref{eq:cross_entropy}. \textit{Adam} \cite{kingma2014adam} is used as the optimization algorithm.
 
 \section{Pre-trained models}
-BART and GPT-2 models are used to explore all features of the created architecture (Figure \ref{architecture_nlg}). BART is an autoencoder for pretraining sequence-to-sequence models, described in the section \ref{bart_section}. BART model with 400M hyperparameters has 12 encoder and decoder layers. This model is chosen because it achieves state-of-the-art results on Conv AI2 task (a dialogue response generation task, conditioned on context and a persona). GPT-2 is a large transformer-based language model, which was trained to predict the next word in 40GB of Internet text. GPT-2 with 117M hyperparameters has large improvements on WikiText2 dataset for language modeling. This model is a successor to GPT, described in the section \ref{sec_gpt} and used as stylized language model. 
+BART and GPT-2 models are used to explore all features of the created architecture (Figure \ref{architecture_nlg}). BART is an autoencoder for pre-training sequence-to-sequence models, described in the section \ref{bart_section}. BART model with 400M hyperparameters has 12 encoder and decoder layers. This model is chosen because it achieves state-of-the-art results on Conv AI2 task (a dialogue response generation task, conditioned on context and a persona). GPT-2 is a large transformer-based language model, which was trained to predict the next word in 40GB of Internet text. GPT-2 with 117M hyperparameters has large improvements on WikiText2 dataset for language modeling. This model is a successor to GPT, described in the section \ref{sec_gpt} and used as stylized language model. 
 
 \begin{table}[ht]
 \centering

@@ -288,7 +288,7 @@ Seq2seq models were introduced in 2014 \cite{sutskever2014sequence}. This model 
 
 The Figure \ref{encoder_decoder} presents traditional encoder-decoder arhitecture. Encoder converts an input sequence of words to a corresponding fixed size hidden vector. Each vector represents the current token and the context of it. Every time step, it takes a vector that represents a word and pass its output to the next layer. The last hidden state of encoder passes its output to the first layer of the decoder. The final hidden state of the encoder is also called context vector. The decoder input is an output encoder vector and start token, which characterizes the beginning of the generated sentence. The generated word depends on the previous decoder state and the last generated word. Many improvements have led to other seq2seq components, such as attention, beam search, bucketing.
 
-\section{Decoding strategies}
+\section{Decoding strategies} \label{decoding_strategies_section}
 According to \cite{holtzman2019curious} decoding strategies with likelihood maximazing lead to text that is increadibly degenerate, even when using state-of-the-art models. If the most likely word is always sampled, the model generates repetitive and overly generic text, like ``I don't know'', because it is a typical answer to any question.
 
 Maximization-based decoding methods such as \textbf{beam search} make text incoherent and repetitive. A beam search is a limited-width breadth first search. This method starts from an empty sequence $(t=0)$, at every step $t=0, 1, 2, 3,...$ beam search expands at most $k$ partial sequences (with highest probabilities) and computes the probabilities of sequences with length $t+1$. It terminates with a beam of $k$ complete sequences. 
@@ -460,24 +460,21 @@ In \textbf{Document Rotation} a token is chosen uniformly at random. A document 
 For \textbf{Sentence Permutation} a document is divided into sentences based on full stops. These sentences are randomly shuffled.
 
 \chapter{Related work} \label{related_work}
-This chapter presents an overview of the most popular NLG models for building open-ended dialogue systems and for resolving problems described in the section \ref{nlg_ds_problems}. Section \ref{related_work_ds_section} presents approaches for resolving standard NLG problems. Section \ref{stylized_problems} presents solutions for generating stylized text, which helps to create the feeling that you are talking to a person.
+This chapter presents an overview of the most popular NLG models for building open-ended dialogue systems. 
 
-\section{Dialogue system problems} \label{related_work_ds_section}
-Modeling conversations with generative probabilistic models was first proposed in \cite{ritter2011data}. They present a data-driven approach to generating responses to Twitter status posts, based on
-phrase-based Statistical Machine Translation. In \cite{shang2015neural} authors proposed a framework for generating responses on micro-blogging websites with using recurrent neural networks. Their model can generate grammatically correct and content-wise appropriate responses to over 75\% of the input text.
+Modeling conversations with generative probabilistic models was first proposed in \cite{ritter2011data}. They present a data-driven approach to generating responses to Twitter status posts, based on phrase-based Statistical Machine Translation. In \cite{shang2015neural} authors proposed a framework for generating responses on micro-blogging websites with using recurrent neural networks. Their model can generate grammatically correct and content-wise appropriate responses to over 75\% of the input text.
 
-\subsubsection{Text generation methods}
 In \cite{see2019makes} solutions to common NLG problems in dialogue systems are described. Authors add control (the ability to specify desired attributes of the generated text at test time) and focus on four controllable attributes of text: repetition, specificity, response-relatedness and question-asking. They measure repetitiveness as n-gram overlap, specificity as word rareness, response-relatedness as the embedding similarity of the bot’s response to the human’s last utterance. In this work, authors use \textbf{Conditional Training (CT)} \cite{peng2018towards} and \textbf{Weighted Decoding (WD)} \cite{ghazvininejad2017hafez}. 
 
 \begin{figure}[hbt]
   \centering
   \includegraphics[width=0.7\textwidth]{figures/ct.pdf}
   \caption{Example of Condition Training model.}
-  \label{ct}
+  \label{fig:ct}
 \end{figure}
 
 
-A \textbf{CT} model learns probabilities $P(y|x,z)$, where $y$ is the output text, $x$ is the input text and $z$ is a control variable, which specifies the desired output attribute. In the model $z$ is presented with learned embedding and is concatenated to each decoder input (Figure \ref{ct}). For example, to get very generic or very specific response, $z$ can be set to LOW or HIGH. If it is necessary simultaneously control several attributes, multiple control embeddings ($z_1, z_2, ..., z_n$) can be concatenated and the model learns $P(y|x, z_1, z_2, ..., z_n)$. Disadvantage of Conditional Training is that it can’t control attributes without sufficient training data. CT model learns only a very weak connection between $z$ and the semantic relatedness of the output.
+A \textbf{CT} model learns probabilities $P(y|x,z)$, where $y$ is the output text, $x$ is the input text and $z$ is a control variable, which specifies the desired output attribute. In the model $z$ is presented with learned embedding and is concatenated to each decoder input. For example, to get very generic or very specific response, $z$ can be set to \texttt{<LOW>} or \texttt{<HIGH>} (Figure \ref{fig:ct}). If it is necessary simultaneously control several attributes, multiple control embeddings ($z_1, z_2, ..., z_n$) can be concatenated and the model learns $P(y|x, z_1, z_2, ..., z_n)$. Disadvantage of Conditional Training is that it can’t control attributes without sufficient training data. CT model learns only a very weak connection between $z$ and the semantic relatedness of the output.
 
 A \textbf{WD} is a technique applied during decoding to increase/decrease the probability of words with certain features. 
 \begin{equation} \label{eq:wd}
@@ -490,16 +487,6 @@ NIDF(w) = \frac{IDF(w) - min\_idf}{max\_idf - min\_idf}
 \end{equation}
 \textbf{Normalized Inverse Document Frequency (NIDF)} is used as a measure of word rareness. In condition training the metric is represented as $z$ variable and in weighted decoding as a parameter of rareness for a word prediction (On each step of the decoding, the probability of each word in the vocabulary is updated in proportion to its rareness. The size of the update is controlled by a weight parameter.) (Equation \ref{eq:nidf}). $IDF(w) = \log(\frac{R}{c_w})$ is a Inverse Document Frequency of a word $w$, where $R$ is the number of responses in the dataset, $c_w$ is the number of those responses that contain $w$. $min\_idf$ and $max\_idf$ are the minimum and maximum IDF's, which are used for normalising the NIDF (ranges from 0 to 1).
 
-Question-asking problem is resolved in CT by setting the variable $z$ to 1 of 11 possible values: $\{0, 1, ..., 10\}$, where $z=i$ means that the model should produce, on average, utterances containing ``?'' with probability $\frac{i}{10}$. In weighted decoding the binary decoding feature is used, which is equal to 1 if a word $w$ is in a pre-defined list of words: ``how, what, when, where, which, who, whom, whose, why, ?'', 0 otherwise.
-
-N-gram based decoding features were defined to control repetition with WD. External (self-repetition across utterances), internal (self-repetition within utterances) and partner (repeating the conversational partner) repetition fetures identify repeating bigrams. Other features identify repeating content words. Negative weight is applied to these features to reduse repetition. 
-\begin{equation} \label{eq:response_relatedness}
-resp\_rel(w; y_{<t}, x) = cos\_sim(word\_emb(w), sent\_emb(l)) 
-\end{equation}
-Response-relatedness feature with weighted decoding is represented in the Equation \ref{eq:response_relatedness}, where $word\_emb(w)$ is the GloVe embedding for the word $w$, $sent\_emb(l)$ is the sentence embedding for the partner's last utterance $l$ ($l$ is part of the context $x$), $cos\_sim$ is the cosine similarity between two.
-The control response-relatedness in condition training is represented by variable $z$ as $cos\_sim(sent\_emb(y), sent\_emb(l))$, where $cos\_sim$ is a cosine similarity between the model's response $y$ and the partner's last utterance $l$.
-
-\section{Generating stylized conversation} \label{stylized_problems}
 The idea that computers can generate stylized texts already appeared half a century ago in \cite{wheatley1965computer}. Authors choose a variety of text characteristics as style, such as an expession of politeness in machine translation \cite{sennrich2016controlling}, transformation from modern English to Shakespearean English \cite{jhamtani2017shakespearizing}, sentiment of a text in \cite{shen2017style} and \cite{li2018delete}. In \cite{gao2019structuring} authors used a structured latent space to generate stylized dialogue responses. Another approach was proposed in \cite{john2018disentangled}, where authors applied an adversarial loss to separate style from content. The problem of style transfer, described in these papers, differs from the stylized text generation, because as it is shown in \cite{guu2018generating} an existing human-written source used to control the reliability of the results can significantly improve the quality of the resulting texts. 
 
 \subsubsection{ECM}
@@ -518,22 +505,13 @@ ECM need an external decision maker, because this model has to specify an emotio
 
 \subsubsection{Generation of stylized texts}
 
-In the paper \cite{tikhonov2018guess} authors describe the problem of stylized text generation in a multilingual setup and show the importance of phonetics for generating the author's stylized poetry. They presented a version of a language model based on a LSTM artificial neural network with extended phonetic and semantic embeddings for stylized poetry generation. The model generates texts resembling the writing style of a particular author.
+In \cite{tikhonov2018guess} authors describe the problem of stylized text generation in a multilingual setup and show the importance of phonetics for generating the author's stylized poetry. They presented a version of a language model based on a LSTM artificial neural network with extended phonetic and semantic embeddings for stylized poetry generation. The model generates texts resembling the writing style of a particular author.
 
-\begin{equation} \label{eq:poetry_nlg}
-G(C|S) = \begin{cases} 
-          (C, \mathbb{R}^m, F) \rightarrow \{T_i^G\} \\
-          \{T_i^G|S\}  \mathtt{\sim}  \{T_i|S\} & \mbox{w.r.t. D}\\
-         \end{cases}
-\end{equation}
+The model uses Conditional Training, where a condition is represented by the name of an author of a poetic text. This model has been trained with English and Russian. At every step of processing data in the model a word embedding is concatenated with embeddings of the document that is currently being analyzed.
 
-The equation \ref{eq:poetry_nlg} represents the stylized model, where $C = \{ T_i\}^M_{i=0}$ is a corpus of $M$ literary texts written in one natural language. Every text of length $l$ is a sequence $T_i = (w_j)^l_{j=0}$ ($w_j$ is a word). Words are drawn from a vocabulary set $V = \{ w_j \}^L_{j=1}$, $L$ is a vocabulary size. $(C, \mathbb{R}^m, F)$ is all information available to us.
+Last feature represents concatentation of final states of two char bidirectional LSTMs with a 128-dimensional vector into a word embedding. One of the LSTMs model works with letters from a char-representation of the word and another one uses phonemes of the International Phonetic Alphabet.  
 
-Performance metric $D$ usually tries to minimize $D(\{T_i\}, \{T_i^G\})$, where $\{T_i^G\}$ is a randomized sample of $C$. $S$ is a subset of continuous and categorical variables out of $(\mathbb{R}^m, F)$ and metric $D$. Artificial neural networks are used for language modeling to avoid the dimensionality curse by effective mapping $(C,\mathbb{R}^m, F) \rightarrow \mathbb{R}^d$ and then train the model like that $G(C):\mathbb{R}^d \rightarrow \{ T_i^G\}$. 
-
-Advantage of this model is a customization. To control cetain parameters of the model, it is needed to include them intp $S$. The output $\{T_i^G|S\}$ will resemble original texts $\{T_i|S\}$ that satisfy $S$ conditions. The name of an author of a poetic text is used as a condition $S$ for the model. 
-
-Another key feature of the proposed model is a concatenated word representation, where one of the LSTMs works with letters from char-representation of the word and another one uses phonemes of the International Phonetic Alphabet, employing an heuristics to transcribe words into phonemes.
+The authors achieved a slight improvement in the model's evaluation, because CT has a weak connection between condition and the semantic relatedness of the output.
  
 \chapter{Evaluation and datasets} \label{eval_datasets_section}
 \section{Evaluation methods}\label{eval}
@@ -542,6 +520,20 @@ The majority of NLG researches published between 2005-2014 relies on automatic m
 Metrics METEOR \cite{banerjee2005meteor}, BLEU \cite{papineni2002bleu}, ROUGE \cite{lin2004rouge} are usually used for automatic summarization. They assume that valid responses have significant word overlap with the ground truth responses. In dialogue systems these metrics cannot be used, because there is significant diversity in the space of valid responses to a given context \cite{liu2016not}.
 
 In \cite{novikova2017we} the weak correlation between human and automatic evaluations is also confirmed. Authors compared different word-based (\textbf{WBM} relies on ground-truth references) and grammar-based (\textbf{GBM} does not rely on ground-truth references) metrics. Their model, combination of WBMs and GBMs, achieved high correlation with humans but only within a single domain.
+
+Best practices for the human evaluation of NLG are represented in \cite{van2019best}. According to these practices it is better to use separate criteria rather than an overall quality assessment. The effect of fatigue can be reduced by shortening the task. Order of the compared models may also affect annotators. To reduce this effect, presenting the conditions should be in a systematically varied order. There should always be quite a few participants.
+
+\textbf{A/B testing} \cite{kohavi2017online} is used as human evaluation. This method is described as the randomized assignment to the user of two variants: the \textit{control} and the \textit{treatment}. The control variant typically is the existing version, which in this case it is a real dialogue of two people. The treatment variant is the new version being evaluated -- in this case it is a generated dialogue. 
+
+\begin{eqfloat}
+\begin{equation} \label{eq:hypergeometric_distribution}
+p_X(k) = Pr(X=k) = \frac{\binom{K}{k} \binom{N-K}{n-k}}{\binom{N}{n}}
+\end{equation}
+\caption{Hypergeometric distribution, where $N$ is the population size, $K$ is the number of success states in the population, $n$ is the quantity drawn in each trial, $k$ is the number of observed successes. $\binom{n}{k} = \frac{n\,!}{k\,!(n-k)\,!}$ is a binomial coefficient.}
+\end{eqfloat}
+
+\textbf{Fisher's exact test} \cite{fisher1922interpretation} is carried out to check human evaluation for statistically significant biases in it. This test is used when there are two nominal variables (nominal variables classify observations into discrete categories) to know if the proportions for one variable differ among the values of another variable. In this case it is controlled if the order of the dialogs affects the user. 
+Fisher's exact test is used when the total sample size is less than 1000. For this test a null hypothesis is put forward. The null hypothesis is that the relative proportions of one variable are independent of the second variable. To confirm or refute this hypothesis, it is necessary to calculate the probability of getting the observed data, and all data sets with more extreme deviations, under the null hypothesis that the proportions are the same. Hypergeometric distribution (Equation \ref{eq:hypergeometric_distribution}) is used to calculate the probability. If the probability is less than 5\%, the null hypothesis is rejected. 
 
 Corpus is very important for successful Natural Language Generation. Dialogue systems require training data in the format of people text conversation, for example, non-fiction or movie reviews are not suitable for this. Large volumes of training data improves the decision-making ability of NLG model, so those models can use it to figure out patterns. Unfortunately, there are not a lot of datasets available for training NLG models, due to the high cost of creating quality datasets.  
 
@@ -576,7 +568,7 @@ Corpus is very important for successful Natural Language Generation. Dialogue sy
 \label{tab:persona_chat}
 \end{table}
 
-\begin{table}[t]
+\begin{table}
 \centering
   \begin{tabular}{ |c|c| } 
    \hline
@@ -593,7 +585,7 @@ Corpus is very important for successful Natural Language Generation. Dialogue sy
 \label{tab:persona_revised}
 \end{table}
 
-\begin{table}[t]
+\begin{table}
 \centering
   \begin{tabular}{|p{10cm}|p{1cm}|} 
   \hline
@@ -620,16 +612,16 @@ Corpus is very important for successful Natural Language Generation. Dialogue sy
 \label{tab:persona_chat_statistics}
 \end{table}
 
-\begin{figure}[hbt]
+\begin{figure}
   \centering
-  \includegraphics[width=0.7\textwidth]{figures/persona_desc.pdf}
+  \includegraphics[width=0.5\textwidth]{figures/persona_desc.pdf}
   \caption{Histogram of persona description lengths.}
   \label{fig:histogram_persona_desc}
 \end{figure}
 
-\begin{figure}[hbt]
+\begin{figure}
   \centering
-  \includegraphics[width=0.7\textwidth]{figures/uttr_length.pdf}
+  \includegraphics[width=0.5\textwidth]{figures/uttr_length.pdf}
   \caption{Histogram of sequences' lengths of a person.}
   \label{fig:histogram_uttr_length}
 \end{figure}
@@ -641,9 +633,16 @@ Persona-Chat dataset consists of small conversations between 2 crowdworkers from
 \section{Datasets for stylisation and pre-training} \label{stylistic_dataset_section}
 \textbf{Stanford Sentiment Treebank (SST)} contains sentences from movie reviews and includes labels for every syntactically plausible phrase in thousands of sentences. This corpus represents sentiment of reviews. To create SST the corpus of movie review excerpts from the paper \cite{pang2005seeing} is used, where HTML tags and sentences that are not in English are deleted from this dataset. The Stanford Parser is used to parse all 10,662 sentences and some snippet were splitted into multiple sentences. The resulting 215,154 phrases were labeled by Amazon Mechanical Trunk. There are 25 different labels from \textit{very negative} to \textit{very positive}. Annotators most often used only 5-class classification: negative, somewhat negative, neutral, positive or somewhat positive. Many of sentences could be considered neutral, therefore, to generate text with positive and negative sentiment I have used negative and somewhat negative classes as one negative class and positive, somewhat positive classes as one positive class. A histogram for SST is represented in the Figure \ref{fig:sst}.
 
+\begin{figure}[hb]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figures/sst.pdf}
+  \caption{Histogram of Stanford Sentiment Treebank labeled reviews.}
+  \label{fig:sst}
+\end{figure}
+
 For poetic style the \textbf{Shakespeare} dataset was used, which contains all of Shakespeare's plays. A histogram for this dataset is shown in the Figure \ref{fig:shakespeare}.
 
-\begin{table}[ht]
+\begin{table}
 \centering
  \begin{tabular}{|p{4cm}|p{3cm}|p{3cm}|} 
  \hline
@@ -665,36 +664,29 @@ A dataset of \textbf{english plaintext jokes} was used for generating text with 
 
 \textbf{Twitter} dataset contains 867,710 message-response pairs from Twitter and is used for pre-training baseline model. The dataset is splitted into train data -- 85\%, valid data -- 10\% and test data -- 5\%. A histogram for the dataset is shown in the Figure \ref{fig:tweet}
 
-
 \begin{figure}
   \centering
-  \includegraphics[width=0.7\textwidth]{figures/sst.pdf}
-  \caption{Histogram of Stanford Sentiment Treebank labeled reviews.}
-  \label{fig:sst}
-\end{figure}
-
-\begin{figure}
-  \centering
-  \includegraphics[width=0.7\textwidth]{figures/shakespeare.pdf}
+  \includegraphics[width=0.5\textwidth]{figures/shakespeare.pdf}
   \caption{Histogram of Shakespeare's plays.}
   \label{fig:shakespeare}
 \end{figure}
 
-\begin{figure}[hbt]
+\begin{figure}
   \centering
-  \includegraphics[width=0.7\textwidth]{figures/jokes.pdf}
+  \includegraphics[width=0.5\textwidth]{figures/jokes.pdf}
   \caption{Histogram of jokes lengths.}
   \label{fig:jokes}
 \end{figure}
 
-\begin{figure}[hbt]
+\begin{figure}
   \centering
-  \includegraphics[width=0.7\textwidth]{figures/tweet.pdf}
+  \includegraphics[width=0.5\textwidth]{figures/tweet.pdf}
   \caption{Histogram of tweets' lengths.}
   \label{fig:tweet}
 \end{figure}
+
 \chapter{Design and implementation} \label{solution_design}
-This chapter describes the model for stylized text generation in dialogue systems and performed experiments. All experiments can be divided into 3 parts: decoding strategies, feature-based decoding modifications and weighted decoding of a combination of language models. The designed architecture for WD of a language models combination is represented in the Figure \ref{architecture_nlg} and implemented in two variants. First, a LSTM-based baseline model was implemented and trained. The second variant uses state-of-the-art models. All parts of the architecture were implemented in Python 3.7.3 with using PyTorch 1.4.0 framework.
+This chapter describes the model for stylized text generation in dialogue systems and performed experiments. All experiments can be divided into 3 parts: decoding strategies, feature-based decoding modifications and weighted decoding of a combination of language models. The designed architecture for WD of a language models combination is represented in the Figure \ref{architecture_nlg} and implemented in two variants. First variant uses a LSTM-based baseline model. The second one uses pre-trained transformer-based models. All parts of the architecture were implemented in Python 3.7.3 with using PyTorch 1.4.0 framework.
 
 \begin{figure}[hbt]
   \centering
@@ -703,10 +695,16 @@ This chapter describes the model for stylized text generation in dialogue system
   \label{architecture_nlg}
 \end{figure}
 
-\section{Baseline}
-Encoder-decoder model in baseline is implemented as LSTM sequence-to-sequence language model, represented in the chapter \ref{nlg_models}, with Luong attention, described in the appendix \ref{luong_attn_appendix}. This model is pre-trained on message-response pairs from Twitter dataset (subsection \ref{stylistic_dataset_section}) and trained on the Persona-Chat dataset, described in the subsection \ref{persona_chat_subsec}. As the input $x$ to the encoder-decoder model, the entire dialogue history, separated by unique token, is used.
+An experiment with decoding strategies uses Beam search and Nucleus sampling methods. These decoding strategies, described in detail in the section \ref{decoding_strategies_section}, allow the generation of less generic and repetitive sequences, which affects the user's perception of the text.
 
-Stylized language model is implemented as LSTM-based RNN model. Each stylized language model is trained separately on the corresponding stylistic dataset described in the subsection \ref{stylistic_dataset_section}.
+For feature-based decoding modifications only Encoder-Decoder model is used. NIDF metric, described in the chapter \ref{related_work}, is used as feature-based modification. This approach makes generated text more specific. NIDF represents a measure of word rareness and on each step of the decoding, the probability of each word in the vocabulary is updated in proportion to its rareness. This metric represents a weight for each word probability from the Encoder-Decoder model. Another experimet is with a length of generated sequences, because a person's style is represented not only by words, but also by the length of sentences. Some people are used to writing very briefly, and someone likes to paint every detail in a text. With each iteration, when generating the next word, a small weight is added to the probability of the \texttt{[EOS]} (end of sequence) symbol. The last experiment with feature-based decoding modification is blocking stop words. During the decoding useless data are filtered. In NLP useless data are referred to as stop words (a commonly used words, for example, ``a'', ``the'', ``I'' etc.). This approach could help to generate more unusual sequences, for example, instead of ``I think'' to use the phrase ``In my opinion''. Stop words are used from NLTK\protect\footnotemark (suite of libraries and programs for symbolic and statistical NLP). During decoding in each iteration, when selecting the next word in the sequence, it is checked if this word is not contained in stop words. If word is in stop words, a probability for this word is setted to 0.
+
+\footnotetext{\url{https://www.nltk.org/}}
+
+\section{Baseline}
+Encoder-decoder model in baseline is implemented as LSTM sequence-to-sequence language model, represented in the chapter \ref{nlg_models}, with Luong attention \cite{luong2015effective}. This model is pre-trained on message-response pairs from Twitter dataset (subsection \ref{stylistic_dataset_section}) and trained on the Persona-Chat dataset, described in the subsection \ref{persona_chat_subsec}. As the input $x$ to the encoder-decoder model, the entire dialogue history, separated by unique token, is used.
+
+Stylized language model has 2 variants. The first variant is implemented as LSTM-based RNN model. Each stylized language model in this variant is trained separately on the corresponding stylistic dataset described in the subsection \ref{stylistic_dataset_section}.
 
 Data are tokenized, where tokenization is a process of splitting text into units represented at model's input and replacing sensitive data with unique identification symbols that retain all the essential information about the data without compromising its security. Spacy\protect\footnotemark library is used with few handcrafted rules for tokenization. As input GloVe (Global Vectors) embeddings are used for distributed word representation \cite{pennington2014glove}. It is an algorithm, which maps words into a meaningful space where the distance between words is related to semantic similarity. The model was trained only on the nonzero elements in a word-word cooccurrence matrix. Outputs of encoder-decoder and stylized language models (probabilities of words) are multiplied by weights (weight is a hyperparameter to be chosen) to increase or decrease the probability of words and finally these outputs are added up (Figure \ref{implementation_architecture}).
 
@@ -756,9 +754,9 @@ BART is fine-tuned on Persona-Chat dataset. Learning rate is set to 0.00003, lab
 \section{Experiments}
 This section represents designed experiments with different features during test time of the designed models to generate stylized dialogues.
 
-The first experiment performed on the BART model uses Beam search and Nucleus sampling methods. These decoding strategies, described in detail in the section \ref{related_work_ds_section}, allow the generation of less generic and repetitive sequences, which affects the user's perception of the text.
+The first experiment performed on the BART model uses Beam search and Nucleus sampling methods. These decoding strategies, described in detail in the section \ref{decoding_strategies_section}, allow the generation of less generic and repetitive sequences, which affects the user's perception of the text.
 
-The following experiments with feature-based decoding modifications are performed using seq2seq models (BART and LSTM-based seq2seq). The first one is with Normalized Inverse Document Frequency, described in the section \ref{related_work_ds_section}. NIDF is used as a decoding feature, because this approach makes generated text more specific. NIDF represents a measure of word rareness and on each step of the decoding, the probability of each word in the vocabulary is updated in proportion to its rareness. Another experimet is with a length of generated sequences, because a person's style is represented not only by words, but also by the length of sentences. Some people are used to writing very briefly, and someone likes to paint every detail in a text. The last experiment with feature-based decoding modification is blocking stop words. During the decoding useless data are filtered. In NLP useless data are referred to as stop words (a commonly used words, for example, ``a'', ``the'', ``I'' etc.). This approach could help to generate more unusual sequences, for example, instead of ``I think'' to use the phrase ``In my opinion''. 
+The following experiments with feature-based decoding modifications are performed using seq2seq models (BART and LSTM-based seq2seq). The first one is with Normalized Inverse Document Frequency, described in the section \ref{decoding_strategies_section}. NIDF is used as a decoding feature, because this approach makes generated text more specific. NIDF represents a measure of word rareness and on each step of the decoding, the probability of each word in the vocabulary is updated in proportion to its rareness. Another experimet is with a length of generated sequences, because a person's style is represented not only by words, but also by the length of sentences. Some people are used to writing very briefly, and someone likes to paint every detail in a text. The last experiment with feature-based decoding modification is blocking stop words. During the decoding useless data are filtered. In NLP useless data are referred to as stop words (a commonly used words, for example, ``a'', ``the'', ``I'' etc.). This approach could help to generate more unusual sequences, for example, instead of ``I think'' to use the phrase ``In my opinion''. 
 
 Next experiment combines sequence-to-sequence model and stylized language models as it is shown in the Figure \ref{architecture_nlg}. 
 \begin{equation} \label{eq:baseline}
@@ -772,26 +770,16 @@ In last experiment $n$ words in a sequence are generated over encoder-decoder mo
 \section{Evaluation}
 There are a lot of researches, which shows that human and automatic evaluations have weak correlation (Subsection \ref{eval}). In dialogue systems there are a lot of ways how to answer to the opponent utterance correctly, that's why in this thesis only human evaluaton is used. 
 
-\textbf{A/B testing} \cite{kohavi2017online} is used as model evaluation. This method is described as the randomized assignment to the user of two variants: the \textit{control} and the \textit{treatment}. The control variant typically is the existing version, which in this case it is a real dialogue of 2 people. The treatment variant is the new version being evaluated -- in this case it is a generated dialogue. 
-
 The experiment evaluated several manifestations of human styles, such as sentiment (positive, negative), poetry, humor, and specificity. Users were given a questionnaire with several questions (``Which dialogue is more positive?'', ``Which dialogue is more negative?'', ``Which dialogue is more poetic?'', etc.) and for each question there were 2 dialogs as answer options. One of the dialogs was generated by the model, and the second was from real life. In the assessment, 21 people took part in the age range from 1991 to 2004 with different levels of education and field of activity.
 
-\begin{eqfloat}
-\begin{equation} \label{eq:hypergeometric_distribution}
-p_X(k) = Pr(X=k) = \frac{\binom{K}{k} \binom{N-K}{n-k}}{\binom{N}{n}}
-\end{equation}
-\caption{Hypergeometric distribution, where $N$ is the population size, $K$ is the number of success states in the population, $n$ is the quantity drawn in each trial, $k$ is the number of observed successes. $\binom{n}{k} = \frac{n\,!}{k\,!(n-k)\,!}$ is a binomial coefficient.}
-\end{eqfloat}
-
-\textbf{Fisher's exact test} \cite{fisher1922interpretation} is carried out to check if human evaluation is statistically significant. This test is used when there are 2 nominal variables (nominal variables classify observations into discrete categories) to know if the proportions for one variable differ among the values of another variable. In this case it is controlled if the order of the dialogs affects the user. 
-Fisher's exact test is used when the total sample size is less than 1000. For this test a null hypothesis is put forward. The null hypothesis is that the relative proportions of one variable are independent of the second variable. To confirm or refute this hypothesis, it is necessary to calculate the probability of getting the observed data, and all data sets with more extreme deviations, under the null hypothesis that the proportions are the same. Hypergeometric distribution (Equation \ref{eq:hypergeometric_distribution}) is used to calculate the probability. If the probability is less than 5\%, the null hypothesis is rejected. For the Fisher's exact test, 2 questionaire were created, where there was only 1 question (``Which dialogue is more poetic?''). In the first case, as a response option, the generated dialogue was first given and then the real dialogue, and in the second, vice versa.
+For the Fisher's exact test, 2 questionaire were created, where there was only 1 question (``Which dialogue is more poetic?''). In the first case, as a response option, the generated dialogue was first given and then the real dialogue, and in the second, vice versa.
 
 \chapter{Results and discussion} \label{results_discuss}
 In this chapter, results of the experiments described in the previous section are presented and their implications are discussed. Human evaluation occurred only for those experiments that are subjectively considered more successful.
 
 All experiments with features, decoding strategies and combination of models are carried out on pre-trained models, because the dialogs generated by the baseline model do not make sense in the context. The example in the Table \ref{tab:baseline_experiment} shows that the model also has a repetition problem, such as repetition of the part of an utterance (``I am''), repetition of phrases (``I am afraid''). These problems can be because of the small amount of data and LSTM neural networks still have a problem to hold a context. In comparison with the baseline model the dialogue generated using the BART model (Table \ref{tab:bart_experiment}) is more logical and diverse.
 
-Results of using beam search and Nucleus sampling methods are shown in the Tables \ref{tab:beam_search} and \ref{tab:nucleus_sampling}. All these decoding strategies are described in detail in the section \ref{related_work_ds_section}.
+Results of using beam search and Nucleus sampling methods are shown in the Tables \ref{tab:beam_search} and \ref{tab:nucleus_sampling}. All these decoding strategies are described in detail in the section \ref{decoding_strategies_section}.
 \begin{table}[ht]
 \centering
  \begin{tabular}{|p{14cm}|} 

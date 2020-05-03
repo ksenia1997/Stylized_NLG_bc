@@ -152,7 +152,7 @@ Main problems of dialogue systems are represented in the Table \ref{tab:ds_probs
 As noticed in \cite{stent2005evaluating}, the main task of NLG is to select, inflect and order words ``to communicate the input meaning'' as completely, clearly and fluently as possible in context. That's why it is necessary to control if output is appropriate or felicitous in a given context. A good generator usually relies on several factors:
 \begin{itemize}
   \item \textbf{adequacy} (a sentence that is ambiguous or not contains communicates meaning in the input, is \textbf{not} adequate)
-  \item \textbf{repetition} (self-repetition across utterances and with utterances, repeating the conversational partner)
+  \item \textbf{repetition} (self-repetition across sequences and with sequences, repeating the conversational partner)
   \item \textbf{response-relatedness} (efficacy in context)
   \item \textbf{variation} (there are 2 basic forms of variation: \textit{word choice variation} and \textit{word order variation} for enriching speech)
 \end{itemize}
@@ -464,7 +464,7 @@ This chapter presents an overview of the most popular NLG models for building op
 
 Modeling conversations with generative probabilistic models was first proposed in \cite{ritter2011data}. They present a data-driven approach to generating responses to Twitter status posts, based on phrase-based Statistical Machine Translation. In \cite{shang2015neural} authors proposed a framework for generating responses on micro-blogging websites with using recurrent neural networks. Their model can generate grammatically correct and content-wise appropriate responses to over 75\% of the input text.
 
-In \cite{see2019makes} solutions to common NLG problems in dialogue systems are described. Authors add control (the ability to specify desired attributes of the generated text at test time) and focus on four controllable attributes of text: repetition, specificity, response-relatedness and question-asking. They measure repetitiveness as n-gram overlap, specificity as word rareness, response-relatedness as the embedding similarity of the bot’s response to the human’s last utterance. In this work, authors use \textbf{Conditional Training (CT)} \cite{peng2018towards} and \textbf{Weighted Decoding (WD)} \cite{ghazvininejad2017hafez}. 
+In \cite{see2019makes} solutions to common NLG problems in dialogue systems are described. Authors add control (the ability to specify desired attributes of the generated text at test time) and focus on four controllable attributes of text: repetition, specificity, response-relatedness and question-asking. They measure repetitiveness as n-gram overlap, specificity as word rareness, response-relatedness as the embedding similarity of the bot’s response to the human’s last sequence. In this work, authors use \textbf{Conditional Training (CT)} \cite{peng2018towards} and \textbf{Weighted Decoding (WD)} \cite{ghazvininejad2017hafez}. 
 
 \begin{figure}[hbt]
   \centering
@@ -593,17 +593,17 @@ Corpus is very important for successful Natural Language Generation. Dialogue sy
   \hline
   Average number of words in second persona description: & 6.321 \\
   \hline
-  Average number of words in the first person's utterances: & 11.419 \\
+  Average number of words in the first person's sequences: & 11.419 \\
   \hline
-  Average number of words in the second person's utterances: & 11.929 \\
+  Average number of words in the second person's sequences: & 11.929 \\
   \hline
   Number of first persona description's sentences: & 40239 \\
   \hline
   Number of second persona description's sentences: & 40126 \\
   \hline
-  Number of the first person's utterances: & 65719 \\
+  Number of the first person's sequences: & 65719 \\
   \hline
-  Number of the second person's utterances:  & 65719 \\
+  Number of the second person's sequences:  & 65719 \\
   \hline
   Number of dialogues & 8938 \\
   \hline
@@ -714,7 +714,7 @@ Encoder-decoder model in baseline is implemented as LSTM sequence-to-sequence la
 
 Stylized language model is implemented as LSTM-based RNN model. Each stylized language model is trained separately on the corresponding stylistic dataset described in the subsection \ref{stylistic_dataset_section}.
 
-Data are tokenized, where tokenization is a process of splitting text into units represented at model's input and replacing sensitive data with unique identification symbols that retain all the essential information about the data without compromising its security. Spacy\protect\footnotemark library is used with few handcrafted rules for tokenization. As input GloVe (Global Vectors) embeddings are used for distributed word representation \cite{pennington2014glove}. It is a model, which maps words into a meaningful space where the distance between words is related to semantic similarity. The model was trained only on the nonzero elements in a word-word cooccurrence matrix. Outputs of encoder-decoder and stylized language models (probabilities of words) are multiplied by weights (weight is a hyperparameter to be chosen) to increase or decrease the probability of words and finally these outputs are added up (Figure \ref{implementation_architecture}).
+Data are tokenized, where tokenization is a process of splitting text into units represented at model's input and replacing sensitive data with unique identification symbols that retain all the essential information about the data without compromising its security. Spacy\protect\footnotemark library is used with few handcrafted rules for tokenization. As input GloVe (Global Vectors) embeddings are used for distributed word representation \cite{pennington2014glove}. It is a model, which maps words into a meaningful space where the distance between words is related to semantic similarity. The model was trained only on the nonzero elements in a word-word cooccurrence matrix. Outputs of encoder-decoder and stylized language models (logarithmic probabilities of words) are multiplied by weights (weight is a hyperparameter to be chosen) to increase or decrease the probability of words and finally these outputs are added up (Figure \ref{implementation_architecture}).
 
 \footnotetext{\url{https://spacy.io/}}
 
@@ -785,7 +785,7 @@ H(p,q) = -\sum_{x \in X} p(x)\log q(x)
 For all experiments with the baseline 2 hidden layers were used in both the encoder and decoder with 512 hidden unites in each hidden layer. A dropout \cite{srivastava2014dropout} was used with the probability of $50\%$ to prevent neural networks from overfitting. \textit{Cross-entropy} (measure of the difference between 2 probability distributions for a given random variable or set of events) was used as a loss function. Formally representation of cross-entropy is in the Equation \ref{eq:cross_entropy}. \textit{Adam} \cite{kingma2014adam} is used as the optimization algorithm.
 
 \section{Pre-trained models}
-BART and GPT-2 models are used to explore all features of the created architecture (Figure \ref{architecture_nlg}). BART is an autoencoder for pre-training sequence-to-sequence models, described in the section \ref{bart_section}. BART model with 400M hyperparameters has 12 encoder and decoder layers. This model is chosen because it achieves state-of-the-art results on Conv AI2 task (a dialogue response generation task, conditioned on context and a persona). GPT-2 is a large transformer-based language model, which was trained to predict the next word in 40GB of Internet text. GPT-2 with 117M hyperparameters has large improvements on WikiText2 dataset for language modeling. This model is a successor to GPT, described in the section \ref{sec_gpt} and used as stylized language model. 
+BART and GPT-2 models are used to improve results of the created architecture (Figure \ref{architecture_nlg}). BART is an autoencoder for pre-training sequence-to-sequence models, described in the section \ref{bart_section}. BART model with 400M hyperparameters has 12 encoder and decoder layers. This model is chosen because it achieves state-of-the-art results on Conv AI2 task (a dialogue response generation task, conditioned on context and a persona). GPT-2 is a large transformer-based language model, which was trained to predict the next word in 40GB of Internet text. GPT-2 with 117M hyperparameters has large improvements on WikiText2 dataset for language modeling. This model is a successor to GPT, described in the section \ref{sec_gpt} and used as stylized language model. 
 
 \begin{table}[ht]
 \centering
@@ -802,7 +802,7 @@ BART and GPT-2 models are used to explore all features of the created architectu
 \label{tab:bart_statistic}
 \end{table}
 
-BART decoder is an equivalent to the GPT model. GPT-2 is a direct scale-up of GPT, with more parameters (1.5 billion parameters) and trained on more amount of data. GPT-2 model uses more words in a vocabulary than GPT, what means that before a combination of these models, it is necessary to convert a distribution of probabilities of the next word in a sequene over all the words in the smallest vocabulary to the distribution over the biggest one and add 0 if word does not exist. Outputs of BART model, transformed to GPT-2 vocabulary, and GPT-2 models (probabilities of words) are multiplied by weights to increase or decrease the probability of words and finally these outputs are added up.
+BART decoder is an equivalent to the GPT model. GPT-2 is a direct scale-up of GPT, with more parameters (1.5 billion parameters) and trained on more amount of data. GPT-2 model uses more words in a vocabulary than GPT, what means that before a combination of these models, it is necessary to convert a distribution of probabilities of the next word in a sequene over all the words in the smallest vocabulary to the distribution over the biggest one and add 0 if word does not exist. Outputs of BART model, transformed to GPT-2 vocabulary, and logarithmic probabilities of words of GPT-2 models are multiplied by weights to increase or decrease the probability of words and finally these outputs are added up.
 
 Each GPT-2 model represents one style. 4 such models are fine-tuned for humor, positive and negative sentiment and poetic style. The model is trained with batch size parameter set to 1, learning rate for Adam is $1\mathrm{e}{-4}$, 50000 chars is a minimum size to concatenate input files with \texttt{<|endoftext|>} separator. 
 
@@ -816,9 +816,9 @@ A/B tests were used for human evaluation. Several manifestations of human styles
 For the Fisher's exact test, 2 questionaire were created, where there was only 1 question (``Which dialogue is more poetic?''). In the first case, as a response option, the generated dialogue was first given and then the real dialogue, and in the second, vice versa.
 
 \chapter{Results and discussion} \label{results_discuss}
-In this chapter, results of the experiments described in the previous section are presented and their implications are discussed. Human evaluation occurred only for those experiments that are subjectively considered more successful.
+In this chapter, the results of the experiments described in the previous section are presented and their implications are discussed. Human evaluation occurred only for those experiments that were subjectively considered more successful.
 
-All experiments with features, decoding strategies and combination of models are carried out on pre-trained models, because the dialogs generated by the baseline model do not make sense in the context. The example in the Table \ref{tab:baseline_experiment} shows that the model also has a repetition problem, such as repetition of the part of an utterance (``I am''), repetition of phrases (``I am afraid''). These problems can be because of the small amount of data and LSTM neural networks still have a problem to hold a context. In comparison with the baseline model the dialogue generated using the BART model (Table \ref{tab:bart_experiment}) is more logical and diverse.
+All experiments with features, decoding strategies and combination of models are carried out on pre-trained models, because the dialogs generated by the baseline model do not make sense in the context. The example in the Table \ref{tab:baseline_experiment} shows that the model also has a repetition problem, such as repetition of the part of an sequence (``I am''), repetition of phrases (``I am afraid''). These problems can be because of the small amount of data and LSTM neural networks still have a problem to hold a context. In comparison with the baseline model the dialogue generated using the BART model (Table \ref{tab:bart_experiment}) is more logical and diverse.
 
 Results of using beam search and Nucleus sampling methods are shown in the Tables \ref{tab:beam_search} and \ref{tab:nucleus_sampling}. All these decoding strategies are described in detail in the section \ref{decoding_strategies_section}.
 \begin{table}[ht]
@@ -867,7 +867,7 @@ Results of using beam search and Nucleus sampling methods are shown in the Table
 \label{tab:nucleus_sampling}
 \end{table}
 
-In Nucleus sampling cumulative distribution (CDF) is computed and cutted off as soon as CDF exceeds P. Determined the set of tokens, to be sampled from, may be very large, which can take a very long time. There is no visible difference in the results, so in other experiments beam search is used because of the time.
+In Nucleus sampling cumulative distribution function (CDF) is computed and cutted off as soon as CDF exceeds P. Determined the set of tokens, to be sampled from, may be very large, which can take a very long time. As there is no visible difference in the results, so in other experiments beam search is used due to time efficient.
 
 \section{Feature-based decoding modifications}
 \subsubsection{NIDF feature}
@@ -921,7 +921,7 @@ Stop words are used from NLTK\protect\footnotemark (suite of libraries and progr
  \caption{Experiment of generated sequences with blocking stop words.}
 \label{tab:stop_words}
 \end{table}
-Represented results of the experiment in the Table \ref{tab:stop_words} shows that generated utterances are very generic and don't make sense in a context. For this experiment, there was no human evaluation.
+Represented results of the experiment in the Table \ref{tab:stop_words} shows that generated sequences are very generic and don't make sense in a context. For this experiment, there was no human evaluation.
 
 \section{Weighted decoding of combination BART and GPT-2 models}
 Results of this experiment are generated dialogues from BART model and one GPT-2 model for stylization, the weights for other stylistic language models are set to 0.
@@ -937,7 +937,7 @@ General conclusion from this experiment is that the more weight was set on gener
 \section{Switching BART and GPT-2 models}
 In this experiment, alternating the generation of words by the encoder-decoder and stylized language models. $n$ words in a sequence are generated over BART and $n$ words are generated over GPT-2 model, where $n$ is a hyperparameter. Sequence generation stops when the end mark of the sequence is generated or the length of the sequence is equal to the maximum length.
 
-Example of the experiment is represented in the Table \ref{tab:jokes_switch}. When generating sequences, there is still a problem of context, but already the model sometimes generates answers to the opponent's utterance (``-i love carrots but I hate carrots too. -i don't like it either.''). \textbf{71.4\%} people consider that this dialogue is more comic than the real one.
+Example of the experiment is represented in the Table \ref{tab:jokes_switch}. When generating sequences, there is still a problem of context, but already the model sometimes generates answers to the opponent's input (``-i love carrots but I hate carrots too. -i don't like it either.''). \textbf{71.4\%} people consider that this dialogue is more comic than the real one.
 
 The sentiment and poetic style are not expressed in the examples shown in the Tables \ref{tab:shakespeare_switch}, \ref{tab:sst_switch}. For the conversation generated by the model fine-tuned on the Shakespeare dataset only \textbf{37.5\%} of people consider this dialogue poetic. \textbf{33.3\%} is a human evaluation for negative sentiment and \textbf{23.8\%} is for positive sentiment.
 
@@ -988,7 +988,7 @@ p = \frac{\binom{7}{4} \binom{8}{3}}{\binom{15}{7}} = \frac{\binom{7}{3} \binom{
 In the Equation \ref{eq:hypergeome_distrib_ex} the probability for null hypothesis is represented. In this case it is not necessary to calculate extreme deviations because the probability is already more than 5\%, so null hypothesis is confirmed, that there is no bias between the arrangement of dialogs and the choice of users.
 
 \chapter{Conclusion} \label{conclusion}
-The goal was to create a model that generates a stylistic response to the utterance of an opponent in the dialogue, in order to give the impression that the proposals are generated by one person.
+The goal was to create a model that generates a stylistic response to the sequence of an opponent in the dialogue, in order to give the impression that the proposals are generated by one person.
 
 In this thesis I have focused on several aspects of style manifestation: specificity, sentiment, humor, poetry. Balance between specificity and genericness is one of the important factors that helps make the generated text more diverse. The mood of the interlocutor is also a key factor in human-human conversation. Each person has emotions, and a neutral dialogue gives a human the feeling that he is talking to a bot. Poetry and humor are a manifestation of high intellectual abilities that are inherent only to man.
 

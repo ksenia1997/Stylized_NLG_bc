@@ -356,10 +356,13 @@ Information in this section is taken from \cite{vaswani2017attention}.
   \label{transformer}
 \end{figure}
 
+\footnotetext{\url{http://primo.ai/index.php?title=Transformer}}
+
+
 Transformer introduces an architecture that is based on self-attention mechanism and does not use any recurrent networks. In each step this model applies self-attention mechanism which directly models relationships between all words in a sequence, regardless of their respective position. Transformers do not require that the sentence be processed in order, that allows process parallelization during training, unlike RNN. Due to this feature, it has enabled training on much more data. 
 
 The architecture of the Transformer is illustrated in the Figure \ref{transformer}. The Transformer consists of a stack of encoders for processing inputs of any length and another set of decoders to output the generated sentences. $N_x$ in the Figure means that modules of encoder and decoder can be stacked on top of each other multiple times. Modules consist of multi-head attention and feed forward layers. The inputs and output are first embedded into an n-dimensional space. Words' positions are added to the embedded representation, n-dimensional vector, of each word. In encoder each layer has two sub-layers, where the first one is a multi-head self-attention mechanism and a second one is a fully connected feed-forward network. Unprocessed input and the output of the sub-layer are connected by residual connections, followed by layer normalization. Another sub-layer added to the decoder, which represents multi-head attention over the output of the encoder stack. In the decoder stack self-attention sub-layer is modified to prevent positions from attending to subsequent positions. This masking ensures that the predictions for a position can depend only on the known outputs at previous positions.
-\footnotetext{\url{http://primo.ai/index.php?title=Transformer}}
+
 
 \begin{equation} \label{eq:transformer_attention}
 Attention(Q, K, V) = softmax(\frac{QK^T}{\sqrt{d_k}})V
@@ -427,13 +430,13 @@ BART (Figure \ref{fig:bart}) is a denoising autoencoder for pre-training sequenc
 
 Bidirectional encoder consists of $N$ transformer encoder blocks stacked on top of each other (Section \ref{sec_transformer}), the final block is the output. The input is a sequence of tokens, which are first embedded into vectors and the processed in the model. The output is a sequence of vectors of size $H$, in which each vector corresponds to an input token with the same index. Autoregressive decoder is GPT model (Section \ref{sec_gpt}). Authors modified ReLU activation functions (Equation \ref{eq:relu}) to GELU (Equation \ref{eq:gelu}) and initialized parameters from $\mathcal{N}(0, 0.2)$. Autoregressive decoder can be directly fine tuned for sequence generation tasks.
 
-\begin{eqfloat} [ht]
+\begin{eqfloat} [H]
 \begin{equation} \label{eq:relu}
 f(x) = x^+ = max(0, x)
 \end{equation}
 \caption{Rectified Linear Unit (ReLU)}
 \end{eqfloat}
-\begin{eqfloat} [ht]
+\begin{eqfloat} [H]
 \begin{equation} \label{eq:gelu}
 GELU(x) = xP(X \leq x) = x \Phi(x)
 \end{equation}
@@ -659,17 +662,14 @@ For poetic style the \textbf{Shakespeare} dataset was used, which contains all o
 \label{tab:jokes}
 \end{table}
 
-
-A dataset of \textbf{english plaintext jokes} was used for generating text with humor style. There are about 208 000 jokes scraped from 3 sources (Table \ref{tab:jokes}). stupidstuff.json is scrapped from stupidstuff.org, wocka.jsom from \url{http://wocka.com}, reddit\_jokes.json is scraped from \url{https://www.reddit.com/r/Jokes} and contains all submissions to the subreddit as of 13.02.2017. A histogram for the dataset is shown in the Figure \ref{fig:jokes}.
-
-\textbf{Twitter} dataset contains 867,710 message-response pairs from Twitter and is used for pre-training baseline model. A histogram for the dataset is shown in the Figure \ref{fig:tweet}
-
-\begin{figure}
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.5\textwidth]{figures/shakespeare.pdf}
   \caption{Histogram of Shakespeare's plays.}
   \label{fig:shakespeare}
 \end{figure}
+
+A dataset of \textbf{english plaintext jokes} was used for generating text with humor style. There are about 208 000 jokes scraped from 3 sources (Table \ref{tab:jokes}). stupidstuff.json is scrapped from stupidstuff.org, wocka.jsom from \url{http://wocka.com}, reddit\_jokes.json is scraped from \url{https://www.reddit.com/r/Jokes} and contains all submissions to the subreddit as of 13.02.2017. A histogram for the dataset is shown in the Figure \ref{fig:jokes}.
 
 \begin{figure}
   \centering
@@ -678,12 +678,14 @@ A dataset of \textbf{english plaintext jokes} was used for generating text with 
   \label{fig:jokes}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.5\textwidth]{figures/tweet.pdf}
   \caption{Histogram of tweets' lengths.}
   \label{fig:tweet}
 \end{figure}
+
+\textbf{Twitter} dataset contains 867,710 message-response pairs from Twitter and is used for pre-training baseline model. A histogram for the dataset is shown in the Figure \ref{fig:tweet}.
 
 \chapter{Design and implementation} \label{solution_design}
 This chapter describes the model for stylized text generation in dialogue systems and performed experiments. All experiments can be divided into 3 parts: decoding strategies, feature-based decoding modifications and weighted decoding of a combination of language models. The designed architecture for WD of a language models combination is represented in the Figure \ref{architecture_nlg} and implemented in two variants. First variant uses a LSTM-based baseline model. The second one uses pre-trained transformer-based models. All parts of the architecture were implemented in Python 3.7.3 with using PyTorch 1.4.0 framework.
@@ -1180,7 +1182,7 @@ The sentiment and poetic style are not expressed in the examples shown in the Ta
 \end{table}
 
 \section{Evaluating the evaluation}
-Fisher's exact test is carried out to check if human evaluation is statistically significant, with the help of which the independence of the dialogue from the order of its display is checked. 2 questionnaires are created for the test. In the first one a dialogue with poetic style is displayed as first and real conversation is shown as a second dialogue after that the participant chooses a more poetic dialogue. The second questionnaire is almost the same, only the order in which dialogs are displayed is changed.
+Fisher's exact test is carried out to check human evaluation for statistically significant biases in it, with the help of which the independence of the dialogue from the order of its display is checked. Two questionnaires are created for the test. In the first one a dialogue with poetic style is displayed as first and real conversation is shown as a second dialogue after that the participant chooses a more poetic dialogue. The second questionnaire is almost the same, only the order in which dialogs are displayed is changed.
 
 The Table \ref{tab:fisher} represents results of the responses of the questionnaire. If the generated dialogue was shown first, then out of 7 people only 4 people chose it as a more stylish dialogue. If the real dialogue was shown first, then out of 8 people, only 3 people chose the generated conversation as a more stylish one.
 

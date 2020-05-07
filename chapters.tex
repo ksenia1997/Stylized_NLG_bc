@@ -1,9 +1,9 @@
 \chapter{Introduction}\label{introduction}
 Dialogue system (DS) is a computer system which interacts with a human in natural language. These systems are used in cars (hands-free car-specific functions, Android Auto, Apple CarPlay), web, robots, computer games etc, because a conversation is a natural way for people to get information. 
 
-Natural Language Generation (NLG) is an important component of dialogue systems. NLG goal is to imitate human behaviour, what is very important for dialogue systems. DS can be classified into task-oriented, which focused on completing a certain tasks and adhere to a determined script for each stage of the conversation, and non-task-oriented, which do not have a stated goal to work towards. A lot of devices have incorporated task-oriented dialogue systems, such as Yandex’s Alisa, Apple’s Siri, Microsoft’s Cortana, Amazon Alexa, and Google Assistant. Task-oriented dialogue acts make conversations more interpetable and controllable. On the other hand, they also hinder scaling such systems to new domains (i.e. conversation topics). To escape from the limitation, recent interest of research started moving to non-task-oriented chitchat dialogues (chatbots). Chitchat dialogues are systems designed to mimic the unstructured human-human conversation. This kind of dialogue systems often have an entertainment value, such as Cleverbot, Microsoft's XiaoIce system etc. Chatbots have also been used for testing theories of psychological counseling.
+Natural Language Generation (NLG) is an important component of dialogue systems. NLG goal is to imitate human behaviour, what is very important for dialogue systems. DS can be classified into task-oriented, which focused on completing a certain tasks and adhere to a determined script for each stage of the conversation, and non-task-oriented, which do not have a stated goal to work towards. A lot of devices today have incorporated intelligent agents, such as Yandex’s Alisa, Apple’s Siri, Microsoft’s Cortana, Amazon Alexa, and Google Assistant. These are in fact dialogue systems. Task-oriented dialogue acts make conversations more interpetable and controllable. On the other hand, they also hinder scaling such systems to new domains (i.e. conversation topics). To escape from the limitation, recent interest of research started moving to non-task-oriented chitchat dialogues (chatbots). Chitchat dialogues are systems designed to mimic the unstructured human-human conversation. This kind of dialogue systems often have an entertainment value, such as Cleverbot, Microsoft's XiaoIce system etc. Chatbots have also been used for testing theories of psychological counseling.
 
-The ability to communicate freely in a natural language is one of the hallmarks of human intelligence, and is likely one of the requirements for true artificial intelligence. Many researchers work on open-ended (i.e. there is a huge range of appropriate outputs given the input) chitchat dialogues to explore this aspect of intelligence, because in task-oriented dialogue systems there is a relatively narrow range of correct outputs given the input. An example of possible responses to an input sequence is shown in the Figure \ref{dialogue_example}, but there are still many ways to answer the question ``Hi, how are you?''. All answers have different attributes of generated text, such as sentiment, lengths of answers and specificity, which can be controlled.  
+The ability to communicate freely in a natural language is one of the hallmarks of human intelligence, and is likely one of the requirements for true artificial intelligence. Many researchers work on an open-ended (i.e. there is a huge range of appropriate outputs given the input) chitchat dialogues to explore this aspect of intelligence. In task-oriented dialogue systems there is a relatively narrow range of correct outputs given the input. An example of possible responses to an input sequence is shown in the Figure \ref{dialogue_example}, but there are still many ways to answer the question ``Hi, how are you?''. All answers have different attributes of generated text, such as sentiment, lengths of answers and specificity, which we as humans can control.  
 
 \begin{figure}
   \centering
@@ -63,16 +63,16 @@ The first advantage is that the output produced by this approach is likely to be
 These models require time and human resources to deploy a real dialogue system, because templates are constructed manually, and the number of templates grows quickly (using different templates for singular and plural versions). The next disadvantage is that human created templates often sound unnatural due to their generic structures. Another weak points are that template-based systems are not able to handle unknown inputs and cannot make variation in output, it is just concatenation of strings. This approach also is not flexible, because it has limits to use templates in other domains. The last one is that a template-based model is not able to learn and is not able to adapt to the user, that's why it generates rigid and stylised responses without the natural variation of human language.
 
 \section{Corpus-based approach}
-Corpus-based system dominates the NLG community, special in the case of open-ended tasks, where it is almost impossible to hand-craft the templates for all possible combinations of semantic units. Corpus-based systems include statistical and machine learning approaches to resolve it \cite{rudnicky2002dialog}. This approach mines large datasets of human-human conversations.
+Corpus-based systems dominate in the NLG community, especially in the case of open-ended tasks, where it is almost impossible to hand-craft the templates for all possible combinations of semantic units. Corpus-based systems include statistical and machine learning approaches to resolve it \cite{rudnicky2002dialog}. This approach mines large datasets of human-human conversations.
 
 \subsubsection{Advantages of corpus-based approach}
 Corpus-based models have ability to generate more proper responses that could have never appeared in the corpus; it is possible to mimick the language of a real domain expert and use this models for open-domain dialogue systems; dynamic approach is able to learn and to handle unknown inputs, it is also has a lot of possible variations of output.
 
 \subsubsection{Disadvantages of corpus-based approach}
-It is necessary to have a corpus, which contains a large amount of data and on a variety of topics to get a sensible output. Even if you have the corpus, process of text generation is not fully controlled and the output can be incorrect or does not make a sense. This approach still has a lot of problems, what will be described in more detail in the section \ref{nlg_ds_problems}. 
+It is necessary to have a corpus, which contains a large amount of data and on a variety of topics to get a sensible output. Even if the corpus is available, process of text generation is not fully controlled and the output can be incorrect or does not need to make a sense. This approach still has a lot of problems, what will be described in more detail in the section \ref{nlg_ds_problems}. 
 
 \section{Language Models}
-In corpus-based system natural language generation uses \textbf{Language Models(LMs)} to generate sequences of texts. LM is a probabilistic model which learns to predict the probability of a sequence of words. The equation \ref{eq:LM} represents the language model, where $W$ is a sequence and $w_1, w_2, ..., w_n$ are words in this sequence. 
+Corpus-based systems usually rely on \textbf{Language Models(LMs)} to generate sequences of texts. LM is a probabilistic model which estimates the probability of a sequence of words. The Equation \ref{eq:LM} represents the language model, where $W$ is a sequence and $w_1, w_2, ..., w_n$ are words in this sequence. 
 
 \begin{equation} \label{eq:LM}
 P(W) = P(w_1, w_2, ..., w_n)
@@ -86,7 +86,7 @@ P(w_1, w_2,..., w_n) = \prod_{i}P(w_i|w_1, w_2,...,w_{i-1})
 \begin{equation} \label{eq:CB}
 P(A|B) = P(A \cap B) / P(B)
 \end{equation}
-In equation \ref{eq:CB} $P(A \cap B)$ is the probability that both events A and B occur.
+In Equation \ref{eq:CB} $P(A \cap B)$ is the probability that both events A and B occur.
 
 \begin{figure}[hbt]
   \centering
@@ -122,7 +122,7 @@ The n-gram ``She is studying IT'' from the Table \ref{tab:n_gram} does not occur
 According to \cite{bengio2003neural} another way to fight with data sparsity is learning a distributed representation for words, which allows each training sentence to inform the model about an exponential number of semantically neighboring sentences. The model learns simultaneously a distributed representation for each word along with the probability function for word sequences. A sequence of words that has never been seen before gets high probability if words in this sequence are similar in the sense of having a nearby representation to words forming an already seen sentence. Authors used neural networks (artificial neural networks are described in the section \ref{nn_section}) for the probability function. The proposed approach improved n-gram models and took an advantage of longer contexts.
 
 
-\section{Problems in dialogue systems}\label{nlg_ds_problems}
+\section{Common of dialogue systems}\label{nlg_ds_problems}
 The ability to communicate with machines in a natural language is a long-standing dream of a mankind. Today's dialogue systems often encounter criticism. There are many scientific works on creating more natural dialogue systems. Markus M. Berg defines a natural dialogue system in \cite{berg2014modelling} as ``a form of dialogue system that tries to improve usability and user satisfaction by imitating human behaviour''. It affects the features of human-to-human dialogue (for example, topic changes, sub-dialogues) and seeks to integrate them into dialogue systems for human interaction with the machine. Open-ended natural dialogue systems still have flaws in generating a response to the user.
 
 \begin{table}[ht]
@@ -183,7 +183,7 @@ An example in the Table \ref{tab:var_example} shows all types of variation. Some
 
 One of the hardest problem in text generation is a language style, which makes a response to an user more human. This task is challenging due to the difficulty of capturing emotional factors and the complex mechanism of human emotions. Some people use obscene speech, some use a lot of expressive means, jargon or jokes to make speech more emotional. This is what distinguishes people and makes their communication more interesting.
 
-\chapter{Concepts of Natural Language Generation} \label{nlg_models}
+\chapter{Concepts in Natural Language Generation} \label{nlg_models}
 Development of NLG from templates to dynamic generation of sentences took a lot of time and models developed along with it. Corpus-based generation uses a generative probabilistic model what can be implemented in many ways. The model focuses on response generation in the context of dialogue, where the task is to generate a response, given an input sequence. Thus, these models fit well within the sequence-to-sequence (seq2seq) (i.e. encoder-decoder) models, which are described in more detail in section \ref{seq2seq_section}. Neural networks are explained for a better understanding seq2seq model.
 
 \section{Neural Networks} \label{nn_section}
@@ -208,7 +208,7 @@ Neurons' outputs can be connected to inputs of other neurons and the calculation
 Training process of neural networks is minimising an error (i.e. loss) between predicted and real outputs of NN with help of \textbf{Gradient Descent} algorithm \cite{lemarechal2012cauchy}. Gradient Descent finds a local minimum of a differentiable function. \textbf{Backpropagation} \cite{rumelhart1986learning} is used for computing a gradient descent with respect to the weights of NN and for fine-tuning weights. Tuning of the weights ensures lower error rates, what makes a model reliable. 
 
 \section{Elman Networks} \label{rnn_section}
-Elman Networks are a form of recurrent neural networks (RNN) used in natural language processing (NLP) as they allow modeling temporal depedencies of variable length in the data (like context) to be captured. RNNs share the same structure as NNs described in the section \ref{nn_section}, except each layer also has an internal state (i.e. hidden state), which captures information about the previous layer inputs. This allows the network to keep track of past data while processing current inputs.
+Elman Networks are a simple form of recurrent neural networks (RNN) used in natural language processing (NLP) as they allow modelling temporal depedencies of variable length in the data (like context) to be captured. RNNs share the same structure as NNs described in the section \ref{nn_section}, except each layer also has an internal state (i.e. hidden state), which captures information about the previous layer inputs. This allows the network to keep track of past data while processing current inputs.
 
 \begin{figure}[hbt]
   \centering
@@ -248,12 +248,12 @@ The Figure \ref{lstm} represents a structure of a LSTM cell. LSTM cell processes
 f_t = \sigma(W_{xf}x_t + W_{hf}h_{t-1}+b_f)
 \end{equation}
 
-The next step is to decide how much of the inner state is going to be updated (i.e. what part of the result the cell is going to store in its state), by using input gate (equation \ref{eq:lstm_2}).
+The next step is to decide how much of the inner state is going to be updated (i.e. what part of the result the cell is going to store in its state), by using input gate (Equation \ref{eq:lstm_2}).
 \begin{equation} \label{eq:lstm_2}
 i_t = \sigma(W_{xi}x_t + W_{hi}h_{t-1}+b_i)
 \end{equation}
 
-After calculating the state modification, it is necessary to compute the new values (i.e. candidate values) which will be stored in it, by using activation function (equation \ref{eq:lstm_3}).
+After calculating the state modification, it is necessary to compute the new values (i.e. candidate values) which will be stored in it, by using activation function (Equation \ref{eq:lstm_3}).
 \begin{equation} \label{eq:lstm_3}
 \tilde{c_{t}}=tanh(W_{xc}x_t + W_{hc}h_{t-1} + b_c)
 \end{equation}
@@ -263,12 +263,12 @@ Updating the cell state is based on the previous state and the candidate values 
 c_t = \tilde{c_{t}} \odot i_t + c_{t-1} \odot f_t
 \end{equation}
 
-Output gate is represented in equation \ref{eq:lstm_5}.
+Output gate is represented in Equation \ref{eq:lstm_5}.
 \begin{equation} \label{eq:lstm_5}
 o_t = \sigma(W_{xo}x_t + W_{ho}h_{t-1}+b_o)
 \end{equation}
 
-And the final step producing the hidden state for the next timestep. It is based on the newly updated cell state, transformed by tanh function and multiplied by the output gate (equation \ref{eq:lstm_6}).
+And the final step producing the hidden state for the next timestep. It is based on the newly updated cell state, transformed by tanh function and multiplied by the output gate (Equation \ref{eq:lstm_6}).
 \begin{equation} \label{eq:lstm_6}
 h_t = o_t \odot tanh(c_t)
 \end{equation}
@@ -280,13 +280,15 @@ This model does not suffer from vanishing gradient, but still the capacity of th
 \begin{figure}[hbt]
   \centering
   \includegraphics[width=0.8\textwidth]{figures/encoder_decoder.pdf}
-  \caption{Architecture of sequence-to-sequence model. $h_i$ represents a hidden state.}
+  \caption{The architecture of sequence-to-sequence model. $h_i$ represents a hidden state.}
   \label{encoder_decoder}
 \end{figure}
 
-Seq2seq models were introduced in 2014 \cite{sutskever2014sequence}. This model uses an encoder-decoder architecture (Figure \ref{encoder_decoder}). Both the encoder and the decoder are recurrent neural networks (vanilla version of RNN is rarely used, because of the problems described in the section \ref{rnn_section}). The role of the encoder is to encode the input, a sequence of variable length data, to a fixed length vector. Decoder based on this vector generates an output sequence of data of different length. These two neural networks are connected into one model to maximise the learning effect. Seq2seq model is very effective to solve NLP problems, because input and output sequences can have different lengths and recurrent neural networks can work with context. This model is often used in machine translation, text summarization, dialogue systems etc.
+Seq2seq models were introduced in 2014 \cite{sutskever2014sequence}. This model uses an encoder-decoder architecture (Figure \ref{encoder_decoder}). Both the encoder and the decoder are recurrent neural networks (vanilla version of RNN is rarely used, because of the problems described in the section \ref{rnn_section}). The role of the encoder is to encode the input, a sequence of variable length data, to a fixed length vector. Decoder based on this vector generates an output sequence of data of different length. These two neural networks are connected into one model to maximise the learning effect. Seq2seq model is very effective in solving NLP problems with long-term dependencies, because input and output sequences can have different lengths and recurrent neural networks can work with ``arbitrarily long'' context. This kind of problems do often appears in machine translation, text summarization, dialogue systems etc.
 
-The Figure \ref{encoder_decoder} presents traditional encoder-decoder arhitecture. Encoder converts an input sequence of words to a corresponding fixed size hidden vector. Each vector represents the current token and the context of it. Every time step, it takes a vector that represents a word and pass its output to the next layer. The last hidden state of encoder passes its output to the first layer of the decoder. The final hidden state of the encoder is also called context vector. The decoder input is an output encoder vector and start token, which characterizes the beginning of the generated sentence. The generated word depends on the previous decoder state and the last generated word. Many improvements have led to other seq2seq components, such as attention, beam search, bucketing.
+The Figure \ref{encoder_decoder} presents traditional encoder-decoder arhitecture. Encoder converts an input sequence of words to a corresponding fixed-size hidden vector. Each vector represents the current token and the context of it. 
+
+Every time step, it takes a vector that represents a word and pass its output to the next layer. The last hidden state of encoder passes its output to the first layer of the decoder. The final hidden state of the encoder is also called context vector. The decoder input is an output encoder vector and start token, which characterizes the beginning of the generated sentence. The generated word depends on the previous decoder state and the last generated word. Many improvements have led to other seq2seq components, such as attention, beam search, bucketing.
 
 \section{Decoding strategies} \label{decoding_strategies_section}
 According to \cite{holtzman2019curious} decoding strategies with likelihood maximazing lead to text that is increadibly degenerate, even when using state-of-the-art models. If the most likely word is always sampled, the model generates repetitive and overly generic text, like ``I don't know'', because it is a typical answer to any question.
@@ -317,9 +319,9 @@ The research \cite{holtzman2019curious} shows how different natural distribution
 \end{equation}
 
 \section{Attention} \label{attention_section}
-A neural attention mechanism is based on the human visual attention mechanism. Visual attention is able to focus on a certain region of an image with ``high resolution'', while perceiving the surrounding image in “low resolution”, and then adjusting the focal point over time.
+A neural attention mechanism is inspired with the human visual attention mechanism. Visual attention is able to focus on a certain region of an image with ``high resolution'', while perceiving the surrounding image in “low resolution”, and then adjusting the focal point over time.
 
-The attention mechanism provides the decoder with information from each hidden state of the encoder and it gives a model the ability to selectively focus on useful parts of the input sequence and learn the alignment between them (Figure \ref{fig:attention}).
+In seq2seq the attention mechanism provides the decoder with information from each hidden state of the encoder and it gives a model the ability to selectively focus on useful parts of the input sequence and learn the alignment between them (Figure \ref{fig:attention}).
 
 \begin{figure}[hbt]
   \centering
@@ -348,20 +350,20 @@ In \cite{vaswani2017attention} attention is described as ``mapping a query and a
 Self-attention is an attention mechanism, where ``self'' means that the inputs interact with each other and ``attention'' means that inputs find out who they should pay more attention. Formally, in the attention mechanism the query, keys and values are from the same sequence. The query is a single element from the sequence while the keys and values are the entire sequence. The attention output is a new representation of the element that was the query. Self-attention is used to compute a new representation of the sequence.  
 
 \section{Transformer} \label{sec_transformer}
-Information in this section is taken from \cite{vaswani2017attention}.
+
 \begin{figure}[hbt]
   \centering
   \includegraphics[width=0.9\textwidth]{figures/transformer_attention.pdf}
   \caption[Transformer architecture]{The architecture of the Transformer.\protect\footnotemark}
-  \label{transformer}
+  \label{fig:transformer}
 \end{figure}
 
 \footnotetext{\url{http://primo.ai/index.php?title=Transformer}}
 
 
-Transformer introduces an architecture that is based on self-attention mechanism and does not use any recurrent networks. In each step this model applies self-attention mechanism which directly models relationships between all words in a sequence, regardless of their respective position. Transformers do not require that the sentence be processed in order, that allows process parallelization during training, unlike RNN. Due to this feature, it has enabled training on much more data. 
+Transformer \cite{vaswani2017attention} introduces an architecture that is based on self-attention mechanism and does not use any recurrent networks. In each step this model applies self-attention mechanism which directly models relationships between all words in a sequence, regardless of their respective position. Transformers do not require that the sentence be processed in order, that allows process parallelization during training, unlike RNN. 
 
-The architecture of the Transformer is illustrated in the Figure \ref{transformer}. The Transformer consists of a stack of encoders for processing inputs of any length and another set of decoders to output the generated sentences. $N_x$ in the Figure means that modules of encoder and decoder can be stacked on top of each other multiple times. Modules consist of multi-head attention and feed forward layers. The inputs and output are first embedded into an n-dimensional space. Words' positions are added to the embedded representation, n-dimensional vector, of each word. In encoder each layer has two sub-layers, where the first one is a multi-head self-attention mechanism and a second one is a fully connected feed-forward network. Unprocessed input and the output of the sub-layer are connected by residual connections, followed by layer normalization. Another sub-layer added to the decoder, which represents multi-head attention over the output of the encoder stack. In the decoder stack self-attention sub-layer is modified to prevent positions from attending to subsequent positions. This masking ensures that the predictions for a position can depend only on the known outputs at previous positions.
+The architecture of the transformer is illustrated in the Figure \ref{fig:transformer}. The transformer consists of a stack of encoders for processing inputs of any length and another set of decoders to output the generated sentences. $N_x$ in the Figure means that modules of encoder and decoder can be stacked on top of each other multiple times. Modules consist of multi-head attention and feed forward layers. The inputs and output are first embedded into an n-dimensional space. Words' positions are added to the embedded representation, n-dimensional vector, of each word. In encoder each layer has two sub-layers, where the first one is a multi-head self-attention mechanism and a second one is a fully connected feed-forward network. Unprocessed input and the output of the sub-layer are connected by residual connections, followed by layer normalization. Another sub-layer added to the decoder, which represents multi-head attention over the output of the encoder stack. In the decoder stack self-attention sub-layer is modified to prevent positions from attending to subsequent positions. This masking ensures that the predictions for a position can depend only on the known outputs at previous positions.
 
 
 \begin{equation} \label{eq:transformer_attention}
@@ -377,18 +379,17 @@ An Equation \ref{eq:transformer_attention} represents a \textbf{scaled dot-produ
 An Equation \ref{eq:transformer_multi_head} represents a \textbf{multi-head attention}, which allows the model to jointly track information from different representation subspaces at different positions. Averaging inhibits this with a single head of attention. The input also consists of queries, keys and values matricies, $W^O$ is a parameter matrix, $h$ is a number of parallel layers, $head_i = Attention(QW_i^Q, KW_i^K, VW_i^V)$, where $W_i^Q, W_i^K, W_i^V$ are parameter matricies. $Q$, $K$ and $V$ are different for each position of the attention modules in the structure. It depends on if they are in the encoder, the decoder or between them.
 
 \section{GPT} \label{sec_gpt}
-Information in this section is taken from \cite{radford2018improving}.
-GPT is a transformer-based (Section \ref{sec_transformer}) language model. The model works in 2 stages. First of all transformer model trained on a very large amount of data in an unsupervised manner, then the model is fine-tuned on much smaller supervised dataset to help it solve specific tasks.
+GPT \cite{radford2018improving} is a transformer-based (Section \ref{sec_transformer}) language model. The model works in 2 stages. First of all transformer model trained on a very large amount of data in an unsupervised manner, then the model is fine-tuned on much smaller supervised dataset to help it solve specific tasks.
 
 \subsubsection{Unsupervised pre-training}
-In unsupervised pre-training a standard language modeling is used and the aim is to maximize the likelihood (Equation \ref{eq:unsupervised_pre_training}, where $U = {u_1, u_2, ... , u_n}$ is an unsupervised corpus of tokens, $k$ is the size of context window, $P$ is modeled using a neural network with parameter $\Theta$).
+In unsupervised pre-training a standard language modelling is used and the aim is to maximize the likelihood (Equation \ref{eq:unsupervised_pre_training}, where $U = {u_1, u_2, ... , u_n}$ is an unsupervised corpus of tokens, $k$ is the size of context window, $P$ is modeled using a neural network with parameter $\Theta$).
 
 \begin{equation} \label{eq:unsupervised_pre_training}
 L_1(U) = \sum_i \log P(u_i|u_{i-k}, ... , u_{i-1}; \Theta)
 \end{equation}
 
-Multi-layer Transformer decoder is used for the language model. The model applies a multi-headed self-attention operation over the input context tokens followed by position-wise feedforward layers to produce an output distribution
-over target tokens (Equation \ref{eq:unsupervised_decoder}, where $U = (u_{-k}, ... , u_{-1})$ is the context vector of tokens, $n$ is the number of layers, $W_e$ is the token embedding matrix, $W_p$ is the position embedding matrix).
+Multi-layer transformer decoder is used for the language model. The model applies a multi-headed self-attention operation over the input context tokens followed by position-wise feedforward layers to produce an output distribution
+over target tokens (Equation \ref{eq:unsupervised_decoder}), where $U = (u_{-k}, ... , u_{-1})$ is the context vector of tokens, $n$ is the number of layers, $W_e$ is the token embedding matrix, $W_p$ is the position embedding matrix).
 
 \begin{equation}  \label{eq:unsupervised_decoder}
 \begin{array}{lcl} 
@@ -411,7 +412,7 @@ P(y|x^1, ... , x^m) = softmax(h_l^m, W_y)
 L_2(C) = \sum_{(x,y)} \log P(y|x^1, ... , x^m)
 \end{equation}
 
-Authors found that including language modeling as an auxiliary objective to the fine-tuning helped learning. First of all it improves the generalization of the supervised model. Secondly it accelerates convergence. They optimize the objective with weight $\lambda$ (Equation \ref{eq:objective_optimalization}).
+Authors found that including language modelling as an auxiliary objective to the fine-tuning helped learning. First of all it improves the generalization of the supervised model. Secondly it accelerates convergence. They optimize the objective with weight $\lambda$ (Equation \ref{eq:objective_optimalization}).
 
 \begin{equation} \label{eq:objective_optimalization}
 L_3(C) = L_2(C) + \lambda * L_1(C)
@@ -422,11 +423,11 @@ L_3(C) = L_2(C) + \lambda * L_1(C)
 \begin{figure}[hbt]
   \centering
   \includegraphics[width=0.5\textwidth]{figures/BART.pdf}
-  \caption{BART: Encoder inputs need not be aligned with decoder outputs, it allows arbitary noise transformations. A document is corrupted by replacing spans of text with mask symbols. The corrupted document is encoded with a bidirectional model, and then the likelihood of the original document is calculated with an autoregressive decoder. For fine-tuning, an uncorrupted document is input to both the encoder and decoder, and representations from the final hidden state of the decoder are used\cite{lewis2019bart}.}
+  \caption{BART: Encoder inputs need not be aligned with decoder outputs, it allows arbitary noise transformations. A document is corrupted by replacing spans of text with mask symbols. The corrupted document is encoded with a bidirectional model, and then the likelihood of the original document is calculated with an autoregressive decoder. For fine-tuning, an uncorrupted document is input to both the encoder and decoder, and representations from the final hidden state of the decoder are used \cite{lewis2019bart}.}
   \label{fig:bart}
 \end{figure}
 
-BART (Figure \ref{fig:bart}) is a denoising autoencoder for pre-training sequence-to-sequence models that maps a corrupted document to the original document it was derived from. The model uses a standard Transformer-based seq2seq architecture, with a bidirectional encoder and left-to-right decoder.
+BART (Figure \ref{fig:bart}) is a denoising autoencoder for pre-training sequence-to-sequence models that maps a corrupted document to the original document it was derived from. The model uses a standard transformer-based seq2seq architecture, with a bidirectional encoder and left-to-right decoder.
 
 Bidirectional encoder consists of $N$ transformer encoder blocks stacked on top of each other (Section \ref{sec_transformer}), the final block is the output. The input is a sequence of tokens, which are first embedded into vectors and the processed in the model. The output is a sequence of vectors of size $H$, in which each vector corresponds to an input token with the same index. Autoregressive decoder is GPT model (Section \ref{sec_gpt}). Authors modified ReLU activation functions (Equation \ref{eq:relu}) to GELU (Equation \ref{eq:gelu}) and initialized parameters from $\mathcal{N}(0, 0.2)$. Autoregressive decoder can be directly fine tuned for sequence generation tasks.
 
@@ -434,13 +435,13 @@ Bidirectional encoder consists of $N$ transformer encoder blocks stacked on top 
 \begin{equation} \label{eq:relu}
 f(x) = x^+ = max(0, x)
 \end{equation}
-\caption{Rectified Linear Unit (ReLU)}
+\caption{Rectified Linear Unit (ReLU).}
 \end{eqfloat}
 \begin{eqfloat} [H]
 \begin{equation} \label{eq:gelu}
 GELU(x) = xP(X \leq x) = x \Phi(x)
 \end{equation}
-\caption{Gaussian Error Linear Unit (GELU)}
+\caption{Gaussian Error Linear Unit (GELU), where $P$ is a Gaussian Probability Density Function.}
 \end{eqfloat}
 
 Pre-training has two stages: text corruption with an arbitrary noising function and learning to reconstruct the original text. BART allows to apply any type of document corruption, such as token masking, sentence permutation, document rotation, token deletion, text infilling (Figure \ref{fig:bart_doc_corruption}).
@@ -460,12 +461,12 @@ For \textbf{Text Infilling} a number of text spans are sampled. Span lengths rep
 
 In \textbf{Document Rotation} a token is chosen uniformly at random. A document rotation starts with that token. The model learns to identify the start of the document.
 
-For \textbf{Sentence Permutation} a document is divided into sentences based on full stops. These sentences are randomly shuffled.
+For \textbf{Sentence Permutation} a document is divided into sentences based on full stops (full stop is a punctuation marking the end of a declarative sentence). These sentences are randomly shuffled.
 
 \chapter{Related work} \label{related_work}
 This chapter presents an overview of the most popular NLG models for building open-ended dialogue systems. 
 
-Modeling conversations with generative probabilistic models was first proposed in \cite{ritter2011data}. They present a data-driven approach to generating responses to Twitter status posts, based on phrase-based Statistical Machine Translation. In \cite{shang2015neural} authors proposed a framework for generating responses on micro-blogging websites with using recurrent neural networks. Their model can generate grammatically correct and content-wise appropriate responses to over 75\% of the input text.
+Modelling conversations with generative probabilistic models was first proposed in \cite{ritter2011data}. They present a data-driven approach to generating responses to Twitter status posts, based on phrase-based Statistical Machine Translation. In \cite{shang2015neural} authors proposed a framework for generating responses on micro-blogging websites with using recurrent neural networks. Their model can generate grammatically correct and content-wise appropriate responses to over 75\% of the input text.
 
 In \cite{see2019makes} solutions to common NLG problems in dialogue systems are described. Authors add control (the ability to specify desired attributes of the generated text at test time) and focus on four controllable attributes of text: repetition, specificity, response-relatedness and question-asking. They measure repetitiveness as n-gram overlap, specificity as word rareness, response-relatedness as the embedding similarity of the bot’s response to the human’s last sequence. In this work, authors use \textbf{Conditional Training (CT)} \cite{peng2018towards} and \textbf{Weighted Decoding (WD)} \cite{ghazvininejad2017hafez}. 
 
@@ -789,7 +790,7 @@ H(p,q) = -\sum_{x \in X} p(x)\log q(x)
 For all experiments with the baseline 2 hidden layers were used in both the encoder and decoder with 512 hidden unites in each hidden layer. A dropout \cite{srivastava2014dropout} was used with the probability of $50\%$ to prevent neural networks from overfitting. \textit{Cross-entropy} (measure of the difference between 2 probability distributions for a given random variable or set of events) was used as a loss function. Formally representation of cross-entropy is in the Equation \ref{eq:cross_entropy}. \textit{Adam} \cite{kingma2014adam} is used as the optimization algorithm.
 
 \section{Pre-trained models}
-BART and GPT-2 models are used to improve results of the created architecture (Figure \ref{architecture_nlg}). BART is an autoencoder for pre-training sequence-to-sequence models, described in the section \ref{bart_section}. BART model with 400M hyperparameters has 12 encoder and decoder layers. This model is chosen because it achieves state-of-the-art results on Conv AI2 task (a dialogue response generation task, conditioned on context and a persona). GPT-2 is a large transformer-based language model, which was trained to predict the next word in 40GB of Internet text. GPT-2 with 117M hyperparameters has large improvements on WikiText2 dataset for language modeling. This model is a successor to GPT, described in the section \ref{sec_gpt} and used as stylized language model. 
+Combination of BART and GPT-2 models is used to improve results of the created architecture (Figure \ref{architecture_nlg}). BART is an autoencoder for pre-training sequence-to-sequence models, described in the section \ref{bart_section}. BART model with 400M hyperparameters has 12 encoder and decoder layers. This model is chosen because it achieves state-of-the-art results on Conv AI2 task (a dialogue response generation task, conditioned on context and a persona). GPT-2 is a large transformer-based language model, which was trained to predict the next word in 40GB of Internet text. GPT-2 with 117M hyperparameters has large improvements on WikiText2 dataset for language modelling. This model is a successor to GPT, described in the section \ref{sec_gpt} and used as stylized language model. 
 
 \begin{table}[ht]
 \centering
@@ -927,8 +928,8 @@ Results of using beam search and Nucleus sampling methods are shown in the Table
 In Nucleus sampling cumulative distribution function (CDF) is computed and cutted off as soon as CDF exceeds P. Determined the set of tokens, to be sampled from, may be very large, which can take a very long time. As there is no visible difference in the results, so in other experiments beam search is used due to time efficient.
 
 \section{Feature-based decoding modifications}
-\subsubsection{NIDF feature}
-In the experiment the Normalized Inverse Document Frequency is used as a decoding feature. This approach makes generated text more specific, because the less often a word is found in a dataset the more weight is setted for the word probability. 
+\subsubsection{Controlling specificity}
+In the experiment the Normalized Inverse Document Frequency feature is used as a decoding feature. This approach makes generated text more specific, because the less often a word is found in a dataset the more weight is setted for the word probability. 
 
 \begin{table}[ht]
  \begin{tabular}{|p{14cm}|}
@@ -957,7 +958,7 @@ In the experiment the Normalized Inverse Document Frequency is used as a decodin
 
 Example results of using BART model with NIDF is shown in the Table \ref{tab:bart_nidf}. NIDF is multiplied by hand tuned weight to increase the probability of words. The conversation generated by BART model with NIDF uses such specific words as ``discard'', ``award'' and \textbf{64.3\%} of people consider that the generated dialogue is more specific than real one.
 
-\subsubsection{Length feature}
+\subsubsection{Length control}
 For this experiment 2 lengths of a sequence were chosen: 5 and 20 words.
 
 \begin{table}[ht]
@@ -981,7 +982,7 @@ For this experiment 2 lengths of a sequence were chosen: 5 and 20 words.
 
 Generated sequences with this feature are shown in the Table \ref{tab:set_len}. In some cases, when generating long sentences, many punctuation marks were added, as in the sentence ``i do not like carrots either.....''. \textbf{71.4\%} people consider, that dialogues generated with a lot of words in a sentence are more interesting.
 
-\subsubsection{Stopword blocking}
+\subsubsection{Stop word blocking}
 Stop words are used from NLTK\protect\footnotemark (suite of libraries and programs for symbolic and statistical NLP). During decoding in each iteration, when selecting the next word in the sequence, it is checked if this word is not contained in stop words.
 
 \footnotetext{\url{https://www.nltk.org/}}
@@ -1006,7 +1007,7 @@ Stop words are used from NLTK\protect\footnotemark (suite of libraries and progr
 Represented results of the experiment in the Table \ref{tab:stop_words} shows that generated sequences are very generic and don't make sense in a context. For this experiment, there was no human evaluation.
 
 \section{Weighted decoding of combination BART and GPT-2 models}
-Results of this experiment are generated dialogues from BART model and one GPT-2 model for stylization, the weights for other stylistic language models are set to 0.
+Results of this experiment are generated dialogues from combination of BART and GPT-2 models for stylization, the weights for other stylistic language models are set to 0.
 
 Example of a generated dialogue with humor is shown in the Table \ref{tab:combo_bart_gpt2_jokes}. The weight for encoder-decoder model is set to 0.3, the weight for stylized language model is set to 0.7. These hyperparameters were manual tunned. Compared to the generated dialogue using only the BART model (Table \ref{tab:bart_experiment}), this conversation is not very different, although, for example, the phrase: ``i am a chef for carrots'' may seem rather funny, because the opponent does not like carrots and \textbf{57.14\%} people consider that this dialogue is comical.
 

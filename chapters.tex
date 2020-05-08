@@ -321,9 +321,7 @@ The research \cite{holtzman2019curious} shows how different natural distribution
 \end{equation}
 
 \section{Attention} \label{attention_section}
-A neural attention mechanism is inspired with the human visual attention mechanism. Visual attention is able to focus on a certain region of an image with ``high resolution'', while perceiving the surrounding image in “low resolution”, and then adjusting the focal point over time.
-
-In seq2seq the attention mechanism provides the decoder with information from each hidden state of the encoder and it gives a model the ability to selectively focus on useful parts of the input sequence and learn the alignment between them (Figure \ref{fig:attention}).
+A neural attention mechanism is inspired with the human visual attention mechanism. Visual attention is able to focus on a certain region of an image with ``high resolution'', while perceiving the surrounding image in “low resolution”, and then adjusting the focal point over time. An example of the attention mechanism is represented in the Figure \ref{fig:attention}.
 
 \begin{figure}[hbt]
   \centering
@@ -333,23 +331,28 @@ In seq2seq the attention mechanism provides the decoder with information from ea
 \end{figure}
 
 \footnotetext{\url{https://arxiv.org/pdf/1409.0473.pdf}}
-\begin{eqfloat}
+
+
 \begin{equation} \label{eq:attention}
 output_i = \sum_{j=1}^{T} \alpha_{ij} h_j
 \end{equation}
-\caption{An output of the attention mechanism, where $T$ is a length of an input sequence, $h_j$ is a hidden state representing a value, $\alpha_{ij}$ (Equation \ref{eq:attention_w}) is a weight of each annotation $h_j$.} 
-\end{eqfloat}
+ 
+In the Equation \ref{eq:attention} an output of the attention mechanism for time $i$ is represented. $T$ is a length of an input sequence, $h_j$ is a hidden state representing a value, $\alpha_{ij}$ (Equation \ref{eq:attention_w}) is a weight of each annotation $h_j$.
 
-\begin{eqfloat}
 \begin{equation} \label{eq:attention_w}
 \alpha_{ij} = \frac{exp(e_{ij})}{\sum_{k=1}^{T} exp(e_{ik})}
 \end{equation}
-\caption{Computation of $\alpha_{ij}$ of each annotation $h_j$, where $e_{ij}$ is an alignment model, represented as feedforward neural network, which scores how well match the inputs around position $j$ and the output at position $i$.} 
-\end{eqfloat}
+
+\begin{equation} \label{eq:alignment_model}
+e_{ij} = a(s_{i-1}, h_j)
+\end{equation}
+
+In the Equation \ref{eq:alignment_model} $e_{ij}$ represents an alignment model, represented as feedforward neural network $a$, which scores how well match the inputs around position $j$ and the output at position $i$. $s_{i-1}$ is RNN hidden state.
+
 
 In \cite{vaswani2017attention} attention is described as ``mapping a query and a set of key-value pairs to an output, where the query, keys, values, and output are all vectors''. The output represents a computed weighted sum of the values (Equation \ref{eq:attention}). A weight for each value is computed by a compatibility function of the query with the corresponding key. Weights for keys corresponding to important values will be greater than for unimportant ones, which means that important values will be a bigger part of the output. 
 
-Self-attention is an attention mechanism, where ``self'' means that the inputs interact with each other and ``attention'' means that inputs find out who they should pay more attention. Formally, in the attention mechanism the query, keys and values are from the same sequence. The query is a single element from the sequence while the keys and values are the entire sequence. The attention output is a new representation of the element that was the query. Self-attention is used to compute a new representation of the sequence.  
+Self-attention is an attention mechanism, where ``self`` means that the inputs interact with each other and ``attention`` means that inputs find out who they should pay more attention. In the self-attention mechanism the query, keys and values are from the same sequence. The query is a single element from the sequence while the keys and values are the entire sequence. The attention output is a new representation of the element that was the query. Self-attention is used to compute a new representation of the sequence.  
 
 \section{Transformer} \label{sec_transformer}
 
@@ -362,11 +365,7 @@ Self-attention is an attention mechanism, where ``self'' means that the inputs i
 
 \footnotetext{\url{http://primo.ai/index.php?title=Transformer}}
 
-
-Transformer \cite{vaswani2017attention} introduces an architecture that is based on self-attention mechanism and does not use any recurrent networks. In each step this model applies self-attention mechanism which directly models relationships between all words in a sequence, regardless of their respective position. Transformers do not require that the sentence be processed in order, that allows process parallelization during training, unlike RNN. 
-
-The architecture of the transformer is illustrated in the Figure \ref{fig:transformer}. The transformer consists of a stack of encoders for processing inputs of any length and another set of decoders to output the generated sentences. $N_x$ in the Figure means that modules of encoder and decoder can be stacked on top of each other multiple times. Modules consist of multi-head attention and feed forward layers. The inputs and output are first embedded into an n-dimensional space. Words' positions are added to the embedded representation, n-dimensional vector, of each word. In encoder each layer has two sub-layers, where the first one is a multi-head self-attention mechanism and a second one is a fully connected feed-forward network. Unprocessed input and the output of the sub-layer are connected by residual connections, followed by layer normalization. Another sub-layer added to the decoder, which represents multi-head attention over the output of the encoder stack. In the decoder stack self-attention sub-layer is modified to prevent positions from attending to subsequent positions. This masking ensures that the predictions for a position can depend only on the known outputs at previous positions.
-
+The transformer \cite{vaswani2017attention} follows the seq2seq architecture that is based on self-attention mechanism. The model does not use any recurrent networks. In each step this model applies self-attention mechanism which directly models relationships between all words in a sequence, regardless of their respective position. Transformers do not require that the sentence be processed in order, that allows process parallelization during training, unlike RNN. 
 
 \begin{equation} \label{eq:transformer_attention}
 Attention(Q, K, V) = softmax(\frac{QK^T}{\sqrt{d_k}})V
@@ -379,6 +378,23 @@ MultiHead(Q, K, V) = Concat(head_1, head_2, ..., head_h)W^O
 An Equation \ref{eq:transformer_attention} represents a \textbf{scaled dot-product attention}. The input consists of values of dimension $d_v$, queries and keys of dimension $d_k$, where queries, keys and values are matricies.
 
 An Equation \ref{eq:transformer_multi_head} represents a \textbf{multi-head attention}, which allows the model to jointly track information from different representation subspaces at different positions. Averaging inhibits this with a single head of attention. The input also consists of queries, keys and values matricies, $W^O$ is a parameter matrix, $h$ is a number of parallel layers, $head_i = Attention(QW_i^Q, KW_i^K, VW_i^V)$, where $W_i^Q, W_i^K, W_i^V$ are parameter matricies. $Q$, $K$ and $V$ are different for each position of the attention modules in the structure. It depends on if they are in the encoder, the decoder or between them.
+
+The architecture of the transformer is illustrated in the Figure \ref{fig:transformer}. $N_x$ in this Figure represents the number of encoder or decoder identical layers that can be stacked on top of each other multiple times. The inputs and output are first embedded into an n-dimensional space. Words' positions, n-dimensional vector, are added to the embedded representation of each word (Equation \ref{eq:pe}). These positions are used to inject some information about the relative or absolute position, because the transformer does not contain recurrence and convolution. 
+
+\begin{eqfloat} [H]
+\begin{equation} \label{eq:pe}
+\begin{array}{lcl} 
+PE_{(pos, 2i)} = sin(\frac{pos}{10000^{\frac{2i}{d_{model}}}}) \\
+
+PE_{(pos, 2i+1)} = cos(\frac{pos}{10000^{\frac{2i}{d_{model}}}})\\
+\end{array}
+\end{equation}
+\caption{The functions for calculating a word's positional encoding, where $pos$ is a position, $i$ is a dimension, $d_{model}$ is the same dimension as the embeddings.}
+\end{eqfloat}
+
+The transformer consists of a stack of encoders, where an encoder maps an input to a sequence of continuous representations. Each encoder has two sub-layers, where the first one is a multi-head self-attention mechanism, and the second is a simple, position-wise fully connected feed-forward network. There is a residual connection \cite{he2016deep} around each of the two sub-layers, followed by layer normalization. All sub-layers in the model produce outputs of dimension $d_{model}$, as well as the embedding layers.
+
+The transformer also consists of a stack of decoders. In addition to the two sub-layers in each encoder, a decoder has an extra sub-layer, which performs multi-head attention over the output of the encoder stack. Masking in this layer ensures that the predictions for position $k$ can depend only on the known outputs at positions less than $k$. There is also the residual connection. 
 
 \section{Generative Pre-Training (GPT)} \label{sec_gpt}
 GPT \cite{radford2018improving} is a transformer-based (Section \ref{sec_transformer}) language model. The model works in 2 stages. First of all transformer model trained on a very large amount of data in an unsupervised manner, then the model is fine-tuned on much smaller supervised dataset to help it solve specific tasks.
@@ -407,7 +423,7 @@ P(u) & = & softmax(h_n W_e^T) \\
 After training the model, the parameters are adapted to the supervised target task. Given a labeled dataset $C$, where an instance represents a sequence of input tokens $(x^1, ... , x^m)$, along with a label $y$. The inputs are passed through the pre-trained model to get the final transformer block's activation $h_l^m$, which is then fed into an additional linear output layer with $W_y$ parameters for predicting $y$ (Equation \ref{eq:supervised_fine_tune}). 
 
 \begin{equation} \label{eq:supervised_fine_tune}
-P(y|x^1, ... , x^m) = softmax(h_l^m W_y)
+P(y|x^1, ... , x^m) = softmax(h_l^{m\intercal} W_y)
 \end{equation}
 
 \begin{equation} \label{eq:supervised_maximize}
@@ -634,10 +650,10 @@ Corpus is very important for successful Natural Language Generation. Dialogue sy
 
 Persona-Chat models normal conversation when 2 people meet for the first meet and try to get know each other better. The aim of the dialogue is to learn about interests of another person, find common ground and discuss their hobbies. The task involves both asking and answering questions. 
 
-Persona-Chat dataset consists of small conversations between 2 crowdworkers from Amazon Mechanical Turk who were randomly paired and asked to act the part of a given provided persona (randomly assigned, and created by another set of crowdworkers). The data collection consists of persona chat (each dialogue has 6-8 turns), personas (set of 1155 possible personas, each consisting of at least 5 profile sentences), revised personas to avoid word overlap, because crowdworkers sometimes could repeat profile information in a chat(the Table \ref{tab:persona_revised}). In turn-based dialogue each message consists of a maximum of 15 words. All statistics are presented in the Table \ref{tab:persona_chat_statistics}, the Figure \ref{fig:histogram_persona_desc} and the Figure \ref{fig:histogram_uttr_length}. An example of Persona-Chat dialogue is shown in the Table \ref{tab:persona_chat}. The dataset contains 262,848 message-responses pairs.
+Persona-Chat dataset consists of small conversations between 2 crowdworkers from Amazon Mechanical Turk who were randomly paired and asked to act the part of a given provided persona (randomly assigned, and created by another set of crowdworkers). The data collection consists of persona chat (each dialogue has 6-8 turns), personas (set of 1155 possible personas, each consisting of at least 5 profile sentences), revised personas to avoid word overlap, because crowdworkers sometimes could repeat profile information in a chat (the Table \ref{tab:persona_revised}). In turn-based dialogue each message consists of a maximum of 15 words. All statistics are presented in the Table \ref{tab:persona_chat_statistics}, the Figure \ref{fig:histogram_persona_desc} and the Figure \ref{fig:histogram_uttr_length}. An example of Persona-Chat dialogue is shown in the Table \ref{tab:persona_chat}. The dataset contains 262,848 message-responses pairs.
 
 \section{Datasets for stylisation and pre-training} \label{stylistic_dataset_section}
-\textbf{Stanford Sentiment Treebank (SST)} contains sentences from movie reviews and includes labels for every syntactically plausible phrase in thousands of sentences. This corpus represents sentiment of reviews. To create SST the corpus of movie review excerpts from the paper \cite{pang2005seeing} is used, where HTML tags and sentences that are not in English are deleted from this dataset. The Stanford Parser is used to parse all 10,662 sentences and some snippet were splitted into multiple sentences. The resulting 215,154 phrases were labeled by Amazon Mechanical Trunk. There are 25 different labels from \textit{very negative} to \textit{very positive}. A histogram for SST is represented in the Figure \ref{fig:sst}.
+\textbf{Stanford Sentiment Treebank (SST)} contains sentences from movie reviews and includes labels for every syntactically plausible phrase in thousands of sentences. This corpus represents sentiment of reviews. To create SST the corpus of movie review excerpts from the paper \cite{pang2005seeing} is used, where HTML tags and sentences that are not in English are deleted from this dataset. The Stanford Parser is used to parse all 10,662 sentences and some snippet were splitted into multiple sentences. The resulting 215,154 phrases were labeled by Amazon Mechanical Trunk. There are 25 different labels from \textit{very negative} to \textit{very positive}. In this thesis negative and somewhat negative classes are used as one negative class and positive, somewhat positive classes as one positive class. A histogram for positive and negative classes is represented in the Figure \ref{fig:sst}.
 
 \begin{figure}[hb]
   \centering
@@ -648,7 +664,16 @@ Persona-Chat dataset consists of small conversations between 2 crowdworkers from
 
 For poetic style the \textbf{Shakespeare} dataset was used, which contains all of Shakespeare's plays. A histogram for this dataset is shown in the Figure \ref{fig:shakespeare}.
 
-\begin{table}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figures/shakespeare.pdf}
+  \caption{Histogram of Shakespeare's plays.}
+  \label{fig:shakespeare}
+\end{figure}
+
+A dataset of \textbf{english plaintext jokes} was used for generating text with humor style. There are about 208 000 jokes scraped from 3 sources (Table \ref{tab:jokes}). stupidstuff.json is scrapped from stupidstuff.org, wocka.jsom from \url{http://wocka.com}, reddit\_jokes.json is scraped from \url{https://www.reddit.com/r/Jokes} and contains all submissions to the subreddit as of 13.02.2017. A histogram for the dataset is shown in the Figure \ref{fig:jokes}.
+
+\begin{table}[H]
 \centering
  \begin{tabular}{|p{4cm}|p{3cm}|p{3cm}|} 
  \hline
@@ -666,15 +691,6 @@ For poetic style the \textbf{Shakespeare} dataset was used, which contains all o
 \end{table}
 
 \begin{figure}[H]
-  \centering
-  \includegraphics[width=0.5\textwidth]{figures/shakespeare.pdf}
-  \caption{Histogram of Shakespeare's plays.}
-  \label{fig:shakespeare}
-\end{figure}
-
-A dataset of \textbf{english plaintext jokes} was used for generating text with humor style. There are about 208 000 jokes scraped from 3 sources (Table \ref{tab:jokes}). stupidstuff.json is scrapped from stupidstuff.org, wocka.jsom from \url{http://wocka.com}, reddit\_jokes.json is scraped from \url{https://www.reddit.com/r/Jokes} and contains all submissions to the subreddit as of 13.02.2017. A histogram for the dataset is shown in the Figure \ref{fig:jokes}.
-
-\begin{figure}
   \centering
   \includegraphics[width=0.5\textwidth]{figures/jokes.pdf}
   \caption{Histogram of jokes lengths.}
@@ -702,7 +718,7 @@ This chapter describes the model for stylized text generation in dialogue system
 
 An experiment with decoding strategies uses Beam search and Nucleus sampling methods. These decoding strategies, described in detail in the section \ref{decoding_strategies_section}, allow the generation of less generic and repetitive sequences, which affects the user's perception of the text.
 
-For feature-based decoding modifications only encoder-decoder model is used. NIDF metric, described in the chapter \ref{related_work}, is used as feature-based modification. This approach makes generated text more specific. NIDF represents a measure of word rareness and on each step of the decoding, the probability of each word in the vocabulary is updated in proportion to its rareness. This metric represents a weight for each word probability from the encoder-decoder model. Another experimet is with a length of generated sequences, because a person's style is represented not only by words, but also by the length of sentences. Some people are used to writing very briefly, and someone likes to paint every detail in a text. With each iteration, when generating the next word, a small weight is added to the probability of the \texttt{[EOS]} (end of sequence) symbol. The last experiment with feature-based decoding modification is blocking stop words. During the decoding useless data are filtered. In NLP useless data are referred to as stop words (a commonly used words, for example, ``a'', ``the'', ``I'' etc.). This approach could help to generate more unusual sequences, for example, instead of ``I think'' to use the phrase ``In my opinion''. Stop words are used from NLTK\protect\footnotemark (suite of libraries and programs for symbolic and statistical NLP). During decoding in each iteration, when selecting the next word in the sequence, it is checked if this word is not contained in stop words. If word is in stop words, a probability for this word is setted to 0.
+For feature-based decoding modifications only encoder-decoder model is used. NIDF metric, described in the chapter \ref{related_work}, is used as feature-based modification. This approach makes generated text more specific. NIDF represents a measure of word rareness and on each step of the decoding, the probability of each word in the vocabulary is updated in proportion to its rareness. This metric represents a weight for each word probability from the encoder-decoder model. Another experimet is with a length of generated sequences, because a person's style is represented not only by words, but also by the length of sentences. Some people are used to writing very briefly, and someone likes to paint every detail in a text. With each iteration, when generating the next word, a small weight is added to the probability of the \texttt{[EOS]} (end of sequence) symbol. The last experiment with feature-based decoding modification is blocking stop words. During the decoding useless data are filtered. In NLP useless data are referred to as stop words (a commonly used words, for example, ``a'', ``the'', ``I'' etc.). This approach could help to generate more unusual sequences, for example, instead of ``I think'' to use the phrase ``In my opinion''. Stop words are used from NLTK\protect\footnotemark (suite of libraries and programs for symbolic and statistical NLP). During decoding in each iteration, when selecting the next word in the sequence, it is checked if this word is not contained in stop words. If word is in stop words, a probability for this word is set to 0.
 
 \footnotetext{\url{https://www.nltk.org/}}
 
@@ -927,11 +943,11 @@ Results of using beam search and Nucleus sampling methods are shown in the Table
 \label{tab:nucleus_sampling}
 \end{table}
 
-In Nucleus sampling cumulative distribution function (CDF) is computed and cutted off as soon as CDF exceeds P. Determined the set of tokens, to be sampled from, may be very large, which can take a very long time. As there is no visible difference in the results, so in other experiments beam search is used due to time efficient.
+In Nucleus sampling cumulative distribution function (CDF) is computed and cut off as soon as CDF exceeds P. Determined the set of tokens, to be sampled from, may be very large, which can take a very long time. As there is no visible difference in the results, so in other experiments beam search is used due to time efficient.
 
 \section{Feature-based decoding modifications}
 \subsubsection{Controlling specificity}
-In the experiment the Normalized Inverse Document Frequency feature is used as a decoding feature. This approach makes generated text more specific, because the less often a word is found in a dataset the more weight is setted for the word probability. 
+In the experiment the Normalized Inverse Document Frequency feature is used as a decoding feature. This approach makes generated text more specific, because the less often a word is found in a dataset the more weight is set for the word probability. 
 
 \begin{table}[ht]
  \begin{tabular}{|p{14cm}|}

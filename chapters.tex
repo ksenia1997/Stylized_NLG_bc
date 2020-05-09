@@ -602,28 +602,7 @@ The decoder with an external memory is represented in the Figure \ref{fig:extern
 In ECM three mechanisms were proposed to model the emotion factor. An important flaw of ECM is that the model needs an external decision maker, because this model has to specify an emotion category that should be generated.
 
 \chapter{Evaluation and datasets} \label{eval_datasets_section}
-\section{Evaluation methods}\label{eval}
-The majority of NLG researches published between 2005-2014 relies on automatic metrics \cite{gkatzia2015snapshot}. A lot of NLG evaluations use automatic metrics, because it is a cheap and fast method. These metrics are reasonable if they are known to be enough correlated with human preferences. According to \cite{artstein2009semi} conversational dialogue systems cannot be evaluated by automatic metrics, because dialogue is heavily dependent on context and theory of current dialogue is not precise enough to predetermine the target output.  
-
-Metrics METEOR \cite{banerjee2005meteor}, BLEU \cite{papineni2002bleu}, ROUGE \cite{lin2004rouge} are usually used for automatic summarization. They assume that valid responses have significant word overlap with the ground truth responses. In dialogue systems these metrics cannot be used, because there is significant diversity in the space of valid responses to a given context \cite{liu2016not}.
-
-In \cite{novikova2017we} the weak correlation between human and automatic evaluations is also confirmed. Authors compared different word-based (\textbf{WBM} relies on ground-truth references) and grammar-based (\textbf{GBM} does not rely on ground-truth references) metrics. Their model, combination of WBMs and GBMs, achieved high correlation with humans but only within a single domain.
-
-Best practices for the human evaluation of NLG are represented in \cite{van2019best}. According to these practices it is better to use separate criteria rather than an overall quality assessment. The effect of fatigue can be reduced by shortening the task. Order of the compared models may also affect annotators. To reduce this effect, presenting the conditions should be in a systematically varied order. There should always be quite a few participants.
-
-\textbf{A/B testing} \cite{kohavi2017online} is used as human evaluation. This method is described as the randomized assignment to the user of two variants: the \textit{control} and the \textit{treatment}. The control variant typically is the existing version, which in this case it is a real dialogue of two people. The treatment variant is the new version being evaluated -- in this case it is a generated dialogue. 
-
-\begin{eqfloat}
-\begin{equation} \label{eq:hypergeometric_distribution}
-p_X(k) = Pr(X=k) = \frac{\binom{K}{k} \binom{N-K}{n-k}}{\binom{N}{n}}
-\end{equation}
-\caption{Hypergeometric distribution, where $N$ is the population size, $K$ is the number of success states in the population, $n$ is the quantity drawn in each trial, $k$ is the number of observed successes. $\binom{n}{k} = \frac{n\,!}{k\,!(n-k)\,!}$ is a binomial coefficient.}
-\end{eqfloat}
-
-\textbf{Fisher's exact test} \cite{fisher1922interpretation} is carried out to check human evaluation for statistically significant biases in it. This test is used when there are two nominal variables (nominal variables classify observations into discrete categories) to know if the proportions for one variable differ among the values of another variable. In this case it is controlled if the order of the dialogs affects the user. 
-Fisher's exact test is used when the total sample size is less than 1000. For this test a null hypothesis is put forward. The null hypothesis is that the relative proportions of one variable are independent of the second variable. To confirm or refute this hypothesis, it is necessary to calculate the probability of getting the observed data, and all data sets with more extreme deviations, under the null hypothesis that the proportions are the same. Hypergeometric distribution (Equation \ref{eq:hypergeometric_distribution}) is used to calculate the probability. If the probability is less than 5\%, the null hypothesis is rejected. 
-
-Corpus is very important for successful Natural Language Generation. Dialogue systems require training data in the format of people text conversation, for example, non-fiction or movie reviews are not suitable for this. Large volumes of training data improves the decision-making ability of NLG model, so those models can use it to figure out patterns. Unfortunately, there are not a lot of datasets available for training NLG models, due to the high cost of creating quality datasets.  
+Corpus is very important for successful Natural Language Generation. Dialogue systems require training data in the format of people text conversation, for example, non-fiction or movie reviews are not suitable for this. Large volumes of training data improves the decision-making ability of NLG model, so those models can use it to figure out patterns. Unfortunately, there are not a lot of datasets available for training NLG models, probably due to the high cost of creating quality datasets.  
 
 \section{Persona-Chat dataset} \label{persona_chat_subsec}
 
@@ -771,6 +750,30 @@ A dataset of \textbf{english plaintext jokes} was used for generating text with 
 \end{figure}
 
 \textbf{Twitter} dataset contains 867,710 message-response pairs from Twitter and is used for pre-training baseline model. A histogram for the dataset is shown in the Figure \ref{fig:tweet}.
+
+\section{Evaluation methods}\label{eval}
+The majority of NLG researches published between 2005-2014 relies on automatic metrics \cite{gkatzia2015snapshot}. A lot of NLG evaluations use automatic metrics, mostly because it is a cheap and fast method. These metrics are reasonable if they are known to be enough correlated with human preferences. According to \cite{artstein2009semi} conversational dialogue systems cannot be evaluated by automatic metrics, because dialogue is heavily dependent on context and theory of current dialogue is not precise enough to predetermine the target output.  
+
+In \cite{novikova2017we} the weak correlation between human and automatic evaluations is also confirmed. Authors compared different word-based (relies on ground-truth references) and grammar-based metrics (does not rely on ground-truth references). Their model, combination of WBMs and GBMs, achieved high correlation with humans but only within a single domain.
+
+Word-based metrics METEOR \cite{banerjee2005meteor}, BLEU \cite{papineni2002bleu}, ROUGE \cite{lin2004rouge} are usually used for automatic summarization. They assume that valid responses have significant word overlap with the ground truth responses. In dialogue systems these metrics cannot be used, because there is significant diversity in the space of valid responses to a given context \cite{liu2016not}.
+
+Grammar-based metrics have been explored in machine translation \cite{gimenez2008smorgasbord} or grammatical error correction \cite{napoles2016there}. The Flesch Reading Ease score \cite{flesch1979write} calculates a ratio between the number of characters per sentence, the number of words per sentence, and the number of syllables per word. Designed grammar-scoring functions are presented in the \cite{napoles2016there}. These metrics can be easily manipulated
+with grammatically correct and easily readable output that is unrelated to the input.
+
+Best practices for the human evaluation of NLG are represented in \cite{van2019best}. According to these practices it is better to use separate criteria rather than an overall quality assessment. The effect of fatigue (annotators can change their responses due to fatigue) can be reduced by shortening the task. Order of the compared models may also affect annotators. To reduce this effect, presenting the conditions should be in a systematically varied order. There should always be quite a few participants.
+
+\textbf{A/B testing} \cite{kohavi2017online} is used as human evaluation. This method is described as the randomized assignment to the user of two variants: the \textit{control} and the \textit{treatment}. The control variant typically is the existing version, which in this case it is a real dialogue of two people. The treatment variant is the new version being evaluated -- in this case it is a generated dialogue. 
+
+\begin{eqfloat}
+\begin{equation} \label{eq:hypergeometric_distribution}
+p_X(k) = Pr(X=k) = \frac{\binom{K}{k} \binom{N-K}{n-k}}{\binom{N}{n}}
+\end{equation}
+\caption{Hypergeometric distribution, where $N$ is the population size, $K$ is the number of success states in the population, $n$ is the quantity drawn in each trial, $k$ is the number of observed successes. $\binom{n}{k} = \frac{n\,!}{k\,!(n-k)\,!}$ is a binomial coefficient.}
+\end{eqfloat}
+
+\textbf{Fisher's exact test} \cite{fisher1922interpretation} is carried out to check human evaluation for statistically significant biases in it. This test is used when there are two nominal variables (nominal variables classify observations into discrete categories) to know if the values of one variable differ among the values of another variable. In this case it is controlled if the order of the dialogs affects the user. 
+Fisher's exact test is used when the total sample size is less than 1000. The null hypothesis is that the one variable is independent of the second variable. To confirm or refute this hypothesis, it is necessary to calculate the probability of getting the observed data, and all data sets with more extreme deviations, under the null hypothesis. Hypergeometric distribution (Equation \ref{eq:hypergeometric_distribution}) is used to calculate the probability. If the probability is less than 5\%, the null hypothesis is rejected. 
 
 \chapter{Design and implementation} \label{solution_design}
 This chapter describes the model for stylized text generation in dialogue systems and performed experiments. All experiments can be divided into 3 parts: decoding strategies, feature-based decoding modifications and weighted decoding of a combination of language models. The designed architecture for WD of a language models combination is represented in the Figure \ref{architecture_nlg} and implemented in two variants. First variant uses a LSTM-based baseline model. The second one uses pre-trained transformer-based models. All parts of the architecture were implemented in Python 3.7.3 with using PyTorch 1.4.0 framework.

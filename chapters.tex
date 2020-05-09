@@ -136,25 +136,31 @@ The ability to communicate with machines in a natural language is a long-standin
  \hline
  2 & Why a mouse when it spins? & adequacy \\
  \hline
- 3 &  -Yes, I'm studying law at the moment. & repetition\\
-   & - Good. & \\
-   & - I like playing the piano. & \\
-   & - Good.  & \\
+ 3 & -Yes, I'm studying law at the moment. & repetition\\
+   & -Good. & \\
+   & -I like playing the piano. & \\
+   & -Good.  & \\
 \hline
 4 & -Do you go get coffee often? & response-relatedness \\
   & -I am a musician. & \\
+\hline
+5 & -What is your favorite film? & specificity \\
+  & -I do not know & \\
+  & -What is your hobby? & \\
+  & -I have no idea & \\
 \hline
  \end{tabular}
  \caption{Examples of DS problems.}
 \label{tab:ds_probs}
 \end{table}
-Main problems of dialogue systems are represented in the Table \ref{tab:ds_probs}. A problem of adequacy shows that a response can be grammatically and syntactically composed correctly, but this sentence does not make sense. A problem of repetition makes conversation boring. A problem of response-relatedness shows that the answer to the question does not make a sense in this context and it spoils the impression of the conversation.
+Main problems of dialogue systems are represented in the Table \ref{tab:ds_probs}. A problem of adequacy shows that a response can be grammatically and syntactically composed correctly, but this sentence does not make sense. A problem of repetition makes conversation boring. A problem of response-relatedness shows that the answer to the question does not make a sense in this context and it spoils the impression of the conversation. A general and trivial response (``I don't know``) in a dialogue could correspond to a very large variety of input sequences, but this does not make the conversation informative and specific.
 
 As noticed in \cite{stent2005evaluating}, the main task of NLG is to select, inflect and order words ``to communicate the input meaning'' as completely, clearly and fluently as possible in context. That's why it is necessary to control if output is appropriate or felicitous in a given context. A good generator usually relies on several factors:
 \begin{itemize}
   \item \textbf{adequacy} (a sentence that is ambiguous or not contains communicates meaning in the input, is \textbf{not} adequate)
   \item \textbf{repetition} (self-repetition across sequences and with sequences, repeating the conversational partner)
   \item \textbf{response-relatedness} (efficacy in context)
+  \item \textbf{specificity} (informativeness in a dialogue)
   \item \textbf{variation} (there are 2 basic forms of variation: \textit{word choice variation} and \textit{word order variation} for enriching speech)
 \end{itemize}
 
@@ -484,7 +490,11 @@ For \textbf{Sentence Permutation} a document is divided into sentences based on 
 \chapter{Related work} \label{related_work}
 This chapter presents an overview of the most popular NLG models for building open-ended dialogue systems. 
 
-Modelling conversations with generative probabilistic models was first proposed in \cite{ritter2011data}. They present a data-driven approach to generating responses to Twitter status posts, based on phrase-based Statistical Machine Translation. In \cite{shang2015neural} authors proposed a framework for generating responses on micro-blogging websites with using recurrent neural networks. Their model can generate grammatically correct and content-wise appropriate responses to over 75\% of the input text.
+Modelling conversations with generative probabilistic models was first proposed in \cite{ritter2011data}. They present a data-driven approach to generating responses to Twitter status posts, based on phrase-based Statistical Machine Translation. In \cite{shang2015neural} authors proposed a framework for generating responses on micro-blogging websites with using recurrent neural networks. Their model can generate grammatically correct and content-wise appropriate responses to over 75\% of the input text. 
+
+The idea that computers can generate stylized texts already appeared half a century ago in \cite{wheatley1965computer}. Authors choose a variety of text characteristics as style, such as an expession of politeness in machine translation \cite{sennrich2016controlling}, transformation from modern English to Shakespearean English \cite{jhamtani2017shakespearizing}, sentiment of a text in \cite{shen2017style} and \cite{li2018delete}. In \cite{gao2019structuring} authors used a structured latent space to generate stylized dialogue responses. Another approach was proposed in \cite{john2018disentangled}, where authors applied an adversarial loss to separate style from content. In \cite{tikhonov2018guess} authors describe the problem of stylized text generation in a multilingual setup and show the importance of phonetics for generating the author's stylized poetry.
+
+\section{Attributes control}
 
 In \cite{see2019makes} solutions to common NLG problems in dialogue systems are described. Authors add control (the ability to specify desired attributes of the generated text at test time) and focus on four controllable attributes of text: repetition, specificity, response-relatedness and question-asking. They measure repetitiveness as n-gram overlap, specificity as word rareness, response-relatedness as the embedding similarity of the bot’s response to the human’s last sequence. In this work, authors use \textbf{Conditional Training (CT)} \cite{peng2018towards} and \textbf{Weighted Decoding (WD)} \cite{ghazvininejad2017hafez}. 
 
@@ -495,46 +505,102 @@ In \cite{see2019makes} solutions to common NLG problems in dialogue systems are 
   \label{fig:ct}
 \end{figure}
 
-
-A \textbf{CT} model learns probabilities $P(y|x,z)$, where $y$ is the output text, $x$ is the input text and $z$ is a control variable, which specifies the desired output attribute. In the model $z$ is presented with learned embedding and is concatenated to each decoder input. For example, to get very generic or very specific response, $z$ can be set to \texttt{<LOW>} or \texttt{<HIGH>} (Figure \ref{fig:ct}). If it is necessary simultaneously control several attributes, multiple control embeddings ($z_1, z_2, ..., z_n$) can be concatenated and the model learns $P(y|x, z_1, z_2, ..., z_n)$. Disadvantage of Conditional Training is that it can’t control attributes without sufficient training data. CT model learns only a very weak connection between $z$ and the semantic relatedness of the output.
+A \textbf{CT} model learns probabilities $P(y|x,z)$, where $y$ is the output text, $x$ is the input text and $z$ is a control variable, which specifies the desired output attribute. In the model $z$ is presented with learned embedding and is concatenated to each decoder input. For example, to get very generic or very specific response, $z$ can be set to an embedding representing \texttt{<LOW>} or \texttt{<HIGH>} (Figure \ref{fig:ct}). If it is necessary simultaneously control several attributes, multiple control embeddings ($z_1, z_2, ..., z_n$) can be concatenated and the model learns $P(y|x, z_1, z_2, ..., z_n)$. Disadvantage of Conditional Training is that it can’t control attributes without sufficient training data. Another observed flaw is that the CT model learns only a very weak connection between $z$ and the semantic relatedness of the output.
 
 A \textbf{WD} is a technique applied during decoding to increase/decrease the probability of words with certain features. 
 \begin{equation} \label{eq:wd}
 score(w, y_{<t}; x) = score(y_{<t}; x) + \log P_{RNN}(w|y_{<t}, x) + \sum_i w_i * f_i(w; y_{<t}, x)
 \end{equation}
-In weighted decoding (Equation \ref{eq:wd}), a hypothesis $y_{<t} = y_1, ..., y_{t-1}$ is expanded by computing the score for each possible next word $w$ in the vocabulary on the $t^{th}$ step of decoding. $\log P_{RNN}(w|y_{<t}, x)$ is the log-probability of the word $w$ calculated by the RNN. $score(y_{<t}; x)$ is the accumulated score of the already-generated words in the hypothesis $y_{<t}$. $f_i(w; y_{<t}, x)$ is a decoding feature with associated weights $w_i$ (hyperparameters to be chosen). Each feature presents a specific controlling attribute.
+In weighted decoding (Equation \ref{eq:wd}), a hypothesis $y_{<t} = y_1, ..., y_{t-1}$ is expanded by computing the score for each possible next word $w$ in the vocabulary on the $t^{th}$ step of decoding. $\log P_{RNN}(w|y_{<t}, x)$ is the log-probability of the word $w$ assigned by the probabilistic model. $score(y_{<t}; x)$ is the accumulated score of the already-generated words in the hypothesis $y_{<t}$. $f_i(w; y_{<t}, x)$ is a decoding feature with associated weights $w_i$ (hyperparameters to be chosen). Each feature presents a specific controlling attribute.
 
 \begin{equation} \label{eq:nidf}
 NIDF(w) = \frac{IDF(w) - min\_idf}{max\_idf - min\_idf}
 \end{equation}
-\textbf{Normalized Inverse Document Frequency (NIDF)} is used as a measure of word rareness. In condition training the metric is represented as $z$ variable and in weighted decoding as a parameter of rareness for a word prediction (On each step of the decoding, the probability of each word in the vocabulary is updated in proportion to its rareness. The size of the update is controlled by a weight parameter.) (Equation \ref{eq:nidf}). $IDF(w) = \log(\frac{R}{c_w})$ is a Inverse Document Frequency of a word $w$, where $R$ is the number of responses in the dataset, $c_w$ is the number of those responses that contain $w$. $min\_idf$ and $max\_idf$ are the minimum and maximum IDF's, which are used for normalising the NIDF (ranges from 0 to 1).
+\textbf{Normalized Inverse Document Frequency (NIDF)} is used as a measure of word rareness. In conditional training the metric is represented as $z$ variable and in weighted decoding as a parameter of rareness for a word prediction (On each step of the decoding, the probability of each word in the vocabulary is updated in proportion to its rareness. The size of the update is controlled by a weight parameter.) (Equation \ref{eq:nidf}). $IDF(w) = \log(\frac{R}{c_w})$ is a Inverse Document Frequency of a word $w$, where $R$ is the number of responses in the dataset, $c_w$ is the number of those responses that contain $w$. $min\_idf$ and $max\_idf$ are the minimum and maximum IDF's, which are used for normalising the NIDF (ranges from 0 to 1).
 
-The idea that computers can generate stylized texts already appeared half a century ago in \cite{wheatley1965computer}. Authors choose a variety of text characteristics as style, such as an expession of politeness in machine translation \cite{sennrich2016controlling}, transformation from modern English to Shakespearean English \cite{jhamtani2017shakespearizing}, sentiment of a text in \cite{shen2017style} and \cite{li2018delete}. In \cite{gao2019structuring} authors used a structured latent space to generate stylized dialogue responses. Another approach was proposed in \cite{john2018disentangled}, where authors applied an adversarial loss to separate style from content. The problem of style transfer, described in these papers, differs from the stylized text generation, because as it is shown in \cite{guu2018generating} an existing human-written source used to control the reliability of the results can significantly improve the quality of the resulting texts. 
-
-\subsubsection{ECM}
-Emotional Chatting Machine (ECM), represented in \cite{zhou2018emotional}, can generate not only relevant and grammatical responses, but also emotionally consistent. This framework proposes seq2seq architecture. This separate responses into several categories (Angry, Disgust, Happy, Like, Sad, Other). The emotion category of the to-be-generated response is given for ECM, because, according to the authors, emotions are highly subjective. 
+\section{Emotional Chatting Machine (ECM)}
+Emotional Chatting Machine (ECM) \cite{zhou2018emotional} can generate not only relevant and grammatical responses, but also emotionally consistent. This framework proposes seq2seq architecture. This separate responses into several categories (Angry, Disgust, Happy, Like, Sad, Other). The emotion category of the to-be-generated response is given for ECM, because, according to the authors, emotions are highly subjective. 
 
 \begin{figure}[hbt]
   \centering
   \includegraphics[width=1\textwidth]{figures/ecm.png}
-  \caption{ Overview of ECM (the grey unit). The pink units are used to model emotion factors in the framework.}
-  \label{ecm}
+  \caption{Overview of ECM (the grey unit). The pink units are used to model emotion factors in the framework.}
+  \label{fig:ecm}
 \end{figure}
 
-In the architecture (Figure \ref{ecm}) a post can be answered with different emotions, depending on the attitude of the respondent. For example, for a sad story, someone may respond with anger  (as an irritable stranger), sympathy (as a friend) or happy (as an enemy). \textbf{Emotion classifier} generates labels for each response. Generated labels and responses are fed into ECM to generate emotional responses conditioned on different emotion categories. In \textbf{Emotion Category Embedding} randomly initialize the vector of an emotion category $v_e$ for each category $e$. During the training the model is learning the vectors of the emotion category. \textbf{Internal memory} captures emotion dynamics during decoding. It is achieved using the following concept: before the decoding process each category has an internal emotion state; at each step the emotion state decays by a certain amount; when decoding process is completed, the emotion state should be zero, what indicates that the emotion is completely expressed. \textbf{External memory} is used to model emotion expressions explicitly, the model can choose to generate words from  an emotion vocabulary or a generic vocabulary.
+In the architecture (Figure \ref{fig:ecm}) a post can be answered with different emotions, depending on the attitude of the respondent. For example, for a sad story, someone may respond with anger  (as an irritable stranger), sympathy (as a friend) or happy (as an enemy). \textit{Emotion classifier} generates labels for each response. Generated labels and responses are fed into ECM to generate emotional responses conditioned on different emotion categories. 
 
-ECM need an external decision maker, because this model has to specify an emotion category to be generated.
+\begin{eqfloat}
+\begin{equation} \label{eq:emotion_cat_emb}
+s_t = GRU(s_{t-1},[c_t; e(y_{t-1}); v_e])
+\end{equation}
+\caption{ECM decoder's state. GRU \cite{cho2014learning} is a gating mechanism in RNN.}
+\end{eqfloat}
 
-\subsubsection{Generation of stylized texts}
+In \textit{Emotion Category Embedding} (Equation \ref{eq:emotion_cat_emb}) each emotion category of a response is represented by a real-valued, low dimensional vector. The vector of an emotion category $v_e$ for each category $e$ is randomly initialize. During the training the model is learning the vectors of the emotion category. The emotion category embedding, along with the context vector $c_t$, and the word embedding $e(y_{t-1})$, are fed into the decoder to update the decoder's state $s_t$. 
 
-In \cite{tikhonov2018guess} authors describe the problem of stylized text generation in a multilingual setup and show the importance of phonetics for generating the author's stylized poetry. They presented a version of a language model based on a LSTM artificial neural network with extended phonetic and semantic embeddings for stylized poetry generation. The model generates texts resembling the writing style of a particular author.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figures/internal_memory.png}
+  \caption{Data flow of the decoder with an internal memory.}
+  \label{fig:internal_memory}
+\end{figure}
 
-The model uses Conditional Training, where a condition is represented by the name of an author of a poetic text. This model has been trained with English and Russian. At every step of processing data in the model a word embedding is concatenated with embeddings of the document that is currently being analyzed.
+\begin{equation} \label{eq:read_gate}
+g_t^r = \sigma(W_g^r[e(y_{t-1}); s_{t-1}; c_t])
+\end{equation}
 
-Last feature represents concatentation of final states of two char bidirectional LSTMs with a 128-dimensional vector into a word embedding. One of the LSTMs model works with letters from a char-representation of the word and another one uses phonemes of the International Phonetic Alphabet.  
+\begin{equation} \label{eq:write_gate}
+g_t^w = \sigma(W_g^w s_t)
+\end{equation}
 
-The authors achieved a slight improvement in the model's evaluation, because CT has a weak connection between condition and the semantic relatedness of the output.
- 
+\textit{Internal memory} captures emotion dynamics during decoding. It is achieved using the following concept: before the decoding process each category has an internal emotion state; at each step the emotion state decays by a certain amount; when decoding process is completed, the emotion state should be zero, what indicates that the emotion is completely expressed. The detailed process is represented in the Figure \ref{fig:internal_memory}, where at each time step $t$, the gate $g_t^r$ (Equation \ref{eq:read_gate}) is computed with the input of the word embedding of the previously decoded word $e(y_{t-1})$, the previous state vector of the decoder $s_{t-1}$, and the current context vector $c_t$. The write gate $g_t^w$ (Equation \ref{eq:write_gate}) is computed on the decoder's state $s_t$. These gates are used to read from and write into the internal memory.
+
+\begin{equation} \label{eq:im_r}
+M_{r,t}^I = g_t^r \odot M_{e,t}^I
+\end{equation}
+
+\begin{equation} \label{eq:im_w}
+M_{e,t+1}^I = g_t^w \odot M_{e,t}^I
+\end{equation}
+
+The emotion state is erased by a $g_t^w$ at each time step. At the last step, the internal emotion state will decay to zero. This process is represented in the Equations \ref{eq:im_r}, \ref{eq:im_w}, where $M$ means memory, $I$ denotes Internal, $r/w$ denotes read and write respectively, $\odot$ is element-wise multiplication.
+
+\begin{equation} \label{eq:im_state}
+s_t = GRU(s_{t-1},[c_t; e(y_{t-1}); M_{r,t}^I])
+\end{equation}
+
+The decoder's state $s_t$ is conditioned on the previous state of the decoder $s_{t-1}$, the context vector $c_t$, the previous target word $e(y_{t-1})$ and the emotion state update $M_{r,t}^I$ (Equation \ref{eq:im_state}).
+
+\textit{External memory} is used to model emotion expressions explicitly, because in the internal memory module the correlation between the change of the internal emotion state and selection of a word is not directly observable. The model can choose to generate words from  an emotion vocabulary or a generic vocabulary.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figures/external_memory.png}
+  \caption{Data flow of the decoder with an external memory.}
+  \label{fig:external_memory}
+\end{figure}
+
+\begin{equation} \label{eq:ex_alpha}
+\alpha_t = \sigma(v_u^\intercal s_t)
+\end{equation}
+
+\begin{equation} \label{eq:ex_emotion_sfmx}
+P_g(y_t = w_g) = softmax(W_g^o s_t)
+\end{equation}
+
+\begin{equation} \label{eq:ex_generic_sfmx}
+P_e(y_t = w_e) = softmax(W_e^o s_t)
+\end{equation}
+
+\begin{equation}\label{eq:ex}
+y_t \sim o_t = P(y_t) = \begin{cases} (1-\alpha_t)P_g(y_t = w_g) \\ \alpha_tP_e(y_t = w_e) \end{cases}
+\end{equation}
+
+The decoder with an external memory is represented in the Figure \ref{fig:external_memory}. The current decoder's state $s_t$, the emotion softmax (Equation \ref{eq:ex_emotion_sfmx}) and the generic softmax (Equation \ref{eq:ex_generic_sfmx}) are computed over the emotion vocabulary. This vocabulary is read from the external memory and the generic vocabulary. $\alpha_t$ (Equation \ref{eq:ex_alpha}) is the type selector, which controls the weight of generating an emotion or a generic word. The next word $y_t$ (Equation \ref{eq:ex}) is sampled from the concatenation of the two weighted probabilities. $\alpha_t$ is in range $[0,1]$, and it is used to balance the choice between an emotion word $w_e$ and a generic word $w_g$. $P_g$ and $P_e$ in the Equation \ref{eq:ex} are the distributions over generic and emotion words respectively. Two vocabularies have no intersection, and the final word decoding distribution $P(y_t)$ is a concatenation of two distributions.
+
+In ECM three mechanisms were proposed to model the emotion factor. An important flaw of ECM is that the model needs an external decision maker, because this model has to specify an emotion category that should be generated.
+
 \chapter{Evaluation and datasets} \label{eval_datasets_section}
 \section{Evaluation methods}\label{eval}
 The majority of NLG researches published between 2005-2014 relies on automatic metrics \cite{gkatzia2015snapshot}. A lot of NLG evaluations use automatic metrics, because it is a cheap and fast method. These metrics are reasonable if they are known to be enough correlated with human preferences. According to \cite{artstein2009semi} conversational dialogue systems cannot be evaluated by automatic metrics, because dialogue is heavily dependent on context and theory of current dialogue is not precise enough to predetermine the target output.  

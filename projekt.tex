@@ -92,9 +92,8 @@
   supervisor.title.p={Ing.},   %titul před jménem (nepovinné) / title before the name (optional)
   %supervisor.title.a={},    %titul za jménem (nepovinné) / title after the name (optional)
   % Klíčová slova / keywords
-  keywords.cs={Sem budou zapsána jednotlivá klíčová slova v českém (slovenském) jazyce, oddělená čárkami.}, % klíčová slova v českém či slovenském jazyce / keywords in czech or slovak language
-  keywords.en={neural network, natural language generation, dialogue systems, seq2seq, BART, GPT-2, LSTM}, % klíčová slova v anglickém jazyce / keywords in english
-  %keywords.en={Here, individual keywords separated by commas will be written in English.},
+  keywords.cs={Umělá neuronová síť, Generování přirozeného jazyka, Dialogové systémy, seq2seq, BART, GPT-2, LSTM},
+  keywords.en={Artificial neural network, Natural language generation, Dialogue systems, seq2seq, BART, GPT-2, LSTM}, 
   % Abstrakt / Abstract
   abstract.cs={Do tohoto odstavce bude zapsán výtah (abstrakt) práce v českém (slovenském) jazyce.}, % abstrakt v českém či slovenském jazyce / abstract in czech or slovak language
   abstract.en={In this thesis, the stylistic generation of natural language in dialogue systems is explored. The goal is to provide insight into the current state of research in this area and find promising research directions to the future. Feature-based modifications and a model for weighted decoding were implemented. The realization of the model is presented in two versions. The first one is a LSTM-based baseline and the second one uses state-of-the-art pretrained models for text generation. The experiments showed that when combining models, trained on certain styles, by weighted decoding, it is possible to achieve the generation of stylistic text, but there is a problem with the context. Based on these findings, recommendations and possible future research areas are suggested.}, % abstrakt v anglickém jazyce / abstract in english
@@ -110,7 +109,7 @@
 %(externí zadavatel, konzultant apod.).},
   acknowledgment={I would like to thank my supervisor Ing. Martin Fajčík for his guidance, constructive feedback and help with the thesis.},
   % Rozšířený abstrakt (cca 3 normostrany) - lze definovat zde nebo níže / Extended abstract (approximately 3 standard pages) - can be defined here or below
-  %extendedabstract={Do tohoto odstavce bude zapsán rozšířený výtah (abstrakt) práce v českém (slovenském) jazyce.},
+  extendedabstract={Do tohoto odstavce bude zapsán rozšířený výtah (abstrakt) práce v českém (slovenském) jazyce.},
   %faculty={FIT}, % FIT/FEKT/FSI/FA/FCH/FP/FAST/FAVU/USI/DEF
   faculty.cs={Fakulta informačních technologií}, % Fakulta v češtině - pro využití této položky výše zvolte fakultu DEF / Faculty in Czech - for use of this entry select DEF above
   faculty.en={Faculty of Information Technology}, % Fakulta v angličtině - pro využití této položky výše zvolte fakultu DEF / Faculty in English - for use of this entry select DEF above
@@ -119,7 +118,14 @@
 }
 
 % Rozšířený abstrakt (cca 3 normostrany) - lze definovat zde nebo výše / Extended abstract (approximately 3 standard pages) - can be defined here or above
-%\extendedabstract{Do tohoto odstavce bude zapsán výtah (abstrakt) práce v českém (slovenském) jazyce.}
+\extendedabstract{Dialogový systém (DS) je počítačový systém, který interaguje s člověkem v přirozeném jazyce. Generování přirozeného jazyka je důležitou součástí DS a jejím cílem je napodobit lidské chování. Jedním z nejdůležitějších kognitivních chování u lidí je vyjadřování a porozumění emocím. Proto je nutné věnovat pozornost nejen generování sémanticky a syntakticky správného textu, ale také jazykovému stylu a emocí, ve kterých člověk komunikuje, aby se dialog stal rozmanitějším a zajímavějším. Pečlivě formulovaná řeč bez klišé nebo žargonu je nezbytná pro zajištění efektivní komunikace. Vytvoření takového dialogového systému je obtížné, protože existuje mnoho témat konverzace, reakcí uživatelů a odpovědí.
+
+Hlavním cílem této práce bylo vytvoření dialogového systému, který je schopen generovat text v různých stylech a ovládat projevy každého stylu. Úvodní část práce se zabývá přístupy NLG a popisem problémů v dialogových systémech. Následující kapitola popisuje nejčastěji používané techniky při generování přirozeného jazyka. Začíná to vysvětlením základních technik společných pro mnoho přístupů strojového učení a poté pokračuje v popisu modelů specifických pro NLG a použitých v experimentech v této práci. 
+
+Další kapitola obsahuje portfolio současných metod a modelů řešení problémů v dialogových systémech. Kromě technik používaných k vytváření modelů, jsou také popsány datasety a metody jejich evaluace. Konkrétněji se práce zabývá metodami lidského hodnocení. 
+
+Po vysvětlení evaluačních technik a datasetů následuje kapitola, představující návrh vlastní architektury dialogového systému. Tato architektura používá vážené dekódování jazykového modelu a stylizovaných jazykových modelů a je implementována ve dvou variantách. První varianta využívá modely založené na LSTM a druhá varianta využívá předškolené modely založené na transformerech. V následující kapitole se nachází popis implementace této architektury a její evaluaci.
+V další kapitole jsou diskutovány výsledky experimentů. }
 
 % nastavení délky bloku s titulkem pro úpravu zalomení řádku - lze definovat zde nebo výše / setting the length of a block with a thesis title for adjusting a line break - can be defined here or above
 %\titlelength{14.5cm}

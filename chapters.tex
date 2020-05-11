@@ -455,7 +455,7 @@ PE_{(pos, 2i+1)} = cos(\frac{pos}{10000^{\frac{2i}{d_{model}}}})\\
 \caption{The functions for calculating a word's positional encoding, where $pos$ is a position, $i$ is a dimension, $d_{model}$ is the same dimension as the embeddings.}
 \end{eqfloat}
 
-The transformer consists of a stack of encoders, where an encoder maps an input to a sequence of continuous representations. Each encoder has two sub-layers, where the first one is a multi-head self-attention mechanism, and the second is a simple, position-wise fully connected feed-forward network. There is a residual connection \cite{he2016deep} around each of the two sub-layers, followed by layer normalization. All sub-layers in the model produce outputs of dimension $d_{model}$, as well as the embedding layers.
+The transformer consists of a stack of encoders, where an encoder maps an input to a sequence of continuous representations. Each encoder has two sub-layers, where the first one is a multi-head self-attention mechanism, and the second is a simple, position-wise fully connected feed-forward network. There is a residual connection \cite{he2016deep} around each of the two sub-layers, followed by layer normalization \cite{ba2016layer}. All sub-layers in the model produce outputs of dimension $d_{model}$, as well as the embedding layers.
 
 The transformer also consists of a stack of decoders. In addition to the two sub-layers in each encoder, a decoder has an extra sub-layer, which performs multi-head attention over the output of the encoder stack. Masking in this layer ensures that the predictions for position $k$ can depend only on the known outputs at positions less than $k$. There is also the residual connection. 
 
@@ -851,7 +851,7 @@ Specificity can make the conversation more informative, because a response like 
 Person's style is represented not only by words, but also by the length of sentences. Some people are used to writing very briefly, and someone likes to paint every detail in a text. Length control is used as feature-based modification.
 
 \subsubsection{Stop words blocking}
-Blocking stop words is another feature-based decoding modification. During the decoding data are filtered. In NLP some data are referred to as stop words (a commonly used words, for example, ``a'', ``the'', ``I'' etc.). This approach could help to generate more unusual sequences, for example, instead of ``I think'' to use the phrase ``In my opinion''.
+Blocking stop words is another feature-based decoding modification. During the decoding data are filtered. In NLP a set of commonly used words in any language is referred to as stop words (for example, ``a'', ``the'', ``I'' etc.). This approach could help to generate more unusual sequences, for example, instead of ``I think'' to use the phrase ``In my opinion''.
 
 \begin{equation} \label{eq:baseline}
 p(y_1, ... , y_{T'}|x_1, ... , x_T) \propto \prod_{t=1}^{T'} [w_1 * \log p_1(y_t|x_1, ... , x_T, y_1, ... , y_{t-1}) + \sum_{i=2}^n w_i * \log p_i(y_t| y_1, ... , y_{t-1})]

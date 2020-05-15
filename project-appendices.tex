@@ -128,7 +128,7 @@
  \textbf{Person2:} mods and, of course, the grotesque, ugly, slanted, half-baked & \textbf{Person2:}  Ian , and that makes sense .  As a tribute to all who love the red carpet \\
  \hline
  \end{tabular}
- \caption{Experiment of weighted decoding of BART and GPT-2 trained on SST stylistic dataset with Nucleus sampling.}
+ \caption{Experiment of a generated conversation by weighted decoding a combination of BART and GPT-2 models, trained on SST stylistic dataset. Decoding strategy is Nucleus sampling.}
 \label{tab:sst_wd_nucleus}
 \end{table}
 
@@ -142,7 +142,7 @@
  \hline
  \textbf{Person 1:} paper has one of the best video games ever. The video games are fun. You can play \\ 
  \textbf{Person 2:} "drive please !" Joke of the Day How is it that there is. \\
- \textbf{Person 1:} thy wife. She said  "I love you."  \\
+ \textbf{Person 1:} thy wife. She said me "I love you."  \\
  \textbf{Person 2:} humility. God would not have let that happen. There is a good chance\\
  \textbf{Person 1:} uds. Truck driver. Do you know the difference? \\
  \textbf{Person 2:} water in the middle of the room. I was surprised when he screamed. **  \\
@@ -152,9 +152,8 @@
  \textbf{Person 2:} controller. A car was driving by. The driver was about to jump out of the car. \\
  \hline
  \end{tabular}
- \caption{Experiment of a generated conversation by weighted decoding of combination of BART and GPT-2 models, trained on dataset with jokes. Decoding strategy is Nucleus sampling.}
+ \caption{Experiment of a generated conversation by weighted decoding a combination of BART and GPT-2 models, trained on dataset with jokes. Decoding strategy is Nucleus sampling.}
 \label{tab:jokes_nucleus}
-\end{table}
 
 \begin{table}[H]
 \centering
@@ -164,22 +163,26 @@
  \hline
  \textbf{Person 2 description:} 1. as a child, i won a national spelling bee. 2. i have been published in the new yorker magazine. 3. i am a gourmet cook. 4. i have perfect pitch. \\
  \hline
- \textbf{Person1:} hi.  \\
- \textbf{Person2:} i work? I was in a gourmet cookbook. What does a mushroom smell like \\ 
- \textbf{Person1:} i don't like it either. \\
- \textbf{Person2:} i am not a suicide.\\
- \textbf{Person1:} i have brown hair?  \\
- \textbf{Person2:} i ride a bike shop to work. The boss walks up to the door. \\
- \textbf{Person1:} i am an athlete. \\
- \textbf{Person2:} i can see through the window. \\
- \textbf{Person1:} i have never seen a naked man. \\
- \textbf{Person2:} i love to use the bathroom but i hate its smell. i (dont have sex with a dead person. \\
- \textbf{Person1:} i am a gay Indian. \\
- \textbf{Person2:} that is not a gay joke. \\
+ \textbf{Person1:} hi, how are you, ihomesick. \\
+ \textbf{Person2:} i am not a god, but a fool. \\ 
+ \textbf{Person1:} i am not like you. But that is what i am afraid of. \\
+ \textbf{Person2:} i am a traitor \\
+ \textbf{Person1:} i ride, good friend. This is a great way to get to Rome. \\
+ \textbf{Person2:} i do not like this. For I am a fan of football, but I am not \\
+ \textbf{Person1:} i see. what think you of his marriage to you? \\
+ \textbf{Person2:} i was published, and she was drowned in a lake. O, let her be.\\
+ \textbf{Person1:} i am not a spelling bee champion. But i had rather be a a chef. \\
+ \textbf{Person2:} i have done. Now, on to the potatoes. Let us have a carrot. \\
+ \textbf{Person1:} i am the eldest. And I am the youngest. \\
+ \textbf{Person2:} i am a man of wit and is from china. And I am a sushi \\
+ \textbf{Person1:} i do not like the names of the carrots. \\
+ \textbf{Person2:} i love carrots. And I am a professional horse person, and i know not the pronunciation \\
  \hline
  \end{tabular}
- \caption{Experiment of switching BART and GPT-2 models trained on jokes stylistic dataset. Decoding strategy is Nucleus.}
-\label{tab:jokes_switch_nucleus}
+ \caption{Experiment of switching BART and GPT-2 models trained on Shakespeare dataset. Decoding strategy is Nucleus sampling.}
+\label{tab:shakespeare_switch_nucleus}
+\end{table}
+
 \end{table}
 
 \begin{table}[H]
@@ -208,4 +211,30 @@
  \end{tabular}
  \caption{Experiment of a generated conversation by switching BART and GPT-2 model, trained on SST stylistic dataset. Decoding strategy is Nucleus sampling.}
 \label{tab:sst_switch_nucleus}
+\end{table}
+
+\begin{table}[H]
+\centering
+ \begin{tabular}{|p{14cm}|} 
+ \hline
+ \textbf{Person 1 description:} 1. i am very athletic. 2. i wear contacts. 3. i have brown hair. 4. i love bicycling. 5. i hate carrots. \\
+ \hline
+ \textbf{Person 2 description:} 1. as a child, i won a national spelling bee. 2. i have been published in the new yorker magazine. 3. i am a gourmet cook. 4. i have perfect pitch. \\
+ \hline
+ \textbf{Person1:} hi.  \\
+ \textbf{Person2:} i work? I was in a gourmet cookbook. What does a mushroom smell like \\ 
+ \textbf{Person1:} i don't like it either. \\
+ \textbf{Person2:} i am not a suicide.\\
+ \textbf{Person1:} i have brown hair?  \\
+ \textbf{Person2:} i ride a bike shop to work. The boss walks up to the door. \\
+ \textbf{Person1:} i am an athlete. \\
+ \textbf{Person2:} i can see through the window. \\
+ \textbf{Person1:} i have never seen a naked man. \\
+ \textbf{Person2:} i love to use the bathroom but i hate its smell. i (dont have sex with a dead person. \\
+ \textbf{Person1:} i am a gay Indian. \\
+ \textbf{Person2:} that is not a gay joke. \\
+ \hline
+ \end{tabular}
+ \caption{Experiment of switching BART and GPT-2 models trained on jokes stylistic dataset. Decoding strategy is Nucleus sampling.}
+\label{tab:jokes_switch_nucleus}
 \end{table}

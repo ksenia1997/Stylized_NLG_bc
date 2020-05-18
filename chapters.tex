@@ -119,9 +119,7 @@ Data sparsity is the phenomenon of not observing enough data in a corpus to mode
 
 The n-gram ``She is studying IT'' from the Table \ref{tab:n_gram} does not occur as often in texts of corpus as n-grams ``Hi'', ``New York'' and ``The Three Musketeers''. Knowing a probability to the occurrence of an N-gram in a sequence of words can be useful, because it can help to decide which N-grams can be chunked together to from single entities (like ``New York'' chuncked together as one word). It can also help make next word predictions. For example, ``tea'' is more likely than ``ball'' in the phrase ``I would like to drink''.
 
-
 According to \cite{bengio2003neural} the state-of-the-art way to fight with data sparsity is learning a distributed representation for words, which allows each training sentence to inform the model about an exponential number of semantically neighboring sentences. The model learns simultaneously a distributed representation for each word along with the probability function for word sequences. A sequence of words that has never been seen before gets high probability if words in this sequence are similar in the sense of having a nearby representation to words forming an already seen sentence. Authors of \cite{bengio2003neural} used neural networks (artificial neural networks are described in the section \ref{nn_section}) for the probability function. The proposed approach improved n-gram models and took an advantage of longer contexts.
-
 
 \section{Flaws of dialogue systems}\label{nlg_ds_problems}
 The ability to communicate with machines in a natural language is a long-standing dream of a mankind. Today's dialogue systems often encounter criticism. There are many scientific works on creating more natural dialogue systems. Markus M. Berg defines a natural dialogue system in \cite{berg2014modelling} as ``a form of dialogue system that tries to improve usability and user satisfaction by imitating human behaviour''. It affects the features of human-to-human dialogue (for example, topic changes, sub-dialogues) and seeks to integrate them into dialogue systems for human interaction with the machine. Open-ended natural dialogue systems still have flaws in generating a response to the user.
@@ -186,7 +184,6 @@ As noticed in \cite{stent2005evaluating}, the main task of NLG is to select, inf
 \end{table}
 
 An example in the Table \ref{tab:var_example} shows all types of variation. Sometimes this factor can be syntactically incorrect or unclear, what you can see in the forth sentence. In fifth sentence a variation changed the meaning of part of the sentence. In addition, the variation may add or remove meaning possibilities.
-
 
 One of the hardest problem in text generation is a language style, which makes a response to an user more human. This task is challenging due to the difficulty of capturing emotional factors and the complex mechanism of human emotions. Some people use obscene speech, some use a lot of expressive means, jargon or jokes to make speech more emotional. This is what distinguishes people and makes their communication more interesting.
 
@@ -395,7 +392,7 @@ In location-based function the alignment scores are computed from solely the tar
 a_t = softmax(\mathbf{W_a}\mathbf{h_t})
 \end{equation}
 
-The context vector $\mathbf{c_t}$ is computed as the weighted average over all the source hidden state, where alignment vector represents weights.
+The context vector $\mathbf{c_t}$ is computed as the weighted average over all the source hidden state, where alignment vector represents weights, as it is shown in the Equation \ref{eq:attention}.
 
 \subsubsection{Local Attention}
 Global attention is expensive, because it has to attend to all words on the source side for each target word. Local attention chooses to focus only on a small subset of the source positions per target word.
@@ -551,6 +548,8 @@ Modelling conversations with generative probabilistic models was first proposed 
 
 The idea that computers can generate stylized texts already appeared half a century ago in \cite{wheatley1965computer}. Authors choose a variety of text characteristics as style, such as an expession of politeness in machine translation \cite{sennrich2016controlling}, transformation from modern English to Shakespearean English \cite{jhamtani2017shakespearizing}, sentiment of a text in \cite{shen2017style} and \cite{li2018delete}. In \cite{gao2019structuring} authors used a structured latent space to generate stylized dialogue responses. Another approach was proposed in \cite{john2018disentangled}, where authors applied an adversarial loss to separate style from content. In \cite{tikhonov2018guess} authors describe the problem of stylized text generation in a multilingual setup and show the importance of phonetics for generating the author's stylized poetry.
 
+In the following sections two different papers are described for a deeper overview of the state-of-the-art methods for stylized NLG.
+
 \section{Controlling conversational attributes}
 
 In \cite{see2019makes} solutions to common NLG problems in dialogue systems are described. Authors add control (the ability to specify desired attributes of the generated text at test time) and focus on four controllable attributes of text: repetition, specificity, response-relatedness and question-asking. They measure repetitiveness as n-gram overlap, specificity as word rareness, response-relatedness as the embedding similarity of the bot’s response to the human’s last sequence. In this work, authors use \textbf{Conditional Training (CT)} \cite{peng2018towards} and \textbf{Weighted Decoding (WD)} \cite{ghazvininejad2017hafez}. 
@@ -576,7 +575,7 @@ NIDF(w) = \frac{IDF(w) - min\_idf}{max\_idf - min\_idf}
 \textbf{Normalized Inverse Document Frequency (NIDF)} is used as a measure of word rareness. In conditional training the metric is represented as $z$ variable and in weighted decoding as a parameter of rareness for a word prediction (On each step of the decoding, the probability of each word in the vocabulary is updated in proportion to its rareness. The size of the update is controlled by a weight parameter.) (Equation \ref{eq:nidf}). $IDF(w) = \log(\frac{R}{c_w})$ is a Inverse Document Frequency of a word $w$, where $R$ is the number of responses in the dataset, $c_w$ is the number of those responses that contain $w$. $min\_idf$ and $max\_idf$ are the minimum and maximum IDF's, which are used for normalising the NIDF (ranges from 0 to 1).
 
 \section{Emotional Chatting Machine (ECM)}
-Emotional Chatting Machine (ECM) \cite{zhou2018emotional} can generate not only relevant and grammatical responses, but also emotionally consistent. This framework proposes seq2seq architecture. This separate responses into several categories (Angry, Disgust, Happy, Like, Sad, Other). The emotion category of the to-be-generated response is given for ECM, because, according to the authors, emotions are highly subjective. 
+Emotional Chatting Machine (ECM) \cite{zhou2018emotional} can generate not only relevant and grammatical responses, but also emotionally consistent. This framework proposes seq2seq architecture. ECM separates responses into several categories (Angry, Disgust, Happy, Like, Sad, Other). The emotion category of the to-be-generated response is given for ECM, because according to the authors, emotions are highly subjective. 
 
 \begin{figure}[hbt]
   \centering
@@ -591,10 +590,10 @@ In the architecture (Figure \ref{fig:ecm}) a post can be answered with different
 \begin{equation} \label{eq:emotion_cat_emb}
 s_t = GRU(s_{t-1},[c_t; e(y_{t-1}); v_e])
 \end{equation}
-\caption{ECM decoder's state. GRU \cite{cho2014learning} is a gating mechanism in RNN.}
+\caption{ECM decoder's state. GRU \cite{cho2014learning} is a type of RNN similar to LSTM.}
 \end{eqfloat}
 
-In \textit{Emotion Category Embedding} (Equation \ref{eq:emotion_cat_emb}) each emotion category of a response is represented by a real-valued, low dimensional vector. The vector of an emotion category $v_e$ for each category $e$ is randomly initialize. During the training the model is learning the vectors of the emotion category. The emotion category embedding, along with the context vector $c_t$, and the word embedding $e(y_{t-1})$, are fed into the decoder to update the decoder's state $s_t$. 
+In \textit{Emotion Category Embedding} (Equation \ref{eq:emotion_cat_emb}) each emotion category of a response is represented by a real-valued, low dimensional vector. The vector of an emotion category $v_e$ for each category $e$ is randomly initialized. During the training the model is learning the vectors of the emotion category. The emotion category embedding, along with the context vector $c_t$ (context vector is explained in detail in the sections \ref{attention_section} and \ref{sec_luong}), and the word embedding $e(y_{t-1})$, are fed into the decoder to update the decoder's state $s_t$. 
 
 \begin{figure}[H]
   \centering
@@ -621,15 +620,15 @@ M_{r,t}^I = g_t^r \odot M_{e,t}^I
 M_{e,t+1}^I = g_t^w \odot M_{e,t}^I
 \end{equation}
 
-The emotion state is erased by a $g_t^w$ at each time step. At the last step, the internal emotion state will decay to zero. This process is represented in the Equations \ref{eq:im_r}, \ref{eq:im_w}, where $M$ means memory, $I$ denotes Internal, $r/w$ denotes read and write respectively, $\odot$ is element-wise multiplication.
+The emotion state is erased by a $g_t^w$ at each time step. At the last step, the internal emotion state will decay to zero, which indicates that the emotion is completely expressed. This process is represented in the Equations \ref{eq:im_r}, \ref{eq:im_w}, where $M$ means memory, $I$ denotes Internal, $r/w$ denotes read and write respectively, $\odot$ is element-wise multiplication.
 
 \begin{equation} \label{eq:im_state}
 s_t = GRU(s_{t-1},[c_t; e(y_{t-1}); M_{r,t}^I])
 \end{equation}
 
-The decoder's state $s_t$ is conditioned on the previous state of the decoder $s_{t-1}$, the context vector $c_t$, the previous target word $e(y_{t-1})$ and the emotion state update $M_{r,t}^I$ (Equation \ref{eq:im_state}).
+The Equation \ref{eq:im_state} is a specific rewrite of the Equation \ref{eq:emotion_cat_emb}, where the decoder's state $s_t$ is conditioned on the previous state of the decoder $s_{t-1}$, the context vector $c_t$, the previous target word $e(y_{t-1})$ and the emotion state update $M_{r,t}^I$.
 
-\textit{External memory} is used to model emotion expressions explicitly, because in the internal memory module the correlation between the change of the internal emotion state and selection of a word is not directly observable. The model can choose to generate words from  an emotion vocabulary or a generic vocabulary.
+\textit{External memory} is used to model emotion expressions explicitly, because in the internal memory module the correlation between the change of the internal emotion state and selection of a word is not directly observable \cite{xu2008constructing}. The model can choose to generate words from an emotion vocabulary or a generic vocabulary.
 
 \begin{figure}[H]
   \centering
@@ -639,7 +638,7 @@ The decoder's state $s_t$ is conditioned on the previous state of the decoder $s
 \end{figure}
 
 \begin{equation} \label{eq:ex_alpha}
-\alpha_t = \sigma(v_u^\intercal s_t)
+\alpha_t = \sigma(l_u^\intercal s_t)
 \end{equation}
 
 \begin{equation} \label{eq:ex_emotion_sfmx}
@@ -654,7 +653,7 @@ P_e(y_t = w_e) = softmax(W_e^o s_t)
 y_t \sim o_t = P(y_t) = \begin{cases} (1-\alpha_t)P_g(y_t = w_g) \\ \alpha_tP_e(y_t = w_e) \end{cases}
 \end{equation}
 
-The decoder with an external memory is represented in the Figure \ref{fig:external_memory}. The current decoder's state $s_t$, the emotion softmax (Equation \ref{eq:ex_emotion_sfmx}) and the generic softmax (Equation \ref{eq:ex_generic_sfmx}) are computed over the emotion vocabulary. This vocabulary is read from the external memory and the generic vocabulary. $\alpha_t$ (Equation \ref{eq:ex_alpha}) is the type selector, which controls the weight of generating an emotion or a generic word. The next word $y_t$ (Equation \ref{eq:ex}) is sampled from the concatenation of the two weighted probabilities. $\alpha_t$ is in range $[0,1]$, and it is used to balance the choice between an emotion word $w_e$ and a generic word $w_g$. $P_g$ and $P_e$ in the Equation \ref{eq:ex} are the distributions over generic and emotion words respectively. Two vocabularies have no intersection, and the final word decoding distribution $P(y_t)$ is a concatenation of two distributions.
+The decoder with an external memory is represented in the Figure \ref{fig:external_memory}. The current decoder's state $s_t$, the emotion softmax (Equation \ref{eq:ex_emotion_sfmx}) and the generic softmax (Equation \ref{eq:ex_generic_sfmx}) are computed over the emotion vocabulary. This vocabulary is read from the external memory and the generic vocabulary. $\alpha_t$ (Equation \ref{eq:ex_alpha}) is the type selector, which controls the weight of generating an emotion or a generic word, $l_u$ is a hyperparameter. The next word $y_t$ (Equation \ref{eq:ex}) is sampled from the concatenation of the two weighted probabilities. $\alpha_t$ is in range $[0,1]$, and it is used to balance the choice between an emotion word $w_e$ and a generic word $w_g$. $P_g$ and $P_e$ in the Equation \ref{eq:ex} are the distributions over generic and emotion words respectively. Two vocabularies have no intersection, and the final word decoding distribution $P(y_t)$ is a concatenation of two distributions.
 
 In ECM three mechanisms were proposed to model the emotion factor. An important flaw of ECM is that the model needs an external decision maker, because this model has to specify an emotion category that should be generated.
 
@@ -842,39 +841,35 @@ This chapter describes the proposed models for stylized text generation in dialo
   \label{architecture_nlg}
 \end{figure}
 
-An experiment with decoding strategies uses Beam search and Nucleus sampling methods. These decoding strategies, described in detail in the section \ref{decoding_strategies_section}, allow the generation of less generic and repetitive sequences, which affects the user's perception of the text.
+An experiment with decoding strategies uses Beam search and Nucleus sampling methods. These decoding strategies are described in detail in the section \ref{decoding_strategies_section}.
+
+\begin{equation} \label{eq:baseline}
+score(y_1, ... , y_{T'}|x_1, ... , x_T) = \sum_{t=1}^{T'} [w_1 * \log p_1(y_t|x_1, ... , x_T, y_1, ... , y_{t-1}) + \sum_{i=2}^n w_i * \log p_i(y_t| y_1, ... , y_{t-1})]
+\end{equation}
+
+The Equation \ref{eq:baseline} is a formal description of the experiment with weighted decoding (Figure \ref{architecture_nlg}), where $x_1, ... , x_T$ is an input sequence and $y_1, ... , y_{T'}$ is its corresponding output sequence whose length $T'$ may differ from $T$. $p_1(y_t|x_1, ... , x_T, y_1, ... , y_{t-1})$ is a distribution from encoder-decoder language model. $p_i(y_t|y_1, ... , y_{t-1})$ is a distribution from each stylized language model, $n$ is a number of stylized models. All distributions are multiplied by a corresponding weight $w$, a hyperparameter in range [0,1] to be chosen.
+
+GPT-2 modes is fine-tuned on the stylized data, which is independent of the input sequence, so an experiment of switching BART and GPT-2 models is carried out. In the experiment with switching models, $n$ words in a sequence are generated over encoder-decoder model, which is dependent of the input, and $n$ words are generated over stylized language model, $n$ is a hyperparameter. This process is repeated until the end mark of the sequence is generated or the length of the sequence is equal to the maximum length. 
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.9\textwidth]{figures/persona_chat_ex.png}
+  \caption{Example of input to the enocder-decoder model from Persona-Chat, where \# is a sentence delimiter, CC is a delimiter marking the end of a person’s description, SS is a delimiter marking start of a conversation when data is truncated.}
+  \label{fig:persona_input}
+\end{figure}
+
+Encoder-decoder model in baseline and pre-trained models are trained on the Persona-Chat dataset, described in the subsection \ref{persona_chat_subsec}. As the input $x$ to the encoder-decoder model, the entire dialogue history, separated by unique token, is used (Figure \ref{fig:persona_input}).
+
+Each stylized language model is trained separately on the corresponding stylistic dataset described in the subsection \ref{stylistic_dataset_section}.
 
 \subsubsection{Controlling specificity experiment}
 Specificity can make the conversation more informative, because a response like ``I have no idea`` is very general and trivial. NIDF metric, described in the chapter \ref{related_work}, is used as feature-based modification. This approach makes generated text more specific. NIDF represents a measure of word rareness and on each step of the decoding, the probability of each word in the vocabulary is updated in proportion to its rareness. This metric represents a weight for each logarithmic word probability from the encoder-decoder model.
 
 \subsubsection{Length control}
-Person's style is represented not only by words, but also by the length of sentences. Some people are used to writing very briefly, and someone likes to paint every detail in a text. Length control is used as feature-based modification.
+Person's style is represented not only by words, but also by the length of sentences. Some people are used to writing very briefly, and someone likes to paint every detail in a text. Length control is used as feature-based modification. In the length control experiment at each iteration, when generating the next word, a small quantity, which is set manually, is added to the logarithmic probability of the \texttt{[EOS]} (end of sequence) symbol. 
 
 \subsubsection{Stop words blocking}
-Blocking stop words is another feature-based decoding modification. During the decoding data are filtered. In NLP a set of commonly used words in any language is referred to as stop words (for example, ``a'', ``the'', ``I'' etc.). This approach could help to generate more unusual sequences, for example, instead of ``I think'' to use the phrase ``In my opinion''.
-
-\begin{equation} \label{eq:baseline}
-\log p(y_1, ... , y_{T'}|x_1, ... , x_T) \propto \prod_{t=1}^{T'} [w_1 * \log p_1(y_t|x_1, ... , x_T, y_1, ... , y_{t-1}) + \sum_{i=2}^n w_i * \log p_i(y_t| y_1, ... , y_{t-1})]
-\end{equation}
-
-The Equation \ref{eq:baseline} is a formal description of the experiment with weighted decoding (Figure \ref{architecture_nlg}), where $x_1, ... , x_T$ is an input sequence and $y_1, ... , y_{T'}$ is its corresponding output sequence whose length $T'$ may differ from $T$. $p_1(y_t|x_1, ... , x_T, y_1, ... , y_{t-1})$ is a distribution from encoder-decoder language model. $p_i(y_t|y_1, ... , y_{t-1})$ is a distribution from each stylized language model, $n$ is a number of stylized models. All distributions are multiplied by a corresponding weight $w$, a hyperparameter in range [0,1] to be chosen. The sum of all weights must be 1.
-
-An experiment of switching BART and GPT-2 models is carried out because text generation using GPT-2 model is independent of the input sequence. Therefore, first a few words are generated using the BART model, and a few using the GPT-2 model. 
-
-\begin{table}[ht]
-\centering
- \begin{tabular}{|p{15cm}|} 
- \hline
-  i like to remodel homes . \# i like to go hunting . \# i like to shoot a bow . \# my favorite holiday is halloween . CC  SS hi , how are you doing ? i am getting ready to do some cheetah chasing to stay in shape . \# you must be very fast . hunting is one of my favorite hobbies . \# i am ! for my hobby i like to do canning or some whittling . \# \\
- \hline
- \end{tabular}
- \caption{Example of input to the enocder-decoder model, where \# is a sentence delimiter, CC is a delimiter marking the end of a person’s description, SS is a delimiter marking start of a conversation.}
-\label{tab:persona_input}
-\end{table}
-
-Encoder-decoder model in baseline and pre-trained models is trained on the Persona-Chat dataset, described in the subsection \ref{persona_chat_subsec}. As the input $x$ to the encoder-decoder model, the entire dialogue history, separated by unique token, is used (Table \ref{tab:persona_input}).
-
-Each stylized language model is trained separately on the corresponding stylistic dataset described in the subsection \ref{stylistic_dataset_section}.
+Blocking stop words is another feature-based decoding modification. During the decoding data are filtered. In NLP a set of commonly used words in any language is referred to as stop words (for example, ``a'', ``the'', ``I'' etc.). This approach could help to generate more unusual sequences, for example, instead of ``I think'' to use the phrase ``In my opinion''. During decoding in each iteration, when selecting the next word in the sequence, it is checked if this word is not contained in stop words. If word is in stop words, a logarithmic probability for this word is set to 0. 
 
 \section{Baseline}
 Encoder-decoder model in baseline is implemented as LSTM sequence-to-sequence language model, described in the chapter \ref{nlg_models}, with Luong attention, described in the section \ref{sec_luong}. In the Luong attention, concatenation is used as a score. This model is pre-trained on message-response pairs from Twitter dataset (subsection \ref{stylistic_dataset_section}). Stylized language model is implemented as LSTM-based RNN model.
@@ -900,19 +895,15 @@ Combination of BART and GPT-2 models is used to improve results of the created a
 \section{Proposed evaluation approach}
 There is a lot of research, which shows that human and automatic evaluations have weak correlation (Subsection \ref{eval}). In dialogue systems there are lots of ways how to answer the opponent's correctly, that's why in this thesis only human evaluaton is used. 
 
-A/B tests were used for human evaluation. Several manifestations of human styles were evaluated, such as sentiment (positive, negative), poetry, humor, and specificity. Users were given a questionnaire with several questions (``Which dialogue is more positive?'', ``Which dialogue is more negative?'', ``Which dialogue is more poetic?'', etc.) and for each question there were 2 dialogs as answer options. One of the dialogs was generated by the model, and the second one was from real life.
+A/B tests were used for human evaluation. Several manifestations of human styles were evaluated, such as sentiment (positive, negative), poetry, humor, and specificity. Users were given a questionnaire with several questions (``Which dialogue is more positive?'', ``Which dialogue is more negative?'', ``Which dialogue is more poetic?'', etc.) and for each question there were 2 dialogs as answer options. One of the dialogs was generated by the model, and the second one was from real data.
 
-For the Fisher's exact test, 2 questionaire were created, where there was only 1 question (``Which dialogue is more poetic?''). In the first case, as a response option, the generated dialogue was first given and then the real dialogue, and in the second, vice versa.
+To evaluate the proposed model Fisher's test was used. For the Fisher's exact test, 2 questionaire were created, where there was only 1 question (``Which dialogue is more poetic?''). In the first case, as a response option, the generated dialogue was first given and then the real dialogue, and in the second, vice versa.
 
 \chapter{Implementation} \label{chap_implementation}
 All parts of the architecture proposed in the Figure \ref{architecture_nlg} were implemented in Python 3.7.3 with using PyTorch 1.4.0 framework.
 
 \subsubsection{Implementation details of the experiments}
-In the length control experiment at each iteration, when generating the next word, a small weight is added to the logarithmic probability of the \texttt{[EOS]} (end of sequence) symbol. 
-
-For the experiment with stop words blocking, stop words are used from NLTK\protect\footnotemark (suite of libraries and programs for symbolic and statistical NLP). During decoding in each iteration, when selecting the next word in the sequence, it is checked if this word is not contained in stop words. If word is in stop words, a logarithmic probability for this word is set to 0. 
-
-In the experiment with switching models, $n$ words in a sequence are generated over encoder-decoder model and $n$ words are generated over stylized language model, $n$ is a hyperparameter. Sequence generation stops when the end mark of the sequence is generated or the length of the sequence is equal to the maximum length. 
+Persona-Chat dataset is used to calculate the NIDF metric. In the experiment with the length control, the hyperparameter is set to 0.001. For the experiment with stop words blocking, stop words are used from NLTK\protect\footnotemark (suite of libraries and programs for symbolic and statistical NLP). In the experiment with switching models, $n$ is set to 3.
 
 \footnotetext{\url{https://www.nltk.org/}}
 
@@ -935,9 +926,9 @@ For all experiments with the baseline 2-layer LSTMs were used in both the encode
 
 
 \subsubsection{Implementation details of the pre-trained model}
-For BART and GPT-2 model is used Byte Pair Encoding \cite{sennrich2015neural}. In the BART model, the learning rate \cite{jacobs1988increased} was set to $3\mathrm{e}{-5}$, label smoothing \cite{szegedy2016rethinking} was 0.1, dropout was also 0.1. BART decoder is an equivalent to the GPT model, described in the section \ref{sec_gpt}. GPT-2 is a direct scale-up of GPT, with more parameters (1.5 billion parameters) and trained on more amount of data. GPT-2 model uses more words in a vocabulary than GPT, what means that before a combination of these models, it is necessary to convert a distribution of logarithmic probabilities of the next word in a sequence over all the words in the smallest vocabulary to the distribution over the biggest one and add 0 if the word does not exist. Outputs of BART model, transformed to GPT-2 vocabulary, and logarithmic probabilities of words of GPT-2 models are multiplied by weights to increase or decrease the probability of words and finally these outputs are added up.
+For BART and GPT-2 model is used Byte Pair Encoding \cite{sennrich2015neural}. In the BART model, the learning rate \cite{jacobs1988increased} was set to $3\mathrm{e}{-5}$, label smoothing \cite{szegedy2016rethinking} was 0.1, dropout was also 0.1. Token Masking corruption is used for BART model. BART decoder is an equivalent to the GPT model, described in the section \ref{sec_gpt}. GPT-2 is a direct scale-up of GPT, with more parameters (1.5 billion parameters) and trained on more amount of data. GPT-2 model uses more words in a vocabulary than GPT, what means that before a combination of these models, it is necessary to convert a distribution of logarithmic probabilities of the next word in a sequence over all the words in the smallest vocabulary to the distribution over the biggest one and add 0 if the word does not exist. Outputs of BART model, transformed to GPT-2 vocabulary, and logarithmic probabilities of words of GPT-2 models are multiplied by weights to increase or decrease the probability of words and finally these outputs are added up.
 
-Each GPT-2 model represents one style. 4 such models were fine-tuned for humor, positive and negative sentiment and poetic style. The model was trained with batch size parameter set to 1, learning rate for Adam is $1\mathrm{e}{-4}$, 50000 chars was a minimum size to concatenate input files with \texttt{<|endoftext|>} separator. 
+Each GPT-2 model represents one style. 4 such models were fine-tuned for humor, positive and negative sentiment and poetic style. The model was trained with batch size parameter set to 32, gradients were accumulated across 5 minibatches. Learning rate for Adam is $1\mathrm{e}{-4}$, 50000 chars was a minimum size to concatenate input files with \texttt{<|endoftext|>} separator. 
 
 \subsubsection{Evaluation details}
 To evaluate the dialogues, 30 people participated with the year of birth in the range from 1991 to 2004 with different levels of education and field of activity. For the Fisher's exact test, 7 people were recruited for one questionaire and 8 other people for another. 
@@ -945,7 +936,7 @@ To evaluate the dialogues, 30 people participated with the year of birth in the 
 \chapter{Results and discussion} \label{results_discuss}
 In this chapter, the results of the experiments described in the previous section are presented and their implications are discussed. Human evaluation occurred only for those experiments that were subjectively considered more successful.
 
-All experiments with features, decoding strategies and combination of models are carried out on pre-trained models, because the dialogues generated by the baseline model do not make sense in the context. The example in the Table \ref{tab:baseline_experiment} shows that the model also has a repetition problem, such as repetition of the part of a sequence (``I am``), repetition of phrases (``I am afraid``). These problems can be because of the small amount of data and LSTM neural networks still have a problem to hold a context. In comparison with the baseline model, the dialogue generated using the BART model (Table \ref{tab:bart_experiment}) is more logical and diverse.
+All experiments with features, decoding strategies and combination of models are carried out on transformer-based models, because the dialogues generated by the baseline model do not make sense in the context. The example in the Table \ref{tab:baseline_experiment} shows that the model also has a repetition problem, such as repetition of the part of a sequence (``I am``), repetition of phrases (``I am afraid``). These problems can be because of the small amount of data and LSTM neural networks still have a problem to model long context dependencies. In comparison with the baseline model, the dialogue generated using the BART model (Table \ref{tab:bart_experiment}) is more logical and diverse.
 
 \begin{table}[H]
 \centering

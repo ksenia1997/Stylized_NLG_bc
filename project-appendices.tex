@@ -1,4 +1,6 @@
 \chapter{Experiments} \label{experiments}
+These experiments represents the results of the specificity control with different weights. Normalized Inverse Document Frequency feature is used as a decoding
+feature (Tables \ref{tab:bart_conversation_idf-5_ap}, \ref{tab:bart_conversation_idf10_ap}, \ref{tab:bart_conversation_idf-10_ap}). The experiments have shown that the greater the absolute value of a weight, the more rare words are generated, but the dialogue at the same time turns out to be meaningless.
 
 \begin{table}[H]
 \centering
@@ -80,7 +82,7 @@
 \label{tab:bart_conversation_idf-10_ap}
 \end{table}
 
-
+The experiment with the length control is represented in the Table \ref{tab:bart_length_control}. Short sentences in the experiments are not perceived by people as one dialogue, but rather, as separate expressions.
 \begin{table}[ht]
 \centering
  \begin{tabular}{|p{2cm}|p{6cm}|p{6cm}|} 
